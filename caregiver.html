@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MyHealth Portal — Caregiver</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="portal.js"></script>
+</head>
+<body data-page="caregiver">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="appbar">
+    <a class="brand" href="index.html" aria-label="Go to Home">
+      <span class="brand__mark" aria-hidden="true">✚</span><span class="brand__text">MyHealth Portal</span>
+    </a>
+    <nav class="usernav">
+      <button class="btn btn--top text-size" data-size="up">A+</button>
+      <button class="btn btn--top text-size" data-size="down">A−</button>
+      <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
+      <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
+      <a class="btn btn--top btn--link" href="patient.html">View Patient</a>
+      <a class="btn btn--top" href="admin-login.html" title="Admin">🛡️</a>
+      <button class="btn btn--top" data-logout>Log out</button>
+    </nav>
+  </header>
+
+  <section class="patientbar">
+    <div class="patientbar__left">
+      <div id="patient-initials" class="patientpic">PT</div>
+      <div>
+        <h1 id="patient-name">Select a patient</h1>
+        <p class="patientmeta">Use the selector to load a patient and edit their information.</p>
+      </div>
+    </div>
+    <div class="assist">
+      <label for="patient-select" class="muted">Active patient</label>
+      <select id="patient-select"></select>
+    </div>
+  </section>
+
+  <main id="main" class="layout">
+    <aside class="sidenav">
+      <span class="sidenav__item sidenav__item--active">Overview</span>
+      <a class="sidenav__item" href="#messages">Messages</a>
+    </aside>
+
+    <section class="content">
+      <article class="card">
+        <header class="card__header"><h2 class="card__title">Patient Details</h2></header>
+        <div class="assist" style="padding:1rem; display:grid; gap:.6rem; grid-template-columns: repeat(auto-fit,minmax(260px,1fr));">
+          <label>Full name <input id="f-name"></label>
+          <label>MRN <input id="f-mrn"></label>
+          <label>Date of birth <input id="f-dob" placeholder="YYYY-MM-DD"></label>
+          <label>Blood type <input id="f-blood"></label>
+          <label>Allergies <input id="f-allergies" placeholder="comma-separated"></label>
+          <label>Access code (patient) <input id="f-access" placeholder="4 digits"></label>
+          <label>Medications (one per line) <textarea id="f-meds" rows="5"></textarea></label>
+          <div style="display:flex; gap:.6rem; align-items:end;">
+            <button class="btn btn--primary" id="save-patient">Save Patient</button>
+            <button class="btn" id="push-to-patient">Push to Patient View</button>
+          </div>
+        </div>
+      </article>
+
+      <article id="messages" class="card">
+        <header class="card__header">
+          <h2 class="card__title">Secure Messages</h2>
+          <a class="link" href="patient.html">Open as Patient</a>
+        </header>
+        <div id="msg-list" class="list" aria-live="polite"></div>
+        <footer class="card__footer">
+          <form id="msg-form-care" class="assist" style="width:100%; display:grid; gap:.6rem;">
+            <label for="msg-care">Reply</label>
+            <textarea id="msg-care" rows="3" placeholder="Type a message to the patient…"></textarea>
+            <button class="btn btn--primary" type="submit">Send Reply</button>
+          </form>
+        </footer>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MyHealth Portal — Patient Login</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="portal.js"></script>
+</head>
+<body data-page="login-patient">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="appbar" role="banner">
+    <a class="brand" href="index.html" aria-label="Go to Home">
+      <span class="brand__mark" aria-hidden="true">✚</span>
+      <span class="brand__text">MyHealth Portal</span>
+    </a>
+    <nav class="usernav" aria-label="Page controls">
+      <button class="btn btn--top text-size" data-size="up">A+</button>
+      <button class="btn btn--top text-size" data-size="down">A−</button>
+      <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
+      <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
+      <a class="btn btn--top btn--link" href="login.html">Caregiver Login</a>
+      <a class="btn btn--top btn--link" href="admin-login.html">Admin</a>
+    </nav>
+  </header>
+
+  <main id="main" class="login-wrap">
+    <form id="pt-login-form" class="card login-card" aria-describedby="help">
+      <h1>Patient Login</h1>
+      <p id="help" class="muted">Use your username/password or your personal access code.</p>
+
+      <label for="pt-user">Username</label>
+      <input id="pt-user" autocomplete="username">
+
+      <label for="pt-pass">Password</label>
+      <input id="pt-pass" type="password" autocomplete="current-password">
+
+      <div class="muted" style="margin:.4rem 0;">— OR —</div>
+
+      <label for="pt-code">Patient Access Code</label>
+      <input id="pt-code" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 2468">
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary btn-lg">Login</button>
+        <a class="btn btn--ghost btn-lg" href="index.html">Home</a>
+      </div>
+
+      <div id="login-status" class="status" role="status" aria-live="polite"></div>
+    </form>
+  </main>
+</body>
+</html>

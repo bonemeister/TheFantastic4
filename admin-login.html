@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MyHealth Portal — Admin Login</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="portal.js"></script>
+</head>
+<body data-page="login-admin">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="appbar">
+    <a class="brand" href="index.html" aria-label="Go to Home">
+      <span class="brand__mark" aria-hidden="true">✚</span><span class="brand__text">MyHealth Admin</span>
+    </a>
+    <nav class="usernav">
+      <button class="btn btn--top text-size" data-size="up">A+</button>
+      <button class="btn btn--top text-size" data-size="down">A−</button>
+      <button class="btn btn--top" id="dark-toggle">Dark</button>
+      <button class="btn btn--top" id="contrast-toggle">Contrast</button>
+      <a class="btn btn--top btn--link" href="index.html">Home</a>
+    </nav>
+  </header>
+
+  <main id="main" class="login-wrap">
+    <form id="admin-login-form" class="card login-card" aria-describedby="help">
+      <h1>Administrator Login</h1>
+      <p id="help" class="muted">Use admin username/password or the admin access code.</p>
+
+      <label for="ad-user">Username (default: admin)</label>
+      <input id="ad-user" autocomplete="username">
+
+      <label for="ad-pass">Password (default: admin123)</label>
+      <input id="ad-pass" type="password" autocomplete="current-password">
+
+      <div class="muted" style="margin:.4rem 0;">— OR —</div>
+
+      <label for="ad-code">Admin Access Code (default: 0000)</label>
+      <input id="ad-code" inputmode="numeric" pattern="[0-9]*" placeholder="0000">
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary btn-lg">Enter Admin</button>
+        <a class="btn btn--ghost btn-lg" href="index.html">Cancel</a>
+      </div>
+
+      <div id="login-status" class="status" role="status" aria-live="polite"></div>
+    </form>
+  </main>
+</body>
+</html>

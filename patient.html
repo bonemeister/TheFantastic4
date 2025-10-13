@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MyHealth Portal — Patient</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="portal.js"></script>
+</head>
+<body data-page="patient">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="appbar">
+    <a class="brand" href="index.html" aria-label="Go to Home">
+      <span class="brand__mark" aria-hidden="true">✚</span><span class="brand__text">MyHealth Portal</span>
+    </a>
+    <nav class="usernav">
+      <button class="btn btn--top text-size" data-size="up">A+</button>
+      <button class="btn btn--top text-size" data-size="down">A−</button>
+      <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
+      <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
+      <a class="btn btn--top btn--link" href="patient-login.html">Switch Account</a>
+      <a class="btn btn--top" href="admin-login.html" title="Admin">🛡️</a>
+      <button class="btn btn--top" data-logout>Log out</button>
+    </nav>
+  </header>
+
+  <section class="patientbar">
+    <div class="patientbar__left">
+      <div id="patient-initials" class="patientpic">PT</div>
+      <div>
+        <h1 id="patient-name">Patient</h1>
+        <p class="patientmeta" id="patient-meta"></p>
+        <p class="alerts" id="patient-alerts"></p>
+      </div>
+    </div>
+    <div class="assist" id="login-status">Signed in</div>
+  </section>
+
+  <main id="main" class="layout">
+    <aside class="sidenav">
+      <span class="sidenav__item sidenav__item--active">Overview</span>
+      <a class="sidenav__item" href="#messages">Messages</a>
+      <a class="sidenav__item" href="#meds">Medications</a>
+    </aside>
+
+    <section class="content">
+      <article id="meds" class="card">
+        <header class="card__header"><h2 class="card__title">Active Medications</h2></header>
+        <ul class="list" id="med-list"></ul>
+      </article>
+
+      <article id="messages" class="card">
+        <header class="card__header"><h2 class="card__title">Secure Messages</h2></header>
+        <div id="msg-list" class="list" aria-live="polite"></div>
+        <footer class="card__footer">
+          <form id="msg-form-patient" class="assist" style="width:100%; display:grid; gap:.6rem;">
+            <label for="msg-patient">New message</label>
+            <textarea id="msg-patient" rows="3" placeholder="Type a message to your caregiver…" required></textarea>
+            <button class="btn btn--primary" type="submit">Send Message</button>
+          </form>
+        </footer>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
