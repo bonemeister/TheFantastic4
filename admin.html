@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MyHealth Portal — Admin</title>
+  <title>MyHealth Admin</title>
   <link rel="stylesheet" href="styles.css" />
   <script defer src="portal.js"></script>
 </head>
@@ -11,56 +11,95 @@
   <a class="skip-link" href="#main">Skip to main content</a>
 
   <header class="appbar">
-    <div class="brand"><span class="brand__mark" aria-hidden="true">✚</span><span class="brand__text">MyHealth Admin</span></div>
-    <nav class="usernav" aria-label="Page controls">
+    <a class="brand" href="index.html" aria-label="Go to Home">
+      <span class="brand__mark" aria-hidden="true">✚</span><span class="brand__text">MyHealth Admin</span>
+    </a>
+    <nav class="usernav">
       <button class="btn btn--top text-size" data-size="up">A+</button>
       <button class="btn btn--top text-size" data-size="down">A−</button>
       <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
       <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
-      <a class="btn btn--top btn--link" href="login.html">Caregiver Login</a>
-      <a class="btn btn--top btn--link" href="patient-login.html">Patient Login</a>
     </nav>
   </header>
 
   <main id="main" class="layout">
+    <!-- Sidebar -->
     <aside class="sidenav">
-      <span class="sidenav__item sidenav__item--active">Users</span>
+      <nav class="sidenav__group">
+        <a class="sidenav__link sidenav__link--active" href="#" aria-current="page">Users</a>
+      </nav>
     </aside>
 
+    <!-- Content -->
     <section class="content">
       <article class="card">
         <header class="card__header">
-          <h2 class="card__title">User Management</h2>
-          <span class="muted">Add caregivers & patients, set passwords and access codes.</span>
+          <h1 class="card__title">User Management</h1>
+          <span class="muted">Add caregivers &amp; patients, set passwords and access codes.</span>
         </header>
 
-        <div class="assist" style="padding:1rem;">
-          <form id="user-form" style="display:grid; gap:.6rem; grid-template-columns: repeat(auto-fit,minmax(220px,1fr));">
+        <!-- Restored role chips (auto-filled by JS) -->
+        <div id="role-summary" style="padding: .5rem 1rem; display:flex; gap:.5rem; flex-wrap:wrap;"></div>
+
+        <div class="assist">
+          <form id="user-form" class="form-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr; gap: .75rem;">
             <label>Role
               <select id="role">
                 <option value="caregiver">Caregiver</option>
                 <option value="patient">Patient</option>
+                <option value="admin">Admin</option>
               </select>
             </label>
+
             <label>Full name
-              <input id="fullName" placeholder="e.g. Patrick Tobe" required>
+              <input id="fullName" placeholder="e.g. Patrick Tobe" />
             </label>
+
             <label>Username
-              <input id="username" placeholder="e.g. ptobe" required>
+              <input id="username" placeholder="e.g. ptobe" />
             </label>
+
             <label>Password
-              <input id="password" placeholder="set a simple demo password">
+              <input id="password" type="password" placeholder="set a simple demo password" />
             </label>
-            <label>Access Code
-              <input id="accessCode" placeholder="4 digits for patients / caregivers">
+
+            <label style="grid-column: 4 / 5;">Access Code
+              <input id="accessCode" inputmode="numeric" placeholder="4 digits for patients / caregivers" />
             </label>
-            <button class="btn btn--primary" type="submit">Add / Update</button>
+
+            <div style="grid-column: 1 / -1; display:flex; justify-content:flex-end; margin-top:.25rem;">
+              <button class="btn btn--primary" type="submit">Add / Update</button>
+            </div>
           </form>
         </div>
+      </article>
 
-        <div id="user-list" class="list" aria-live="polite" style="padding:0 1rem 1rem;"></div>
+      <article class="card">
+        <header class="card__header">
+          <h2 class="card__title">Users</h2>
+        </header>
+        <div id="user-list" class="list"></div>
       </article>
     </section>
   </main>
+
+  <!-- ADMIN TICKETS (receiving box for caregiver messages) -->
+  <button id="adm-ticket-toggle"
+          class="chat-fab"
+          title="Incoming Tickets"
+          style="left:50%;transform:translateX(-50%);bottom:1rem;">💬</button>
+
+  <section id="adm-ticket-panel"
+           class="chat-panel"
+           aria-label="Incoming Tickets"
+           aria-hidden="true"
+           style="left:50%;transform:translateX(-50%);bottom:5rem;">
+    <header class="chat-header">
+      <strong class="chat-title">Incoming Tickets</strong>
+      <button class="chat-close" type="button"
+              onclick="document.querySelector('#adm-ticket-panel').classList.remove('open')">×</button>
+    </header>
+    <div id="adm-ticket-list" class="list" style="max-height:280px; overflow:auto;"></div>
+  </section>
 </body>
 </html>

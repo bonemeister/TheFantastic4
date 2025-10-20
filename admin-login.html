@@ -3,49 +3,59 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MyHealth Portal — Admin Login</title>
+  <title>Administrator Login</title>
   <link rel="stylesheet" href="styles.css" />
   <script defer src="portal.js"></script>
 </head>
-<body data-page="login-admin">
+<body>
   <a class="skip-link" href="#main">Skip to main content</a>
 
   <header class="appbar">
     <a class="brand" href="index.html" aria-label="Go to Home">
-      <span class="brand__mark" aria-hidden="true">✚</span><span class="brand__text">MyHealth Admin</span>
+      <span class="brand__mark" aria-hidden="true">✨</span><span class="brand__text">MyHealth Admin</span>
     </a>
     <nav class="usernav">
       <button class="btn btn--top text-size" data-size="up">A+</button>
-      <button class="btn btn--top text-size" data-size="down">A−</button>
-      <button class="btn btn--top" id="dark-toggle">Dark</button>
-      <button class="btn btn--top" id="contrast-toggle">Contrast</button>
-      <a class="btn btn--top btn--link" href="index.html">Home</a>
+      <button class="btn btn--top text-size" data-size="down">A&minus;</button>
+      <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
+      <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
     </nav>
   </header>
 
-  <main id="main" class="login-wrap">
-    <form id="admin-login-form" class="card login-card" aria-describedby="help">
-      <h1>Administrator Login</h1>
-      <p id="help" class="muted">Use admin username/password or the admin access code.</p>
+  <main id="main" class="layout">
+    <section class="content">
+      <article class="card" style="max-width:720px;margin:auto;">
+        <header class="card__header">
+          <h1 class="card__title" style="margin-bottom:.35rem;">Administrator Login</h1>
+          <div class="muted">
+            Demo: username <code>admin</code> &middot; password <code>admin123</code> &middot; or access code <code>1000</code>
+          </div>
+        </header>
 
-      <label for="ad-user">Username (default: admin)</label>
-      <input id="ad-user" autocomplete="username">
+        <form id="admin-login-form" class="assist" style="display:grid;gap:.75rem;">
+          <label>Username
+            <input id="ad-user" type="text" autocomplete="username" />
+          </label>
 
-      <label for="ad-pass">Password (default: admin123)</label>
-      <input id="ad-pass" type="password" autocomplete="current-password">
+          <label>Password
+            <input id="ad-pass" type="password" autocomplete="current-password" />
+          </label>
 
-      <div class="muted" style="margin:.4rem 0;">— OR —</div>
+          <div class="muted">&mdash; OR &mdash;</div>
 
-      <label for="ad-code">Admin Access Code (default: 0000)</label>
-      <input id="ad-code" inputmode="numeric" pattern="[0-9]*" placeholder="0000">
+          <label>Admin Access Code
+            <input id="ad-code" type="text" inputmode="numeric" />
+          </label>
 
-      <div class="form-actions">
-        <button type="submit" class="btn btn--primary btn-lg">Enter Admin</button>
-        <a class="btn btn--ghost btn-lg" href="index.html">Cancel</a>
-      </div>
+          <div style="display:flex;gap:.5rem;align-items:center;">
+            <button class="btn btn--primary" type="submit">Enter Admin</button>
+            <a class="btn btn--ghost" href="index.html">Cancel</a>
+          </div>
 
-      <div id="login-status" class="status" role="status" aria-live="polite"></div>
-    </form>
+          <div id="login-status" class="text-danger" role="status" aria-live="polite"></div>
+        </form>
+      </article>
+    </section>
   </main>
 </body>
 </html>

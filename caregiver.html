@@ -19,65 +19,156 @@
       <button class="btn btn--top text-size" data-size="down">A−</button>
       <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
       <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
-      <a class="btn btn--top btn--link" href="patient.html">View Patient</a>
-      <a class="btn btn--top" href="admin-login.html" title="Admin">🛡️</a>
       <button class="btn btn--top" data-logout>Log out</button>
     </nav>
   </header>
 
-  <section class="patientbar">
-    <div class="patientbar__left">
-      <div id="patient-initials" class="patientpic">PT</div>
-      <div>
-        <h1 id="patient-name">Select a patient</h1>
-        <p class="patientmeta">Use the selector to load a patient and edit their information.</p>
-      </div>
-    </div>
-    <div class="assist">
-      <label for="patient-select" class="muted">Active patient</label>
-      <select id="patient-select"></select>
-    </div>
-  </section>
-
   <main id="main" class="layout">
+    <!-- Sidebar -->
     <aside class="sidenav">
-      <span class="sidenav__item sidenav__item--active">Overview</span>
-      <a class="sidenav__item" href="#messages">Messages</a>
+      <div class="sidenav__group">
+        <label class="sidenav__label" for="patient-select">Active patient</label>
+        <select id="patient-select"></select>
+      </div>
     </aside>
 
+    <!-- Content -->
     <section class="content">
       <article class="card">
-        <header class="card__header"><h2 class="card__title">Patient Details</h2></header>
-        <div class="assist" style="padding:1rem; display:grid; gap:.6rem; grid-template-columns: repeat(auto-fit,minmax(260px,1fr));">
-          <label>Full name <input id="f-name"></label>
-          <label>MRN <input id="f-mrn"></label>
-          <label>Date of birth <input id="f-dob" placeholder="YYYY-MM-DD"></label>
-          <label>Blood type <input id="f-blood"></label>
-          <label>Allergies <input id="f-allergies" placeholder="comma-separated"></label>
-          <label>Access code (patient) <input id="f-access" placeholder="4 digits"></label>
-          <label>Medications (one per line) <textarea id="f-meds" rows="5"></textarea></label>
-          <div style="display:flex; gap:.6rem; align-items:end;">
-            <button class="btn btn--primary" id="save-patient">Save Patient</button>
-            <button class="btn" id="push-to-patient">Push to Patient View</button>
+        <header class="card__header">
+          <div style="display:flex;align-items:center;gap:.8rem;">
+            <div class="avatar"><span id="patient-initials">PT</span></div>
+            <div>
+              <h1 class="card__title" id="patient-name">Patient</h1>
+              <div class="muted" id="patient-hint">Use the selector to load a patient and edit their information.</div>
+            </div>
+          </div>
+        </header>
+
+        <div class="assist">
+          <div class="form-grid" style="grid-template-columns: repeat(6,1fr); gap:.75rem;">
+            <label style="grid-column: span 2;">Full name
+              <input id="f-name" />
+            </label>
+            <label>MRN
+              <input id="f-mrn" />
+            </label>
+            <label>Date of birth
+              <input id="f-dob" type="date" />
+            </label>
+            <label>Blood type
+              <select id="f-blood">
+                <option value="">—</option>
+                <option>O+</option><option>O−</option>
+                <option>A+</option><option>A−</option>
+                <option>B+</option><option>B−</option>
+                <option>AB+</option><option>AB−</option>
+              </select>
+            </label>
+            <label style="grid-column: span 2;">Allergies
+              <input id="f-allergies" placeholder="e.g. Penicillin" />
+            </label>
+            <label>Access code (patient)
+              <input id="f-access" inputmode="numeric" placeholder="0000" />
+            </label>
+          </div>
+
+          <hr class="divider" />
+
+          <h2 style="margin-top:.25rem;">Medication Manager</h2>
+          <div class="form-grid" style="grid-template-columns: repeat(6,1fr); gap:.75rem;">
+            <label>Medication
+              <input id="med-name" placeholder="e.g. Loratadine" />
+            </label>
+            <label>Strength
+              <input id="med-strength" placeholder="10 mg" />
+            </label>
+            <label>Unit
+              <select id="med-unit">
+                <option value="">—</option>
+                <option>mg</option>
+                <option>mcg</option>
+                <option>mL</option>
+              </select>
+            </label>
+            <label>Form
+              <select id="med-form">
+                <option value="tablet">tablet</option>
+                <option value="capsule">capsule</option>
+                <option value="liquid">liquid</option>
+                <option value="inhaler">inhaler</option>
+              </select>
+            </label>
+            <label style="grid-column: span 2;">Dose / Directions
+              <input id="med-directions" placeholder="Take 1 tablet daily" />
+            </label>
+
+            <label>Quantity
+              <input id="med-qty" inputmode="numeric" />
+            </label>
+            <label>Refills
+              <input id="med-refills" inputmode="numeric" />
+            </label>
+            <label>Start date
+              <input id="med-start" type="date" />
+            </label>
+            <label>End date (optional)
+              <input id="med-end" type="date" />
+            </label>
+            <label style="grid-column: span 2;">Notes
+              <input id="med-notes" placeholder="PRN allergies, timing, etc." />
+            </label>
+
+            <div style="grid-column: 1 / -1; display:flex; gap:.6rem;">
+              <button id="med-add" class="btn">Add to list</button>
+            </div>
+          </div>
+
+          <h3 style="margin-top:1rem;">Current Medications</h3>
+          <ul id="med-list-care" class="list"></ul>
+
+          <h3 style="margin-top:1rem;">Medications (one per line)</h3>
+          <textarea id="f-meds" rows="6" style="width:100%;"></textarea>
+
+          <div style="margin-top:1rem;">
+            <button id="save-patient" class="btn btn--primary">Save Patient</button>
           </div>
         </div>
       </article>
-
-      <article id="messages" class="card">
-        <header class="card__header">
-          <h2 class="card__title">Secure Messages</h2>
-          <a class="link" href="patient.html">Open as Patient</a>
-        </header>
-        <div id="msg-list" class="list" aria-live="polite"></div>
-        <footer class="card__footer">
-          <form id="msg-form-care" class="assist" style="width:100%; display:grid; gap:.6rem;">
-            <label for="msg-care">Reply</label>
-            <textarea id="msg-care" rows="3" placeholder="Type a message to the patient…"></textarea>
-            <button class="btn btn--primary" type="submit">Send Reply</button>
-          </form>
-        </footer>
-      </article>
     </section>
   </main>
+
+  <!-- FLOATING CHAT (bottom-right, existing) -->
+  <button id="chat-toggle" class="chat-fab" aria-expanded="false" aria-controls="chat-panel" title="Open messages">
+    💬
+  </button>
+  <section id="chat-panel" class="chat-panel" aria-label="Secure Messages" aria-hidden="true">
+    <header class="chat-header">
+      <strong class="chat-title">Secure Messages</strong>
+      <button class="chat-close" type="button" onclick="document.querySelector('#chat-panel').classList.remove('open')">×</button>
+    </header>
+    <div id="chat-list" class="list" style="max-height:260px; overflow:auto;"></div>
+    <form id="chat-form" class="chat-form">
+      <textarea id="chat-input" rows="2" placeholder="Type a message to the patient…"></textarea>
+      <button class="btn btn--primary" type="submit">Send Reply</button>
+    </form>
+  </section>
+
+  <!-- NEW: FLOATING ISSUE REPORT (bottom-left) -->
+  <button id="issue-toggle" class="chat-fab" aria-expanded="false" aria-controls="issue-panel" title="Report an issue"
+          style="left:1rem; right:auto;">⚠️</button>
+
+  <section id="issue-panel" class="chat-panel" aria-label="Report an Issue" aria-hidden="true"
+           style="left:1rem; right:auto;">
+    <header class="chat-header">
+      <strong class="chat-title">Report an Issue</strong>
+      <button class="chat-close" type="button" onclick="document.querySelector('#issue-panel').classList.remove('open')">×</button>
+    </header>
+    <div id="issue-list" class="list" style="max-height:260px; overflow:auto;"></div>
+    <form id="issue-form" class="chat-form">
+      <textarea id="issue-input" rows="2" placeholder="Describe the issue…"></textarea>
+      <button class="btn btn--primary" type="submit">Send Report</button>
+    </form>
+  </section>
 </body>
 </html>
