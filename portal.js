@@ -273,6 +273,7 @@ function initAdmin(){
   const list=$('#user-list');
   renderUserList(); renderRoleSummary();
 
+  // >>> YOUR REQUESTED SUBMIT HANDLER (added; replaces previous one) <<<
   form.addEventListener('submit',(e)=>{
     e.preventDefault();
     const role=$('#role').value, fullName=$('#fullName').value.trim(),
@@ -288,13 +289,14 @@ function initAdmin(){
       if (accessCode) existing.accessCode=accessCode;
       if (role==='patient'){ existing.mrn ??=''; existing.dob ??=''; existing.blood ??=''; existing.allergies ??=''; existing.meds ??=[]; }
     }else{
-      const u = { id:uid(), role, fullName, username, password,
+      const u = { id:uid(), role, fullName, username, password: password || 'changeme',
         accessCode: accessCode || (role==='admin' ? '1000' : role==='caregiver' ? '0000' : '0000') };
       if (role==='patient') Object.assign(u,{mrn:'',dob:'',blood:'',allergies:'',meds:[]});
       users.push(u);
     }
     saveUsers(users);
     form.reset();
+    alert('User saved successfully.');
     renderUserList(); renderRoleSummary();
   });
 
