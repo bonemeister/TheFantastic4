@@ -3,47 +3,62 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MyHealth Portal — Welcome</title>
+  <title>MyHealth Portal</title>
   <link rel="stylesheet" href="styles.css" />
   <script defer src="portal.js"></script>
 </head>
-<body data-page="home">
+<body>
   <a class="skip-link" href="#main">Skip to main content</a>
 
-  <header class="appbar" role="banner">
+  <header class="appbar">
     <a class="brand" href="index.html" aria-label="Go to Home">
-      <span class="brand__mark" aria-hidden="true">✚</span>
-      <span class="brand__text">MyHealth Portal</span>
+      <span class="brand__mark" aria-hidden="true">✚</span><span class="brand__text">MyHealth Portal</span>
     </a>
-    <nav class="usernav" aria-label="Page controls">
+    <nav class="usernav">
       <button class="btn btn--top text-size" data-size="up">A+</button>
       <button class="btn btn--top text-size" data-size="down">A−</button>
       <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
       <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
-      <a class="btn btn--top" href="admin-login.html" aria-label="Administrator login" title="Administrator">🛡️ Admin</a>
     </nav>
   </header>
 
-  <main id="main" class="layout">
-    <section class="content" style="margin:auto; max-width:880px;">
-      <article class="card">
+  <!-- Left-aligned: no auto-centering -->
+  <main id="main" class="layout" style="grid-template-columns: 1fr; max-width: 1100px; margin-inline:0;">
+    <section class="content">
+      <!-- Left margin only so the card hugs the left side like before -->
+      <article class="card" style="max-width: 420px; margin: 1.25rem 0 1.25rem 1.25rem;">
         <header class="card__header">
-          <h1 class="card__title">Welcome</h1>
+          <h1 class="card__title" style="font-size:1.6rem;">Welcome</h1>
           <span class="muted">Choose how you want to sign in</span>
         </header>
-        <div class="tiles" style="padding:1rem;">
-          <a class="tile" href="login.html">
-            <div class="tile__title">I’m a Caregiver</div>
-            <div class="tile__meta">Manage a patient’s chart and messages</div>
-          </a>
-          <a class="tile" href="patient-login.html">
-            <div class="tile__title">I’m a Patient</div>
-            <div class="tile__meta">View my chart and message my caregiver</div>
-          </a>
-          <a class="tile" href="admin-login.html">
-            <div class="tile__title">Administrator</div>
-            <div class="tile__meta">Manage users & access codes</div>
-          </a>
+
+        <div class="assist" style="padding:1rem; display:grid; gap:1rem;">
+          <!-- Caregiver -->
+          <div class="card" style="padding:1rem;">
+            <h2 style="margin:.2rem 0 1rem;">I’m a Caregiver</h2>
+            <button type="button" class="btn btn--primary" style="width:100%;"
+              onclick="location.href='login.html'">
+              Caregiver Login
+            </button>
+          </div>
+
+          <!-- Patient -->
+          <div class="card" style="padding:1rem;">
+            <h2 style="margin:.2rem 0 1rem;">I’m a Patient</h2>
+            <button type="button" class="btn btn--primary" style="width:100%;"
+              onclick="location.href='patient-login.html'">
+              Patient Login
+            </button>
+          </div>
+
+          <!-- Admin -->
+          <div class="card" style="padding:1rem;">
+            <h2 style="margin:.2rem 0 1rem;">Administrator</h2>
+            <button type="button" class="btn btn--primary" style="width:100%;"
+              onclick="location.href='admin-login.html'">
+              Admin Login
+            </button>
+          </div>
         </div>
       </article>
     </section>

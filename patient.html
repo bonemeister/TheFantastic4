@@ -40,7 +40,6 @@
   <main id="main" class="layout">
     <aside class="sidenav">
       <span class="sidenav__item sidenav__item--active">Overview</span>
-      <a class="sidenav__item" href="#messages">Messages</a>
       <a class="sidenav__item" href="#meds">Medications</a>
     </aside>
 
@@ -49,19 +48,26 @@
         <header class="card__header"><h2 class="card__title">Active Medications</h2></header>
         <ul class="list" id="med-list"></ul>
       </article>
-
-      <article id="messages" class="card">
-        <header class="card__header"><h2 class="card__title">Secure Messages</h2></header>
-        <div id="msg-list" class="list" aria-live="polite"></div>
-        <footer class="card__footer">
-          <form id="msg-form-patient" class="assist" style="width:100%; display:grid; gap:.6rem;">
-            <label for="msg-patient">New message</label>
-            <textarea id="msg-patient" rows="3" placeholder="Type a message to your caregiver…" required></textarea>
-            <button class="btn btn--primary" type="submit">Send Message</button>
-          </form>
-        </footer>
-      </article>
     </section>
   </main>
+
+  <!-- Floating Chat (bottom-right) -->
+  <div class="chat-fab"><button id="chat-toggle" aria-label="Open messages">💬</button></div>
+  <aside id="chat-panel" class="chat-panel" aria-label="Messages" aria-live="polite">
+    <div class="chat-head">
+      <h3 class="chat-title">Messages</h3>
+      <span class="muted">Care team chat</span>
+    </div>
+    <div class="chat-body">
+      <div id="chat-list" class="list"></div>
+    </div>
+    <div class="chat-foot">
+      <form id="chat-form">
+        <label class="muted" for="chat-input">Message</label>
+        <textarea id="chat-input" rows="2" placeholder="Type a message to your caregiver…"></textarea>
+        <button class="btn btn--primary" type="submit">Send</button>
+      </form>
+    </div>
+  </aside>
 </body>
 </html>

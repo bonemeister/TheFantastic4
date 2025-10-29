@@ -213,3 +213,52 @@ h1{ margin:.1rem 0; font-size: var(--step-2); }
   .layout{ grid-template-columns: 1fr; }
   .sidenav{ position:static; flex-direction:row; overflow:auto; white-space:nowrap; }
 }
+/* === Bottom-right Chat (uses existing theme vars) === */
+.chat-fab{
+  position:fixed; right:18px; bottom:18px; z-index:1000;
+}
+.chat-fab > button{
+  width:54px; height:54px; border-radius:999px; border:1px solid var(--border);
+  background:var(--brand); color:var(--btn-ink, #fff); display:grid; place-items:center;
+  font-size:22px; cursor:pointer; box-shadow:0 10px 24px rgba(0,0,0,.25);
+}
+
+.chat-panel{
+  position:fixed; right:18px; bottom:84px; width:360px; max-width:calc(100vw - 36px);
+  height:420px; display:none; flex-direction:column; overflow:hidden;
+  background:var(--panel); color:var(--ink); border:1px solid var(--line); border-radius:14px;
+  box-shadow:0 18px 38px rgba(0,0,0,.28); z-index:1000;
+}
+.chat-panel.open{ display:flex; }
+
+.chat-head{ display:flex; align-items:center; justify-content:space-between; padding:.7rem .9rem; border-bottom:1px solid var(--line); }
+.chat-title{ margin:0; font-weight:800; }
+.chat-body{ flex:1; overflow:auto; background:transparent; }
+.chat-foot{ padding:.7rem .9rem; border-top:1px solid var(--line); background:var(--panel); }
+.chat-foot form{ display:grid; gap:.5rem; }
+.chat-foot button{ width:100%; }
+
+.chat-empty{ padding:1rem; opacity:.8; text-align:center; }
+
+@media (max-width: 900px){
+  .chat-panel{ height:60vh; }
+}
+/* Add a bit of space between the header title and any helper text */
+.card__header {
+  display: flex;
+  align-items: baseline;
+}
+.card__header .card__title {
+  margin-right: .6rem; /* adjust to taste (.5–1rem) */
+}
+
+/* Stack neatly on small screens */
+@media (max-width: 520px){
+  .card__header {
+    flex-direction: column;
+    gap: .25rem;
+  }
+  .card__header .card__title {
+    margin-right: 0;
+  }
+}
