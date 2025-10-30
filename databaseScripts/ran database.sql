@@ -1,0 +1,4 @@
+
+USE HealthDataPlatform;
+GO
+

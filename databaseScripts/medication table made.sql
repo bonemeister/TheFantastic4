@@ -1,0 +1,11 @@
+CREATE TABLE Medications (
+    MedID INT IDENTITY(1,1) PRIMARY KEY,
+    PatientID INT NOT NULL FOREIGN KEY REFERENCES Patients(PatientID),
+    Name NVARCHAR(100) NOT NULL,
+    Strength NVARCHAR(50),
+    Directions NVARCHAR(MAX),
+    StartDate DATE,
+    EndDate DATE,
+    Refills INT DEFAULT 0,
+    CreatedAt DATETIMEOFFSET DEFAULT SYSDATETIMEOFFSET() 
+);
