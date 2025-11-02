@@ -3,20 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Administrator Login</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script defer src="portal.js"></script>
+  <link rel="stylesheet" href="styles.css?v=2" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
 
   <header class="appbar">
     <a class="brand" href="index.html" aria-label="Go to Home">
-      <span class="brand__mark" aria-hidden="true">✨</span><span class="brand__text">MyHealth Admin</span>
+      <span class="brand__mark" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M256 32C256 32 160 64 96 64C96 64 96 192 96 256C96 368 256 480 256 480C256 480 416 368 416 256C416 192 416 64 416 64C352 64 256 32 256 32Z" fill="#2563EB"/>
+          <circle cx="256" cy="256" r="96" fill="white"/>
+          <path d="M256 200V312M200 256H312" stroke="#2563EB" stroke-width="32" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="brand__text">MyHealth Admin</span>
     </a>
     <nav class="usernav">
       <button class="btn btn--top text-size" data-size="up">A+</button>
-      <button class="btn btn--top text-size" data-size="down">A&minus;</button>
+      <button class="btn btn--top text-size" data-size="down">A−</button>
       <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
       <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
     </nav>
@@ -28,26 +37,20 @@
         <header class="card__header">
           <h1 class="card__title" style="margin-bottom:.35rem;">Administrator Login</h1>
           <div class="muted">
-            Demo: username <code>admin</code> &middot; password <code>admin123</code> &middot; or access code <code>1000</code>
+            Demo: username <code>admin</code> &middot; password <code>admin123</code>
           </div>
         </header>
 
         <form id="admin-login-form" class="assist" style="display:grid;gap:.75rem;">
-          <label>Username
-            <input id="ad-user" type="text" autocomplete="username" />
+          <label style="display:flex !important;flex-direction:column !important;gap:.4rem !important;visibility:visible !important;opacity:1 !important;">Username
+            <input id="ad-user" type="text" autocomplete="username" style="display:block !important;visibility:visible !important;" />
           </label>
 
-          <label>Password
-            <input id="ad-pass" type="password" autocomplete="current-password" />
+          <label style="display:flex !important;flex-direction:column !important;gap:.4rem !important;visibility:visible !important;opacity:1 !important;">Password
+            <input id="ad-pass" type="password" autocomplete="current-password" style="display:block !important;visibility:visible !important;" />
           </label>
 
-          <div class="muted">&mdash; OR &mdash;</div>
-
-          <label>Admin Access Code
-            <input id="ad-code" type="text" inputmode="numeric" />
-          </label>
-
-          <div style="display:flex;gap:.5rem;align-items:center;">
+          <div style="display:flex;gap:.5rem;align-items:center;margin-top:1rem;">
             <button class="btn btn--primary" type="submit">Enter Admin</button>
             <a class="btn btn--ghost" href="index.html">Cancel</a>
           </div>
@@ -57,5 +60,7 @@
       </article>
     </section>
   </main>
+
+  <script defer src="portal.js?v=2"></script>
 </body>
 </html>

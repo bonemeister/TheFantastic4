@@ -7,14 +7,42 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body data-page="404">
-  <main class="login-wrap" style="text-align:center;">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="appbar">
+    <a class="brand" href="index.html" aria-label="Go to Home">
+      <span class="brand__mark" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M256 32C256 32 160 64 96 64C96 64 96 192 96 256C96 368 256 480 256 480C256 480 416 368 416 256C416 192 416 64 416 64C352 64 256 32 256 32Z" fill="#2563EB"/>
+          <circle cx="256" cy="256" r="96" fill="white"/>
+          <path d="M256 200V312M200 256H312" stroke="#2563EB" stroke-width="32" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="brand__text">MyHealth Portal</span>
+    </a>
+    <nav class="usernav">
+      <button class="btn btn--top text-size" data-size="up">A+</button>
+      <button class="btn btn--top text-size" data-size="down">A−</button>
+      <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
+      <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
+    </nav>
+  </header>
+
+  <main id="main" class="login-wrap" style="text-align:center;">
     <article class="card" style="padding:2rem; max-width:560px;">
       <h1 style="font-size:var(--step-2); margin:.2rem 0 0;">404 — Page not found</h1>
-      <p class="muted">The page you’re looking for doesn’t exist or moved.</p>
-      <div style="margin-top:1rem;">
+      <p class="muted">The page you're looking for doesn't exist or you don't have permission to access it.</p>
+      <div style="margin-top:1.5rem; display:flex; flex-direction:column; gap:.5rem; align-items:center;">
         <a class="btn btn--primary btn-lg" href="index.html">Back to Home</a>
+        <div style="display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center; margin-top:.5rem;">
+          <a class="btn btn--ghost" href="login.html">Caregiver Login</a>
+          <a class="btn btn--ghost" href="patient-login.html">Patient Login</a>
+          <a class="btn btn--ghost" href="admin-login.html">Admin Login</a>
+        </div>
       </div>
     </article>
   </main>
+
+  <script defer src="portal.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Patient Login</title>
+  <title>Caregiver Login</title>
   <link rel="stylesheet" href="styles.css" />
   <script defer src="portal.js"></script>
 </head>
@@ -33,33 +33,33 @@
     <section class="content">
       <article class="card" style="max-width:720px;margin:auto;">
         <header class="card__header">
-          <h1 class="card__title" style="margin-bottom:.35rem;">Patient Login</h1>
+          <h1 class="card__title" style="margin-bottom:.35rem;">Caregiver Login</h1>
           <div class="muted">
-            Demo: username <code>ptobe</code> &middot; password <code>patient123</code> &middot; or access code <code>0000</code>
+            Demo: username <code>caregiver</code> &middot; password <code>password123</code> &middot; or access code <code>0000</code>
           </div>
         </header>
 
-        <form id="pt-login-form" class="assist" style="display:grid;gap:.75rem;">
-          <label>Username
-            <input id="pt-user" type="text" autocomplete="username" />
+        <form id="cg-login-form" class="assist" style="display:grid;gap:.75rem;">
+          <label style="display:flex;flex-direction:column;gap:.4rem;">Username
+            <input id="cg-user" type="text" autocomplete="username" />
           </label>
 
-          <label>Password
-            <input id="pt-pass" type="password" autocomplete="current-password" />
+          <label style="display:flex;flex-direction:column;gap:.4rem;">Password
+            <input id="cg-pass" type="password" autocomplete="current-password" />
           </label>
 
-          <div class="muted">&mdash; OR &mdash;</div>
+          <div class="muted" style="text-align:center;margin:.5rem 0;">&mdash; OR &mdash;</div>
 
-          <label>Patient Access Code
-            <input id="pt-code" type="text" inputmode="numeric" placeholder="Enter 4-digit code" />
+          <label style="display:flex;flex-direction:column;gap:.4rem;">Caregiver Access Code
+            <input id="cg-code" type="text" inputmode="numeric" placeholder="Enter 4-digit code" />
           </label>
 
-          <div style="display:flex;gap:.5rem;align-items:center;">
-            <button class="btn btn--primary" type="submit">Enter Patient</button>
+          <div style="display:flex;gap:.5rem;align-items:center;margin-top:.5rem;">
+            <button class="btn btn--primary" type="submit">Enter Caregiver</button>
             <a class="btn btn--ghost" href="index.html">Cancel</a>
           </div>
 
-          <div id="login-status" class="text-danger" role="status" aria-live="polite"></div>
+          <div id="login-status" class="text-danger" role="status" aria-live="polite" style="display:none;"></div>
         </form>
       </article>
     </section>
