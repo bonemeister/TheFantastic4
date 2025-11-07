@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MyHealth Portal — Patient</title>
+  <title>MyHealth Portal – Patient</title>
   <link rel="stylesheet" href="styles.css" />
   <script defer src="portal.js"></script>
 </head>
@@ -12,7 +12,14 @@
 
   <header class="appbar">
     <a class="brand" href="index.html" aria-label="Go to Home">
-      <span class="brand__mark" aria-hidden="true">✚</span><span class="brand__text">MyHealth Portal</span>
+      <span class="brand__mark" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M256 32C256 32 160 64 96 64C96 64 96 192 96 256C96 368 256 480 256 480C256 480 416 368 416 256C416 192 416 64 416 64C352 64 256 32 256 32Z" fill="#2563EB"/>
+          <circle cx="256" cy="256" r="96" fill="white"/>
+          <path d="M256 200V312M200 256H312" stroke="#2563EB" stroke-width="32" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="brand__text">MyHealth Portal</span>
     </a>
     <nav class="usernav">
       <button class="btn btn--top text-size" data-size="up">A+</button>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MyHealth Portal — Caregiver</title>
+  <title>MyHealth Portal – Caregiver</title>
   <link rel="stylesheet" href="styles.css" />
   <script defer src="portal.js"></script>
 </head>
@@ -12,163 +12,193 @@
 
   <header class="appbar">
     <a class="brand" href="index.html" aria-label="Go to Home">
-      <span class="brand__mark" aria-hidden="true">✚</span><span class="brand__text">MyHealth Portal</span>
+      <span class="brand__mark" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M256 32C256 32 160 64 96 64C96 64 96 192 96 256C96 368 256 480 256 480C256 480 416 368 416 256C416 192 416 64 416 64C352 64 256 32 256 32Z" fill="#2563EB"/>
+          <circle cx="256" cy="256" r="96" fill="white"/>
+          <path d="M256 200V312M200 256H312" stroke="#2563EB" stroke-width="32" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="brand__text">MyHealth Portal</span>
     </a>
     <nav class="usernav">
       <button class="btn btn--top text-size" data-size="up">A+</button>
       <button class="btn btn--top text-size" data-size="down">A−</button>
       <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
       <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
+      <a class="btn btn--top" href="admin-login.html" title="Admin">🛡️</a>
       <button class="btn btn--top" data-logout>Log out</button>
     </nav>
   </header>
 
-  <main id="main" class="layout">
-    <!-- Sidebar -->
-    <aside class="sidenav">
-      <div class="sidenav__group">
-        <label class="sidenav__label" for="patient-select">Active patient</label>
-        <select id="patient-select"></select>
+  <section class="patientbar">
+    <div class="patientbar__left">
+      <div id="patient-initials" class="patientpic">PT</div>
+      <div>
+        <label for="patient-select" style="font-size:.85rem;color:var(--muted);">Managing Patient:</label>
+        <select id="patient-select" style="font-size:1.1rem;font-weight:600;border:none;background:transparent;cursor:pointer;">
+          <option>Loading...</option>
+        </select>
+        <p class="patientmeta" id="patient-meta"></p>
+        <p class="alerts" id="patient-alerts"></p>
       </div>
+    </div>
+    <div class="assist" id="login-status">Signed in as Caregiver</div>
+  </section>
+
+  <main id="main" class="layout">
+    <aside class="sidenav">
+      <a class="sidenav__link sidenav__link--active" href="#info" aria-current="page">Patient Info</a>
+      <a class="sidenav__link" href="#meds">Medications</a>
+      <button class="sidenav__link" id="issue-toggle" style="border:none;background:none;text-align:left;width:100%;cursor:pointer;">Report Issue</button>
     </aside>
 
-    <!-- Content -->
     <section class="content">
-      <article class="card">
+      <article id="info" class="card">
         <header class="card__header">
-          <div style="display:flex;align-items:center;gap:.8rem;">
-            <div class="avatar"><span id="patient-initials">PT</span></div>
-            <div>
-              <h1 class="card__title" id="patient-name">Patient</h1>
-              <div class="muted" id="patient-hint">Use the selector to load a patient and edit their information.</div>
-            </div>
-          </div>
+          <h2 class="card__title">Patient Information</h2>
         </header>
+        <form class="assist" style="display:grid; gap:.75rem;">
+          <label>Full Name
+            <input id="f-name" type="text" placeholder="Patient full name" />
+          </label>
 
-        <div class="assist">
-          <div class="form-grid" style="grid-template-columns: repeat(6,1fr); gap:.75rem;">
-            <label style="grid-column: span 2;">Full name
-              <input id="f-name" />
-            </label>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:.75rem;">
             <label>MRN
-              <input id="f-mrn" />
+              <input id="f-mrn" type="text" placeholder="Medical Record Number" />
             </label>
-            <label>Date of birth
+            <label>Date of Birth
               <input id="f-dob" type="date" />
             </label>
-            <label>Blood type
-              <select id="f-blood">
-                <option value="">—</option>
-                <option>O+</option><option>O−</option>
-                <option>A+</option><option>A−</option>
-                <option>B+</option><option>B−</option>
-                <option>AB+</option><option>AB−</option>
-              </select>
-            </label>
-            <label style="grid-column: span 2;">Allergies
-              <input id="f-allergies" placeholder="e.g. Penicillin" />
-            </label>
-            <label>Access code (patient)
-              <input id="f-access" inputmode="numeric" placeholder="0000" />
+            <label>Blood Type
+              <input id="f-blood" type="text" placeholder="e.g. O+" />
             </label>
           </div>
 
-          <hr class="divider" />
+          <label>Allergies
+            <input id="f-allergies" type="text" placeholder="Known allergies" />
+          </label>
 
-          <h2 style="margin-top:.25rem;">Medication Manager</h2>
-          <div class="form-grid" style="grid-template-columns: repeat(6,1fr); gap:.75rem;">
-            <label>Medication
-              <input id="med-name" placeholder="e.g. Loratadine" />
+          <label>Access Code
+            <input id="f-access" type="text" inputmode="numeric" placeholder="4-digit patient access code" />
+          </label>
+
+          <button type="button" class="btn btn--primary" id="save-patient" style="padding:.5rem 1rem;font-size:.9rem;">Save Patient Info</button>
+        </form>
+      </article>
+
+      <article id="meds" class="card">
+        <header class="card__header">
+          <h2 class="card__title">Medications</h2>
+        </header>
+
+        <div class="assist" style="display:grid; gap:.75rem; padding:1rem; background:var(--surface-accent); border-radius:.5rem; margin-bottom:1rem;">
+          <h3 style="margin:0; font-size:1rem;">Add New Medication</h3>
+          
+          <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:.5rem;">
+            <label style="font-size:.85rem;">Medication Name
+              <input id="med-name" type="text" placeholder="e.g. Lisinopril" />
             </label>
-            <label>Strength
-              <input id="med-strength" placeholder="10 mg" />
+            <label style="font-size:.85rem;">Strength
+              <input id="med-strength" type="text" placeholder="10" />
             </label>
-            <label>Unit
-              <select id="med-unit">
-                <option value="">—</option>
-                <option>mg</option>
-                <option>mcg</option>
-                <option>mL</option>
-              </select>
+            <label style="font-size:.85rem;">Unit
+              <input id="med-unit" type="text" placeholder="mg" />
             </label>
-            <label>Form
+            <label style="font-size:.85rem;">Form
               <select id="med-form">
-                <option value="tablet">tablet</option>
-                <option value="capsule">capsule</option>
-                <option value="liquid">liquid</option>
-                <option value="inhaler">inhaler</option>
+                <option value="tablet">Tablet</option>
+                <option value="capsule">Capsule</option>
+                <option value="liquid">Liquid</option>
+                <option value="inhaler">Inhaler</option>
               </select>
             </label>
-            <label style="grid-column: span 2;">Dose / Directions
-              <input id="med-directions" placeholder="Take 1 tablet daily" />
-            </label>
-
-            <label>Quantity
-              <input id="med-qty" inputmode="numeric" />
-            </label>
-            <label>Refills
-              <input id="med-refills" inputmode="numeric" />
-            </label>
-            <label>Start date
-              <input id="med-start" type="date" />
-            </label>
-            <label>End date (optional)
-              <input id="med-end" type="date" />
-            </label>
-            <label style="grid-column: span 2;">Notes
-              <input id="med-notes" placeholder="PRN allergies, timing, etc." />
-            </label>
-
-            <div style="grid-column: 1 / -1; display:flex; gap:.6rem;">
-              <button id="med-add" class="btn">Add to list</button>
-            </div>
           </div>
 
-          <h3 style="margin-top:1rem;">Current Medications</h3>
-          <ul id="med-list-care" class="list"></ul>
+          <label style="font-size:.85rem;">Directions
+            <input id="med-directions" type="text" placeholder="e.g. Take 1 tablet daily" />
+          </label>
 
-          <h3 style="margin-top:1rem;">Medications (one per line)</h3>
-          <textarea id="f-meds" rows="6" style="width:100%;"></textarea>
-
-          <div style="margin-top:1rem;">
-            <button id="save-patient" class="btn btn--primary">Save Patient</button>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:.5rem;">
+            <label style="font-size:.85rem;">Quantity
+              <input id="med-qty" type="text" placeholder="30" />
+            </label>
+            <label style="font-size:.85rem;">Refills
+              <input id="med-refills" type="text" placeholder="2" />
+            </label>
           </div>
+
+          <label style="font-size:.85rem;">Notes
+            <input id="med-notes" type="text" placeholder="Additional notes" />
+          </label>
+
+          <button type="button" class="btn btn--primary" id="med-add" style="padding:.5rem 1rem;font-size:.9rem;">Add Medication</button>
+        </div>
+
+        <h3 style="margin:1rem 0 .5rem; font-size:1rem;">Current Medications</h3>
+        <ul class="list" id="med-list-care" style="display:grid;gap:.5rem;"></ul>
+        
+        <div style="display:none;">
+          <textarea id="f-meds" rows="8"></textarea>
         </div>
       </article>
     </section>
   </main>
 
-  <!-- FLOATING CHAT (bottom-right, existing) -->
-  <button id="chat-toggle" class="chat-fab" aria-expanded="false" aria-controls="chat-panel" title="Open messages">
-    💬
-  </button>
-  <section id="chat-panel" class="chat-panel" aria-label="Secure Messages" aria-hidden="true">
-    <header class="chat-header">
-      <strong class="chat-title">Secure Messages</strong>
-      <button class="chat-close" type="button" onclick="document.querySelector('#chat-panel').classList.remove('open')">×</button>
-    </header>
-    <div id="chat-list" class="list" style="max-height:260px; overflow:auto;"></div>
-    <form id="chat-form" class="chat-form">
-      <textarea id="chat-input" rows="2" placeholder="Type a message to the patient…"></textarea>
-      <button class="btn btn--primary" type="submit">Send Reply</button>
-    </form>
-  </section>
+  <!-- Floating Chat (bottom-right) -->
+  <button id="chat-toggle" class="chat-fab" aria-label="Open secure messages">💬</button>
+  <aside id="chat-panel" class="chat-panel" aria-label="Secure Messages" aria-live="polite">
+    <div class="chat-head">
+      <div>
+        <h3 class="chat-title">Secure Messages</h3>
+        <label for="chat-patient-select" style="font-size:.85rem;color:var(--muted);display:block;margin-top:.25rem;">
+          Chatting with:
+          <select id="chat-patient-select" style="font-size:.95rem;font-weight:500;border:1px solid var(--border);background:var(--surface);padding:.25rem .5rem;border-radius:.25rem;cursor:pointer;margin-left:.25rem;">
+            <option>Loading patients...</option>
+          </select>
+        </label>
+      </div>
+      <button class="chat-close" type="button" onclick="document.getElementById('chat-panel').classList.remove('open')">×</button>
+    </div>
+    <div class="chat-body">
+      <div id="chat-list" class="list"></div>
+    </div>
+    <div class="chat-foot">
+      <form id="chat-form">
+        <label class="muted" for="chat-input">Message</label>
+        <textarea id="chat-input" rows="2" placeholder="Type a secure message…"></textarea>
+        <button class="btn btn--primary" type="submit">Send</button>
+      </form>
+    </div>
+  </aside>
 
-  <!-- NEW: FLOATING ISSUE REPORT (bottom-left) -->
-  <button id="issue-toggle" class="chat-fab" aria-expanded="false" aria-controls="issue-panel" title="Report an issue"
-          style="left:1rem; right:auto;">⚠️</button>
+  <!-- Issue Panel (bottom-left) -->
+  <button id="issue-toggle-fab" class="chat-fab" aria-label="Report to Admin" style="left:18px;right:auto;">📋</button>
+  <aside id="issue-panel" class="chat-panel" aria-label="Report Issue" style="left:18px;right:auto;">
+    <div class="chat-head">
+      <div>
+        <h3 class="chat-title">Report to Admin</h3>
+        <span class="muted" style="display:block;font-size:.85rem;margin-top:.25rem;">Submit tickets to administrators</span>
+      </div>
+      <button class="chat-close" type="button" onclick="document.getElementById('issue-panel').classList.remove('open')">×</button>
+    </div>
+    <div class="chat-body">
+      <div id="issue-list" class="list"></div>
+    </div>
+    <div class="chat-foot">
+      <form id="issue-form">
+        <label class="muted" for="issue-input">Describe the issue</label>
+        <textarea id="issue-input" rows="3" placeholder="Report a technical or medical issue to administrators…"></textarea>
+        <button class="btn btn--primary" type="submit">Submit Ticket</button>
+      </form>
+    </div>
+  </aside>
 
-  <section id="issue-panel" class="chat-panel" aria-label="Report an Issue" aria-hidden="true"
-           style="left:1rem; right:auto;">
-    <header class="chat-header">
-      <strong class="chat-title">Report an Issue</strong>
-      <button class="chat-close" type="button" onclick="document.querySelector('#issue-panel').classList.remove('open')">×</button>
-    </header>
-    <div id="issue-list" class="list" style="max-height:260px; overflow:auto;"></div>
-    <form id="issue-form" class="chat-form">
-      <textarea id="issue-input" rows="2" placeholder="Describe the issue…"></textarea>
-      <button class="btn btn--primary" type="submit">Send Report</button>
-    </form>
-  </section>
+  <style>
+    #med-list-care {
+      display: grid;
+      gap: 0.5rem;
+    }
+  </style>
 </body>
 </html>
