@@ -1,0 +1,99 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\fantastic4repo\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\SQLQuery5.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\SQLQuery3.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\medication table made.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\table log(audit) sec purposes.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\patients table made.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "patients table made.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (60))",
+              "DocumentMoniker": "C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\patients table made.sql",
+              "RelativeDocumentMoniker": "..\\databaseScripts\\patients table made.sql",
+              "ToolTip": "C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\patients table made.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (60))",
+              "RelativeToolTip": "..\\databaseScripts\\patients table made.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (60))",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-10-29T07:58:27.667Z",
+              "EditorCaption": " - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (60))"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "table log(audit) sec purposes.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (59))",
+              "DocumentMoniker": "C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\table log(audit) sec purposes.sql",
+              "RelativeDocumentMoniker": "..\\databaseScripts\\table log(audit) sec purposes.sql",
+              "ToolTip": "C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\table log(audit) sec purposes.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (59))",
+              "RelativeToolTip": "..\\databaseScripts\\table log(audit) sec purposes.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (59))",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-10-29T07:58:24.145Z",
+              "EditorCaption": " - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (59))"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "medication table made.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (58))",
+              "DocumentMoniker": "C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\medication table made.sql",
+              "RelativeDocumentMoniker": "..\\databaseScripts\\medication table made.sql",
+              "ToolTip": "C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\medication table made.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (58))",
+              "RelativeToolTip": "..\\databaseScripts\\medication table made.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (58))",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-10-29T07:58:18.195Z",
+              "EditorCaption": " - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (58))"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SQLQuery3.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (56))",
+              "DocumentMoniker": "C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\SQLQuery3.sql",
+              "RelativeDocumentMoniker": "..\\databaseScripts\\SQLQuery3.sql",
+              "ToolTip": "C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\SQLQuery3.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (56))",
+              "RelativeToolTip": "..\\databaseScripts\\SQLQuery3.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (56))",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-10-29T07:57:58.222Z",
+              "EditorCaption": " - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (56))"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SQLQuery5.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (53))",
+              "DocumentMoniker": "C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\SQLQuery5.sql",
+              "RelativeDocumentMoniker": "..\\databaseScripts\\SQLQuery5.sql",
+              "ToolTip": "C:\\Users\\cphil\\OneDrive\\Desktop\\SD\\databaseScripts\\SQLQuery5.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (53))",
+              "RelativeToolTip": "..\\databaseScripts\\SQLQuery5.sql - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (53))",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-10-29T07:57:53.377Z",
+              "EditorCaption": " - LAPTOP-VV5RCRVD\\SQLEXPRESS.HealthDataPlatform (LAPTOP-VV5RCRVD\\cphil (53))"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
