@@ -1,69 +1,205 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MyHealth Portal</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script defer src="portal.js"></script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>MyHealth Portals — Welcome</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f0f2f7; --surface: #ffffff; --surface2: #f8fafc;
+      --border: #e4e8f0; --text: #1a2540; --text-muted: #7b8fac;
+      --primary: #3b82f6; --primary-dark: #2563eb;
+      --radius: 14px;
+      --shadow: 0 2px 16px rgba(15,22,35,.08);
+      --shadow-lg: 0 12px 48px rgba(15,22,35,.15);
+      --font: 'DM Sans', sans-serif;
+      --touch-min: 48px;
+    }
+    body { font-family:var(--font); background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+    .skip-link { position:absolute; top:-100px; left:1rem; z-index:999; background:var(--primary); color:#fff; padding:.75rem 1.25rem; border-radius:8px; font-weight:600; text-decoration:none; transition:top .15s; }
+    .skip-link:focus { top:1rem; }
+
+    /* TOPBAR */
+    .topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 2rem; height:64px; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--shadow); }
+    .brand { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+    .brand-icon { width:38px; height:38px; background:var(--primary); border-radius:10px; display:flex; align-items:center; justify-content:center; }
+    .brand-icon svg { width:22px; height:22px; }
+    .brand-name { font-size:1.1rem; font-weight:700; color:var(--text); }
+    .brand-sub  { font-size:.72rem; color:var(--text-muted); }
+    .topbar-controls { display:flex; align-items:center; gap:.5rem; }
+    .ctrl-btn { min-height:var(--touch-min); padding:.4rem .9rem; border-radius:8px; border:2px solid var(--border); background:var(--surface2); color:var(--text); font-family:var(--font); font-size:.82rem; font-weight:600; cursor:pointer; transition:all .15s; display:inline-flex; align-items:center; gap:.3rem; }
+    .ctrl-btn:hover { border-color:var(--primary); background:#eff6ff; }
+    .ctrl-btn:focus-visible { outline:3px solid var(--primary); outline-offset:2px; }
+
+    /* MAIN */
+    main { flex:1; display:flex; align-items:center; justify-content:center; padding:2.5rem 1.5rem; }
+    .page-wrap { width:100%; max-width:980px; display:grid; grid-template-columns:1fr 1.15fr; gap:3rem; align-items:center; }
+
+    /* HERO */
+    .hero-eyebrow { display:inline-flex; align-items:center; gap:.5rem; background:#eff6ff; color:var(--primary); font-size:.78rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:.3rem .9rem; border-radius:99px; margin-bottom:1.25rem; }
+    .hero-title { font-size:2.4rem; font-weight:800; line-height:1.18; color:var(--text); margin-bottom:1rem; }
+    .hero-title span { color:var(--primary); }
+    .hero-desc { font-size:1rem; color:var(--text-muted); line-height:1.7; margin-bottom:1.75rem; max-width:400px; }
+    .hero-stats { display:flex; gap:2rem; }
+    .hero-stat-num   { font-size:1.5rem; font-weight:800; color:var(--text); line-height:1; }
+    .hero-stat-label { font-size:.76rem; color:var(--text-muted); margin-top:.2rem; }
+
+    /* PORTAL CARDS */
+    .portal-cards { display:flex; flex-direction:column; gap:1rem; }
+    .section-label { font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-bottom:.25rem; }
+    .portal-card { background:var(--surface); border:2px solid var(--border); border-radius:var(--radius); padding:1.4rem 1.5rem; display:flex; align-items:center; gap:1.2rem; text-decoration:none; transition:border-color .15s, box-shadow .15s, transform .15s; cursor:pointer; position:relative; overflow:hidden; }
+    .portal-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:99px 0 0 99px; opacity:0; transition:opacity .15s; }
+    .portal-card:hover { border-color:#c7d7f9; box-shadow:var(--shadow-lg); transform:translateY(-2px); }
+    .portal-card:hover::before { opacity:1; }
+    .portal-card:focus-visible { outline:3px solid var(--primary); outline-offset:3px; }
+    .portal-card.caregiver::before { background:#3b82f6; }
+    .portal-card.patient::before   { background:#10b981; }
+    .portal-card.admin::before     { background:#8b5cf6; }
+    .portal-card-icon { width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.4rem; }
+    .portal-card.caregiver .portal-card-icon { background:#eff6ff; }
+    .portal-card.patient   .portal-card-icon { background:#ecfdf5; }
+    .portal-card.admin     .portal-card-icon { background:#f5f3ff; }
+    .portal-card-body { flex:1; }
+    .portal-card-title { font-size:1.05rem; font-weight:700; color:var(--text); margin-bottom:.2rem; }
+    .portal-card-desc  { font-size:.82rem; color:var(--text-muted); line-height:1.5; }
+    .portal-card-arrow { font-size:1.2rem; color:var(--text-muted); transition:transform .15s, color .15s; flex-shrink:0; }
+    .portal-card:hover .portal-card-arrow { transform:translateX(4px); color:var(--primary); }
+
+    footer { text-align:center; padding:1.25rem; font-size:.78rem; color:var(--text-muted); border-top:1px solid var(--border); }
+
+    /* DARK */
+    body.dark { --bg:#0d1420; --surface:#141d2e; --surface2:#1a2540; --border:#1e2a3a; --text:#e2e8f0; --text-muted:#64748b; }
+    /* CONTRAST */
+    body.contrast { --bg:#000; --surface:#000; --surface2:#111; --border:#fff; --text:#fff; --text-muted:#ccc; }
+    body.contrast .portal-card { border-color:#fff; }
+
+    @media (max-width:720px) {
+      .page-wrap { grid-template-columns:1fr; gap:2rem; }
+      .hero-title { font-size:1.8rem; }
+    }
+  
+    /* ── DARK MODE: force input text black only while typing (focused) ── */
+    body.dark input:focus,
+    body.dark select:focus,
+    body.dark textarea:focus {
+      color: var(--text) !important;
+    }
+  </style>
 </head>
-<body>
-  <a class="skip-link" href="#main">Skip to main content</a>
+<body style="visibility:visible">
+<a class="skip-link" href="#main">Skip to main content</a>
 
-  <header class="appbar">
-    <a class="brand" href="index.html" aria-label="Go to Home">
-      <span class="brand__mark" aria-hidden="true">
-        <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M256 32C256 32 160 64 96 64C96 64 96 192 96 256C96 368 256 480 256 480C256 480 416 368 416 256C416 192 416 64 416 64C352 64 256 32 256 32Z" fill="#2563EB"/>
-          <circle cx="256" cy="256" r="96" fill="white"/>
-          <path d="M256 200V312M200 256H312" stroke="#2563EB" stroke-width="32" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="brand__text">MyHealth Portal</span>
-    </a>
-    <nav class="usernav">
-      <button class="btn btn--top text-size" data-size="up">A+</button>
-      <button class="btn btn--top text-size" data-size="down">A−</button>
-      <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
-      <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
-    </nav>
-  </header>
+<header class="topbar" role="banner">
+  <a class="brand" href="/" aria-label="MyHealth Portals home">
+    <div class="brand-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+        <path d="M12 2s-7 3-7 10v5l7 5 7-5v-5c0-7-7-10-7-10z"/>
+        <path d="M12 8v4M10 12h4"/>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-name">MyHealth Portals</div>
+      <div class="brand-sub">Secure Health Management</div>
+    </div>
+  </a>
+  <div class="topbar-controls" role="toolbar" aria-label="Accessibility controls">
+    <button class="ctrl-btn text-size" data-size="up" aria-label="Increase text size">A+</button>
+    <button class="ctrl-btn text-size" data-size="down" aria-label="Decrease text size">A−</button>
+    <button class="ctrl-btn" id="dark-toggle" aria-pressed="false" aria-label="Toggle dark mode">🌙 Dark</button>
+    <button class="ctrl-btn" id="contrast-toggle" aria-pressed="false" aria-label="Toggle high contrast">◑ Contrast</button>
+  </div>
+</header>
 
-  <main id="main" class="layout" style="grid-template-columns: 1fr; max-width: 1100px; margin-inline:0;">
-    <section class="content">
-      <article class="card" style="max-width: 420px; margin: 1.25rem 0 1.25rem 1.25rem;">
-        <header class="card__header">
-          <h1 class="card__title" style="font-size:1.6rem;">Welcome</h1>
-          <span class="muted">Choose how you want to sign in</span>
-        </header>
+<main id="main" role="main">
+  <div class="page-wrap">
 
-        <div class="assist" style="padding:1rem; display:grid; gap:1rem;">
-          <div class="card" style="padding:1rem;">
-            <h2 style="margin:.2rem 0 1rem;">I'm a Caregiver</h2>
-            <button type="button" class="btn btn--primary" style="width:100%;"
-              onclick="location.href='caregiver-login.html'">
-              Caregiver Login
-            </button>
+    <div class="hero">
+      <div class="hero-eyebrow" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 22s-7-4-7-10V5l7-3 7 3v7c0 6-7 10-7 10z"/></svg>
+        Secure &amp; Private
+      </div>
+      <h1 class="hero-title">Your health,<br/><span>managed with care.</span></h1>
+      <p class="hero-desc">A secure portal connecting patients, caregivers, and administrators. Access medications, appointments, reminders, and secure messaging — all in one place.</p>
+      <div class="hero-stats" role="list" aria-label="Platform highlights">
+        <div role="listitem"><div class="hero-stat-num">256-bit</div><div class="hero-stat-label">Encrypted</div></div>
+        <div role="listitem"><div class="hero-stat-num">24 / 7</div><div class="hero-stat-label">Available</div></div>
+        <div role="listitem"><div class="hero-stat-num">WCAG</div><div class="hero-stat-label">Accessible</div></div>
+      </div>
+    </div>
+
+    <div>
+      <p class="section-label">Sign in as</p>
+      <nav class="portal-cards" aria-label="Portal selection">
+        <a class="portal-card caregiver" href="caregiver-login.html" aria-label="Caregiver login — Manage patients, medications, and appointments">
+          <div class="portal-card-icon" aria-hidden="true">&#129657;</div>
+          <div class="portal-card-body">
+            <div class="portal-card-title">I'm a Caregiver</div>
+            <div class="portal-card-desc">Manage patient records, medications, appointments, and reminders</div>
           </div>
-
-          <div class="card" style="padding:1rem;">
-            <h2 style="margin:.2rem 0 1rem;">I'm a Patient</h2>
-            <button type="button" class="btn btn--primary" style="width:100%;"
-              onclick="location.href='patient-login.html'">
-              Patient Login
-            </button>
+          <div class="portal-card-arrow" aria-hidden="true">&#8594;</div>
+        </a>
+        <a class="portal-card patient" href="patient-login.html" aria-label="Patient login — View your health information and messages">
+          <div class="portal-card-icon" aria-hidden="true">&#128100;</div>
+          <div class="portal-card-body">
+            <div class="portal-card-title">I'm a Patient</div>
+            <div class="portal-card-desc">View medications, upcoming appointments, and message your caregiver</div>
           </div>
-
-          <div class="card" style="padding:1rem;">
-            <h2 style="margin:.2rem 0 1rem;">Administrator</h2>
-            <button type="button" class="btn btn--primary" style="width:100%;"
-              onclick="location.href='admin-login.html'">
-              Admin Login
-            </button>
+          <div class="portal-card-arrow" aria-hidden="true">&#8594;</div>
+        </a>
+        <a class="portal-card admin" href="admin-login.html" aria-label="Administrator login — Manage the portal">
+          <div class="portal-card-icon" aria-hidden="true">&#128737;&#65039;</div>
+          <div class="portal-card-body">
+            <div class="portal-card-title">Administrator</div>
+            <div class="portal-card-desc">Manage users, review support tickets, and oversee the portal</div>
           </div>
-        </div>
-      </article>
-    </section>
-  </main>
+          <div class="portal-card-arrow" aria-hidden="true">&#8594;</div>
+        </a>
+      </nav>
+    </div>
+
+  </div>
+</main>
+
+<footer role="contentinfo">&copy; 2026 MyHealth Portals &mdash; Secure Health Management</footer>
+
+<script>
+(function(){
+  var f=parseFloat(localStorage.getItem('mhf'));
+  if(f&&f>=0.7&&f<=2){document.documentElement.style.fontSize=f+'rem';}
+  else if(f){localStorage.removeItem('mhf');}
+  document.querySelectorAll('.text-size').forEach(function(b){
+    b.addEventListener('click', function(){
+      var c=parseFloat(localStorage.getItem('mhf')||'1');
+      if(c>2||c<0.7)c=1;
+      var n=b.dataset.size==='up'?Math.min(c+.08,1.4):Math.max(c-.08,.85);
+      localStorage.setItem('mhf',n);
+      document.documentElement.style.fontSize=n+'rem';
+    });
+  });
+  var dk = document.getElementById('dark-toggle');
+  if (dk) {
+    if (localStorage.getItem('mhd')==='1') { document.body.classList.add('dark'); dk.textContent='☀️ Light'; dk.setAttribute('aria-pressed','true'); }
+    dk.addEventListener('click', function(){
+      var on = document.body.classList.toggle('dark');
+      localStorage.setItem('mhd', on?'1':'0');
+      dk.setAttribute('aria-pressed', on?'true':'false');
+      dk.textContent = on ? '☀️ Light' : '🌙 Dark';
+    });
+  }
+  var ct = document.getElementById('contrast-toggle');
+  if (ct) {
+    if (localStorage.getItem('mhc')==='1') { document.body.classList.add('contrast'); ct.setAttribute('aria-pressed','true'); }
+    ct.addEventListener('click', function(){
+      var on = document.body.classList.toggle('contrast');
+      localStorage.setItem('mhc', on?'1':'0');
+      ct.setAttribute('aria-pressed', on?'true':'false');
+    });
+  }
+})();
+</script>
 </body>
 </html>

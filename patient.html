@@ -1,80 +1,1356 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MyHealth Portal – Patient</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script defer src="portal.js"></script>
-</head>
-<body data-page="patient">
-  <a class="skip-link" href="#main">Skip to main content</a>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>MyHealth — Patient Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <header class="appbar">
-    <a class="brand" href="index.html" aria-label="Go to Home">
-      <span class="brand__mark" aria-hidden="true">
-        <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M256 32C256 32 160 64 96 64C96 64 96 192 96 256C96 368 256 480 256 480C256 480 416 368 416 256C416 192 416 64 416 64C352 64 256 32 256 32Z" fill="#2563EB"/>
-          <circle cx="256" cy="256" r="96" fill="white"/>
-          <path d="M256 200V312M200 256H312" stroke="#2563EB" stroke-width="32" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="brand__text">MyHealth Portal</span>
-    </a>
-    <nav class="usernav">
-      <button class="btn btn--top text-size" data-size="up">A+</button>
-      <button class="btn btn--top text-size" data-size="down">A−</button>
-      <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
-      <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
-      <a class="btn btn--top btn--link" href="patient-login.html">Switch Account</a>
-      <a class="btn btn--top" href="admin-login.html" title="Admin">🛡️</a>
-      <button class="btn btn--top" data-logout>Log out</button>
-    </nav>
+    :root {
+      --sidebar-w: 240px;
+      --sidebar-bg: #0f1623;
+      --sidebar-border: #1e2a3a;
+      --sidebar-text: #8a9bb5;
+      --sidebar-active-bg: #1a2540;
+      --sidebar-accent: #3b82f6;
+      --bg: #f0f2f7;
+      --surface: #ffffff;
+      --surface2: #f8fafc;
+      --border: #e4e8f0;
+      --text: #1a2540;
+      --text-muted: #7b8fac;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(15,22,35,.07);
+      --shadow-lg: 0 8px 32px rgba(15,22,35,.13);
+      --font: 'DM Sans', sans-serif;
+      --text-base: 1.05rem;
+      --text-lg: 1.15rem;
+      --text-xl: 1.35rem;
+      --text-sm: .95rem;
+      --text-xs: .85rem;
+      --touch-min: 48px;
+    }
+
+    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: var(--text-base); line-height: 1.6; display: flex; min-height: 100vh; }
+
+    .skip-link { position: absolute; top: -100px; left: 1rem; z-index: 999; background: var(--primary); color: #fff; padding: .75rem 1.25rem; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: var(--text-base); transition: top .15s; }
+    .skip-link:focus { top: 1rem; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { width: var(--sidebar-w); background: var(--sidebar-bg); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; overflow-y: auto; }
+    .sidebar-brand { display: flex; align-items: center; gap: .8rem; padding: 1.3rem 1.25rem 1rem; border-bottom: 1px solid var(--sidebar-border); text-decoration: none; }
+    .sidebar-brand-icon { width: 38px; height: 38px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-brand-icon svg { width: 22px; height: 22px; }
+    .sidebar-brand-text { font-size: .88rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .sidebar-brand-sub  { font-size: .72rem; color: var(--sidebar-text); }
+    .sidebar-section { padding: 1rem 1.25rem .4rem; font-size: .65rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #3d5270; }
+    .sidebar-item { display: flex; align-items: center; gap: .75rem; padding: .75rem 1.25rem; min-height: var(--touch-min); font-size: .88rem; font-weight: 500; color: var(--sidebar-text); cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: background .15s, color .15s; position: relative; }
+    .sidebar-item:hover { background: #161f30; color: #c8d6ea; }
+    .sidebar-item:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+    .sidebar-item.active { background: var(--sidebar-active-bg); color: #fff; }
+    .sidebar-item.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--sidebar-accent); border-radius:0 2px 2px 0; }
+    .sidebar-item .s-icon { width: 20px; height: 20px; opacity:.7; flex-shrink:0; }
+    .sidebar-item.active .s-icon { opacity:1; }
+    .sidebar-footer { margin-top:auto; padding:.75rem 1rem; border-top:1px solid var(--sidebar-border); }
+
+    /* ── MAIN ── */
+    .main-wrap { margin-left: var(--sidebar-w); flex:1; display:flex; flex-direction:column; }
+
+    /* ── TOPBAR ── */
+    .topbar { height: 68px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.75rem; position: sticky; top:0; z-index:50; gap:1rem; }
+    .topbar-greeting { font-size: var(--text-xl); font-weight: 700; }
+    .topbar-right { display:flex; align-items:center; gap:.6rem; }
+    .topbar-avatar { width: 42px; height: 42px; background: linear-gradient(135deg,#3b82f6,#06b6d4); border-radius: 50%; display:flex; align-items:center; justify-content:center; font-size: .9rem; font-weight: 700; color:#fff; flex-shrink:0; }
+    .a11y-btn { min-height: var(--touch-min); min-width: var(--touch-min); padding: .4rem .9rem; border-radius: 8px; font-family: var(--font); font-size: var(--text-sm); font-weight: 700; border: 2px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; transition: all .15s; display:inline-flex; align-items:center; gap:.35rem; }
+    .a11y-btn:hover { background: var(--bg); border-color: var(--primary); }
+    .a11y-btn:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+    /* ── CONTENT ── */
+    .content-area { flex:1; padding: 1.75rem; max-width: 900px; }
+    .section-panel { display:none; }
+    .section-panel.active { display:block; }
+
+    /* ── WELCOME CARD ── */
+    .welcome-card { background: linear-gradient(135deg,#1a2540,#0f1e36); border-radius: var(--radius); padding: 1.75rem 2rem; color: #fff; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap:1rem; }
+    .welcome-name { font-size: var(--text-xl); font-weight: 700; margin-bottom: .3rem; }
+    .welcome-meta { font-size: var(--text-sm); color: #94a3b8; display:flex; gap:1.25rem; flex-wrap:wrap; }
+    .welcome-tag  { display:inline-flex; align-items:center; gap:.3rem; }
+    .welcome-stat { text-align:center; }
+    .welcome-stat-num { font-size: 2rem; font-weight: 800; color:#fff; line-height:1; }
+    .welcome-stat-label { font-size: .78rem; color: #94a3b8; margin-top:.2rem; }
+    .welcome-stats { display:flex; gap:2rem; flex-shrink:0; }
+
+    /* ── CARD ── */
+    .card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 1.4rem; overflow:hidden; }
+    .card-header { display:flex; align-items:center; justify-content:space-between; padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--border); }
+    .card-title    { font-size: var(--text-lg); font-weight: 700; }
+    .card-subtitle { font-size: var(--text-xs); color: var(--text-muted); margin-top:.15rem; }
+    .card-body     { padding: 1.25rem 1.4rem; }
+
+    /* ── MED LIST ── */
+    .med-item { display: flex; align-items: flex-start; gap: 1rem; padding: 1.1rem 1.2rem; border: 2px solid var(--border); border-radius: 10px; background: var(--surface2); margin-bottom: .75rem; transition: border-color .15s, box-shadow .15s; }
+    .med-item:hover { border-color: #c7d7f9; box-shadow: var(--shadow); }
+    .med-icon { width: 44px; height: 44px; border-radius: 10px; background: #eff6ff; color: var(--primary); display: flex; align-items:center; justify-content:center; flex-shrink:0; font-size: 1.3rem; }
+    .med-name { font-size: var(--text-lg); font-weight: 700; margin-bottom: .2rem; }
+    .med-dose { font-size: var(--text-sm); color: #2563eb; font-weight: 600; }
+    .med-directions { font-size: var(--text-sm); color: var(--text); margin-top: .3rem; line-height: 1.5; }
+    .med-freq { font-size: var(--text-xs); color: var(--text-muted); margin-top: .25rem; }
+    .med-note { font-size: var(--text-xs); color: var(--warning); background:#fffbeb; border-radius:6px; padding:.3rem .6rem; margin-top:.4rem; display:inline-block; }
+
+    /* ── MED IMAGE GALLERY ── */
+    .img-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 1rem; }
+    .img-card {
+      border: 2px solid var(--border); border-radius: 12px; overflow: hidden;
+      background: var(--surface2); transition: box-shadow .2s, transform .2s, border-color .2s;
+      cursor: pointer; position: relative;
+    }
+    .img-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: #c7d7f9; }
+    .img-card:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+    .img-card img { width: 100%; height: 140px; object-fit: cover; display: block; background: #e2e8f0; }
+    .img-card-body  { padding: .6rem .75rem .7rem; }
+    .img-card-med   { font-size: var(--text-sm); font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .img-card-desc  { font-size: var(--text-xs); color: var(--text-muted); margin-top: .2rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .img-card-date  { font-size: .78rem; color: var(--text-muted); margin-top: .35rem; }
+    .img-card-badge { position: absolute; top: .5rem; left: .5rem; background: rgba(59,130,246,.88); color: #fff; font-size: .68rem; font-weight: 700; padding: .15rem .5rem; border-radius: 99px; }
+    .img-zoom-hint  { position: absolute; bottom: .5rem; right: .5rem; background: rgba(0,0,0,.45); color: #fff; font-size: .7rem; padding: .15rem .45rem; border-radius: 6px; opacity: 0; transition: opacity .15s; pointer-events: none; }
+    .img-card:hover .img-zoom-hint { opacity: 1; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox-overlay { display: none; position: fixed; inset: 0; background: rgba(5,10,20,.93); z-index: 500; align-items: center; justify-content: center; padding: 1.5rem; }
+    .lightbox-overlay.open { display: flex; }
+    .lightbox-inner { max-width: 820px; width: 100%; position: relative; }
+    .lightbox-img   { width: 100%; max-height: 68vh; object-fit: contain; border-radius: 12px; display: block; }
+    .lightbox-info  { background: rgba(255,255,255,.07); border-radius: 10px; padding: 1.1rem 1.25rem; margin-top: .75rem; color: #e2e8f0; }
+    .lightbox-med   { font-size: 1.1rem; font-weight: 700; }
+    .lightbox-desc  { font-size: var(--text-sm); color: #94a3b8; margin-top: .4rem; line-height: 1.55; }
+    .lightbox-meta  { font-size: .8rem; color: #64748b; margin-top: .5rem; }
+    .lightbox-close { position: absolute; top: -2.75rem; right: 0; background: none; border: none; color: #94a3b8; font-size: 1.8rem; cursor: pointer; line-height: 1; padding: .25rem .5rem; transition: color .15s; }
+    .lightbox-close:hover { color: #fff; }
+    .lightbox-nav   { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.1); border: none; color: #fff; font-size: 1.5rem; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+    .lightbox-nav:hover { background: rgba(255,255,255,.2); }
+    .lightbox-prev { left: -56px; }
+    .lightbox-next { right: -56px; }
+
+    /* ── APPT LIST ── */
+    .appt-item { display:flex; gap:1rem; align-items:flex-start; padding: 1.1rem 1.2rem; border: 2px solid var(--border); border-radius:10px; background: var(--surface2); margin-bottom:.75rem; transition: border-color .15s; }
+    .appt-item.upcoming  { border-left: 5px solid var(--primary); }
+    .appt-item.completed { border-left: 5px solid var(--success); opacity:.75; }
+    .appt-item.cancelled { border-left: 5px solid #d1d5db; opacity:.6; }
+    .appt-date-block { min-width: 60px; text-align:center; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .5rem .6rem; }
+    .appt-month { font-size: .68rem; font-weight: 800; text-transform:uppercase; letter-spacing:.06em; color: var(--primary); }
+    .appt-day   { font-size: 1.7rem; font-weight: 800; line-height:1; color: var(--text); }
+    .appt-year  { font-size: .68rem; color: var(--text-muted); }
+    .appt-title { font-size: var(--text-lg); font-weight: 700; }
+    .appt-meta  { font-size: var(--text-sm); color: var(--text-muted); margin-top:.3rem; display:flex; gap:.75rem; flex-wrap:wrap; }
+    .appt-notes { font-size: var(--text-sm); color: var(--text); margin-top:.4rem; background: #f0f9ff; padding: .5rem .75rem; border-radius:6px; border-left: 3px solid var(--primary); }
+
+    /* ── REMINDER LIST ── */
+    .rem-item { display:flex; align-items:center; gap:.9rem; padding: .9rem 1.1rem; border: 2px solid var(--border); border-radius:10px; background: var(--surface2); margin-bottom:.6rem; transition: border-color .15s; }
+    .rem-item.done { opacity:.5; }
+    .rem-item.done .rem-title { text-decoration:line-through; }
+    .rem-check { width: 24px; height: 24px; flex-shrink:0; cursor: pointer; accent-color: var(--primary); }
+    .rem-title { font-size: var(--text-base); font-weight: 600; }
+    .rem-meta  { font-size: var(--text-xs); color: var(--text-muted); margin-top:.15rem; display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+
+    /* ── TAGS ── */
+    .tag { display:inline-flex; align-items:center; gap:.2rem; font-size:.75rem; font-weight:700; padding:.2rem .6rem; border-radius:99px; }
+    .tag-blue    { background:#dbeafe; color:#1d4ed8; }
+    .tag-green   { background:#d1fae5; color:#065f46; }
+    .tag-red     { background:#fee2e2; color:#991b1b; }
+    .tag-orange  { background:#fef3c7; color:#92400e; }
+    .tag-gray    { background:#f3f4f6; color:#374151; }
+    .tag-teal    { background:#cffafe; color:#0e7490; }
+
+    /* ── FILTER TABS ── */
+    .filter-tabs { display:flex; gap:.5rem; margin-bottom:1.1rem; flex-wrap:wrap; }
+    .filter-tab { min-height: var(--touch-min); padding:.4rem 1.1rem; border-radius: 10px; border: 2px solid var(--border); background: var(--surface2); color: var(--text-muted); font-family: var(--font); font-size: var(--text-sm); font-weight: 600; cursor: pointer; transition: all .15s; }
+    .filter-tab:hover:not(.active) { background: var(--bg); color: var(--text); border-color: #c7d7f9; }
+    .filter-tab:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+    .filter-tab.active { background: var(--primary); color:#fff; border-color: var(--primary); }
+
+    /* ── PROFILE FORM ── */
+    .field { display:flex; flex-direction:column; gap:.4rem; }
+    .field label { font-size:var(--text-xs); font-weight:700; color:var(--text-muted); letter-spacing:.03em; }
+    .field input, .field select, .field textarea {
+      font-family:var(--font); font-size:var(--text-base); padding:.6rem .9rem;
+      border:2px solid var(--border); border-radius:10px; background:var(--surface2); color:var(--text);
+      transition:border-color .15s, box-shadow .15s; outline:none; width:100%;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(59,130,246,.12); background:#fff; }
+    .btn { display:inline-flex; align-items:center; gap:.4rem; font-family:var(--font); font-size:var(--text-sm); font-weight:700; padding:.5rem 1.1rem; border-radius:9px; border:none; cursor:pointer; transition:all .15s; }
+    .btn-primary   { background:var(--primary); color:#fff; }
+    .btn-primary:hover { background:var(--primary-dark); }
+    .btn-secondary { background:var(--surface2); color:var(--text); border:2px solid var(--border); }
+    .btn-secondary:hover { background:var(--bg); }
+    .btn-sm { font-size:var(--text-xs); padding:.35rem .8rem; }
+    .field label { font-size: var(--text-sm); font-weight: 700; color: var(--text-muted); }
+    .field-value { font-size: var(--text-base); font-weight: 500; padding: .65rem .9rem; border: 2px solid var(--border); border-radius: 10px; background: var(--surface2); color: var(--text); }
+    .form-grid   { display:grid; gap:1rem; }
+    .form-cols-2 { grid-template-columns:1fr 1fr; }
+    .form-cols-3 { grid-template-columns:1fr 1fr 1fr; }
+
+    /* ── CHAT PANEL ── */
+    .fab { position:fixed; bottom:1.5rem; width: 58px; height: 58px; border-radius: 50%; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 20px rgba(0,0,0,.25); cursor:pointer; border:none; font-size: 1.35rem; transition: transform .15s, box-shadow .15s; z-index:90; }
+    .fab:hover { transform:scale(1.07); }
+    .fab:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    .fab-chat { right:1.5rem; background:var(--primary); color:#fff; }
+    .fab-badge { position:absolute; top:-2px; right:-2px; width:18px; height:18px; border-radius:50%; background: var(--danger); color:#fff; font-size:.65rem; font-weight:800; display:none; align-items:center; justify-content:center; border: 2px solid #fff; }
+    .side-panel { position:fixed; bottom:0; right:0; width: 400px; height: 520px; background: var(--surface); border-radius:16px 16px 0 0; box-shadow: var(--shadow-lg); display:flex; flex-direction:column; transform: translateY(100%); transition: transform .25s cubic-bezier(.34,1.2,.64,1); z-index:90; border:1px solid var(--border); border-bottom:none; }
+    .side-panel.open { transform:translateY(0); }
+    .panel-header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid var(--border); flex-shrink:0; }
+    .panel-title { font-size:var(--text-lg); font-weight:700; }
+    .panel-close { background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:1.4rem; line-height:1; min-width:var(--touch-min); min-height:var(--touch-min); display:flex; align-items:center; justify-content:center; border-radius:8px; transition:background .15s; }
+    .panel-close:hover { background:var(--bg); color:var(--text); }
+    .panel-close:focus-visible { outline:3px solid var(--primary); outline-offset:2px; }
+    .panel-body { flex:1; overflow-y:auto; padding:1rem 1.1rem; }
+    .chat-msg { padding:.6rem 0; border-bottom:1px solid var(--border); }
+    .chat-msg:last-child { border-bottom:none; }
+    .chat-sender { font-size:var(--text-xs); font-weight:700; color:var(--text-muted); margin-bottom:.2rem; }
+    .chat-bubble { background: var(--surface2); border-radius:10px; padding:.65rem .9rem; font-size:var(--text-base); line-height:1.55; display:inline-block; max-width:100%; }
+    .chat-bubble.mine { background:#eff6ff; color:#1e3a8a; }
+    .chat-time { font-size:.72rem; color:var(--text-muted); margin-top:.2rem; }
+    .chat-empty { text-align:center; padding:2.5rem 1rem; color:var(--text-muted); font-size:var(--text-sm); }
+    .panel-footer { padding:.9rem 1.1rem; border-top:1px solid var(--border); flex-shrink:0; }
+    .chat-input-wrap { display:flex; gap:.6rem; align-items:flex-end; }
+    .chat-input-wrap textarea { flex:1; padding:.7rem .9rem; border: 2px solid var(--border); border-radius:10px; font-family:var(--font); font-size:var(--text-base); resize:none; outline:none; line-height:1.5; transition:border-color .15s; }
+    .chat-input-wrap textarea:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(59,130,246,.12); }
+    .btn-send { min-width: var(--touch-min); min-height: var(--touch-min); background: var(--primary); color:#fff; border:none; border-radius:10px; cursor:pointer; font-family:var(--font); font-size:var(--text-sm); font-weight:700; padding:.7rem 1.1rem; transition:background .15s; }
+    .btn-send:hover { background: var(--primary-dark); }
+    .btn-send:focus-visible { outline:3px solid var(--primary); outline-offset:2px; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state { text-align:center; padding:3rem 1rem; color:var(--text-muted); }
+    .empty-icon  { font-size:2.5rem; margin-bottom:.75rem; }
+    .empty-text  { font-size:var(--text-base); }
+
+    /* ── DARK MODE ── */
+    body.dark { --bg:#0d1420; --surface:#141d2e; --surface2:#1a2540; --border:#1e2a3a; --text:#e2e8f0; --text-muted:#64748b; }
+    body.dark .img-card img { background: #1a2540; }
+    body.dark .lightbox-info { background: rgba(255,255,255,.04); }
+
+    /* ── HIGH CONTRAST ── */
+    body.contrast { --bg:#000; --surface:#000; --surface2:#111; --border:#fff; --text:#fff; --text-muted:#ccc; --primary:#4af; --sidebar-bg:#000; }
+    body.contrast .sidebar-item.active { background:#004; }
+    body.contrast .med-item, body.contrast .appt-item, body.contrast .rem-item, body.contrast .img-card { border-color:#fff !important; }
+
+    /* ── TTS PANEL ── */
+    .tts-wrap { position: relative; }
+    .tts-btn {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .75rem 1.25rem; min-height: var(--touch-min);
+      font-size: .88rem; font-weight: 500; color: var(--sidebar-text);
+      cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+      transition: background .15s, color .15s; position: relative;
+    }
+    .tts-btn:hover { background: #161f30; color: #c8d6ea; }
+    .tts-btn.active { background: var(--sidebar-active-bg); color: #fff; }
+    .tts-btn.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--sidebar-accent); border-radius:0 2px 2px 0; }
+    .tts-btn .s-icon { width: 20px; height: 20px; opacity:.7; flex-shrink:0; }
+    .tts-btn.active .s-icon { opacity:1; }
+    .tts-dropdown {
+      display: none; background: #1a2540; border: 1px solid #2a3a54;
+      border-radius: 10px; padding: .75rem; margin: 0 .25rem .25rem;
+    }
+    .tts-dropdown.open { display: block; }
+    .tts-label { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #3d5270; margin-bottom: .4rem; }
+    .tts-select {
+      width: 100%; background: #0f1623; border: 1px solid #2a3a54; color: #c8d6ea;
+      border-radius: 7px; padding: .4rem .6rem; font-family: var(--font); font-size: .82rem;
+      cursor: pointer; outline: none; margin-bottom: .65rem;
+    }
+    .tts-select:focus { border-color: var(--sidebar-accent); }
+    .tts-volume-row { display: flex; align-items: center; gap: .5rem; margin-bottom: .65rem; }
+    .tts-volume-row input[type=range] { flex: 1; accent-color: var(--sidebar-accent); cursor: pointer; }
+    .tts-volume-label { font-size: .72rem; color: #5a7090; min-width: 28px; text-align: right; }
+    .tts-read-btn {
+      width: 100%; padding: .45rem; border-radius: 7px; border: none;
+      background: var(--sidebar-accent); color: #fff;
+      font-family: var(--font); font-size: .82rem; font-weight: 700;
+      cursor: pointer; transition: opacity .15s;
+    }
+    .tts-read-btn:hover { opacity: .85; }
+    .tts-read-btn:disabled { opacity: .45; cursor: not-allowed; }
+    .tts-status { font-size: .72rem; color: #5a7090; text-align: center; margin-top: .4rem; min-height: 1em; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .sidebar { transform:translateX(-100%); transition:transform .25s; }
+      .sidebar.open { transform:translateX(0); }
+      .main-wrap { margin-left:0; }
+      .welcome-stats { display:none; }
+      .form-cols-2, .form-cols-3 { grid-template-columns:1fr; }
+      .side-panel { width:100%; }
+      .img-gallery { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+      .lightbox-prev, .lightbox-next { display: none; }
+    }
+  
+    /* ── DARK MODE: force input text black only while typing (focused) ── */
+    body.dark input:focus{background:var(--surface2) !important;}
+    body.dark input:focus,
+    body.dark select:focus,
+    body.dark textarea:focus {
+      color: var(--text) !important;
+    }
+  </style>
+</head>
+<body style="visibility:hidden">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+  <a class="sidebar-brand" href="/">
+    <div class="sidebar-brand-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+        <path d="M12 2s-7 3-7 10v5l7 5 7-5v-5c0-7-7-10-7-10z"/>
+        <path d="M12 8v4M10 12h4"/>
+      </svg>
+    </div>
+    <div>
+      <div class="sidebar-brand-text">MyHealth</div>
+      <div class="sidebar-brand-sub">Patient Portal</div>
+    </div>
+  </a>
+
+  <div class="sidebar-section">My Health</div>
+  <button class="sidebar-item active" data-section="overview" aria-current="page">
+    <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    My Overview
+  </button>
+  <button class="sidebar-item" data-section="meds">
+    <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+    My Medications
+  </button>
+  <button class="sidebar-item" data-section="appointments">
+    <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    My Appointments
+  </button>
+  <button class="sidebar-item" data-section="reminders">
+    <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+    My Reminders
+  </button>
+  <button class="sidebar-item" data-section="profile">
+    <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    My Profile
+  </button>
+
+  <div class="sidebar-section">Accessibility</div>
+  <button class="sidebar-item a11y-toggle" id="sidebar-dark">
+    <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+    Dark Mode
+  </button>
+  <button class="sidebar-item a11y-toggle" id="sidebar-contrast">
+    <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 010 20z"/></svg>
+    High Contrast
+  </button>
+  <button class="sidebar-item" id="sidebar-font-up">
+    <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><text x="3" y="18" font-size="14" fill="currentColor" stroke="none" font-family="sans-serif">A+</text></svg>
+    Larger Text
+  </button>
+  <button class="sidebar-item" id="sidebar-font-down">
+    <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><text x="3" y="18" font-size="10" fill="currentColor" stroke="none" font-family="sans-serif">A−</text></svg>
+    Smaller Text
+  </button>
+
+  <div class="tts-wrap">
+    <button class="tts-btn" id="tts-toggle-btn" aria-expanded="false" aria-controls="tts-dropdown">
+      <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>
+      Read Aloud
+      <svg id="tts-chevron" style="margin-left:auto;width:14px;height:14px;transition:transform .2s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="tts-dropdown" id="tts-dropdown" role="region" aria-label="Read aloud settings">
+      <div class="tts-label">Voice</div>
+      <select class="tts-select" id="tts-voice">
+        <option value="Aoede">Aoede (Default)</option>
+        <option value="Kore">Kore</option>
+        <option value="Puck">Puck</option>
+        <option value="Charon">Charon</option>
+        <option value="Fenrir">Fenrir</option>
+        <option value="Leda">Leda</option>
+        <option value="Orus">Orus</option>
+        <option value="Zephyr">Zephyr</option>
+      </select>
+      <div class="tts-label">Volume</div>
+      <div class="tts-volume-row">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5a7090" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
+        <input type="range" id="tts-volume" min="0" max="1" step="0.05" value="1" aria-label="Volume"/>
+        <span class="tts-volume-label" id="tts-vol-display">100%</span>
+      </div>
+      <button class="tts-read-btn" id="tts-read-btn">▶ Read Current Page</button>
+      <div class="tts-status" id="tts-status"></div>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="sidebar-item" id="logout-btn">
+      <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      Log Out
+    </button>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main-wrap">
+  <header class="topbar" role="banner">
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <div class="topbar-avatar" id="patient-initials" aria-hidden="true">PT</div>
+      <div><div class="topbar-greeting" id="topbar-greeting">Good morning</div></div>
+    </div>
+    <div class="topbar-right">
+      <button class="a11y-btn" id="chat-toggle" aria-label="Open messages" aria-haspopup="dialog">
+        <span aria-hidden="true">💬</span> Messages
+        <span id="msg-count" style="display:none;background:var(--danger);color:#fff;border-radius:99px;padding:.05rem .45rem;font-size:.75rem;">0</span>
+      </button>
+    </div>
   </header>
 
-  <section class="patientbar">
-    <div class="patientbar__left">
-      <div id="patient-initials" class="patientpic">PT</div>
-      <div>
-        <h1 id="patient-name">Patient</h1>
-        <p class="patientmeta" id="patient-meta"></p>
-        <p class="alerts" id="patient-alerts"></p>
+  <main id="main-content" class="content-area" tabindex="-1">
+
+    <!-- ── OVERVIEW ── -->
+    <div id="section-overview" class="section-panel active" role="region" aria-label="My Overview">
+      <div class="welcome-card" role="img" aria-label="Welcome banner">
+        <div>
+          <div class="welcome-name" id="welcome-name">Welcome back</div>
+          <div class="welcome-meta" id="welcome-meta"><span class="welcome-tag">Loading your information...</span></div>
+        </div>
+        <div class="welcome-stats" aria-label="Health summary">
+          <div class="welcome-stat"><div class="welcome-stat-num" id="stat-meds" aria-label="Number of medications">—</div><div class="welcome-stat-label">Medications</div></div>
+          <div class="welcome-stat"><div class="welcome-stat-num" id="stat-appts" aria-label="Upcoming appointments">—</div><div class="welcome-stat-label">Appointments</div></div>
+          <div class="welcome-stat"><div class="welcome-stat-num" id="stat-tasks" aria-label="Pending reminders">—</div><div class="welcome-stat-label">Reminders</div></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">&#128197; Next Appointments</div></div>
+            <button class="filter-tab" style="min-height:36px;padding:.3rem .75rem;font-size:.8rem;" data-section="appointments">See all</button>
+          </div>
+          <div class="card-body" id="ov-appts" aria-live="polite"></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">&#9999;&#65039; Today's Reminders</div></div>
+            <button class="filter-tab" style="min-height:36px;padding:.3rem .75rem;font-size:.8rem;" data-section="reminders">See all</button>
+          </div>
+          <div class="card-body" id="ov-reminders" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">&#128138; Active Medications</div></div>
+        <div class="card-body" id="ov-meds" aria-live="polite"></div>
       </div>
     </div>
-    <div class="assist" id="login-status">Signed in</div>
-  </section>
 
-  <main id="main" class="layout">
-    <aside class="sidenav">
-      <span class="sidenav__item sidenav__item--active">Overview</span>
-      <a class="sidenav__item" href="#meds">Medications</a>
-    </aside>
+    <!-- ── MEDICATIONS ── -->
+    <div id="section-meds" class="section-panel" role="region" aria-label="My Medications">
+      <!-- Prescriptions -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">My Medications</div>
+            <div class="card-subtitle">Your current prescriptions and supplements</div>
+          </div>
+        </div>
+        <div class="card-body" id="med-list" aria-live="polite"></div>
+      </div>
 
-    <section class="content">
-      <article id="meds" class="card">
-        <header class="card__header"><h2 class="card__title">Active Medications</h2></header>
-        <ul class="list" id="med-list"></ul>
-      </article>
-    </section>
+      <!-- Medication Image Gallery -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">🖼 Medication Images</div>
+            <div class="card-subtitle">Reference photos uploaded by your care team — click any image to enlarge</div>
+          </div>
+          <span id="img-count-badge" style="display:none;" class="tag tag-blue"></span>
+        </div>
+        <div class="card-body" id="med-img-section" aria-live="polite">
+          <div class="empty-state">
+            <div class="empty-icon">🖼</div>
+            <p class="empty-text">No medication images on file yet.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── APPOINTMENTS ── -->
+    <div id="section-appointments" class="section-panel" role="region" aria-label="My Appointments">
+      <div class="card">
+        <div class="card-header"><div><div class="card-title">My Appointments</div><div class="card-subtitle">Doctor visits and scheduled care</div></div></div>
+        <div class="card-body">
+          <div class="filter-tabs" role="group" aria-label="Filter appointments">
+            <button class="filter-tab active" data-filter="upcoming" aria-pressed="true">Upcoming</button>
+            <button class="filter-tab" data-filter="completed" aria-pressed="false">Completed</button>
+            <button class="filter-tab" data-filter="all" aria-pressed="false">All</button>
+          </div>
+          <div id="appt-list" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REMINDERS ── -->
+    <div id="section-reminders" class="section-panel" role="region" aria-label="My Reminders">
+      <div class="card">
+        <div class="card-header"><div><div class="card-title">My Reminders</div><div class="card-subtitle">Tasks and reminders from your care team</div></div></div>
+        <div class="card-body">
+          <div class="filter-tabs" role="group" aria-label="Filter reminders">
+            <button class="filter-tab active" data-filter="all" aria-pressed="true">All</button>
+            <button class="filter-tab" data-filter="medication" aria-pressed="false">Medication</button>
+            <button class="filter-tab" data-filter="appointment" aria-pressed="false">Appointment</button>
+            <button class="filter-tab" data-filter="lab" aria-pressed="false">Lab / Test</button>
+          </div>
+          <div id="reminder-list" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROFILE ── -->
+    <div id="section-profile" class="section-panel" role="region" aria-label="My Profile">
+
+      <!-- Account Settings card -->
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">⚙️ Account Settings</div><div class="card-subtitle">Change your username, display name, and profile picture</div></div>
+        </div>
+        <div class="card-body">
+          <div id="pt-profile-status" style="display:none;padding:.6rem .9rem;border-radius:8px;margin-bottom:1rem;font-size:var(--text-sm);"></div>
+
+          <!-- Avatar area -->
+          <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;padding:1.25rem;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border);">
+            <div id="pt-avatar-wrap" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700;color:#fff;overflow:hidden;border:3px solid var(--border);box-shadow:var(--shadow);flex-shrink:0;">
+              <span id="pt-avatar-initials">?</span>
+              <img id="pt-avatar-img" src="" alt="Profile picture" style="display:none;width:100%;height:100%;object-fit:cover;"/>
+            </div>
+            <div>
+              <div style="font-size:var(--text-base);font-weight:700;margin-bottom:.3rem;" id="pt-avatar-label">Your Photo</div>
+              <div style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:.75rem;">Shown in your portal header. Kept private — only you can see it.</div>
+              <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+                <label class="btn btn-secondary btn-sm" style="cursor:pointer;min-height:40px;" aria-label="Upload profile photo">
+                  📷 Change Photo
+                  <input type="file" id="pt-avatar-file" accept="image/*" style="display:none;" aria-label="Choose profile photo file"/>
+                </label>
+                <button class="btn btn-secondary btn-sm" id="pt-avatar-remove" style="display:none;min-height:40px;" aria-label="Remove profile photo">✕ Remove</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="field">
+              <label for="pt-displayName">Display Name</label>
+              <input id="pt-displayName" placeholder="Nickname or preferred name (optional)" aria-describedby="pt-dn-hint"/>
+              <div id="pt-dn-hint" style="font-size:var(--text-xs);color:var(--text-muted);margin-top:.25rem;">Used for your greeting. Leave blank to use your full name.</div>
+            </div>
+            <div class="field">
+              <label for="pt-username">Username *</label>
+              <input id="pt-username" placeholder="Your login username" autocomplete="off"/>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:1rem;">
+            <button class="btn btn-primary" id="pt-profile-save" style="min-height:var(--touch-min);">Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change password card -->
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">🔒 Change Password</div><div class="card-subtitle">Keep your account secure with a strong password</div></div>
+        </div>
+        <div class="card-body">
+          <div id="pt-pw-status" style="display:none;padding:.6rem .9rem;border-radius:8px;margin-bottom:1rem;font-size:var(--text-sm);"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="field" style="grid-column:1/-1;">
+              <label for="pt-pw-current">Current Password</label>
+              <input type="password" id="pt-pw-current" autocomplete="current-password" placeholder="Enter your current password" style="max-width:400px;"/>
+            </div>
+            <div class="field">
+              <label for="pt-pw-new">New Password</label>
+              <input type="password" id="pt-pw-new" autocomplete="new-password" placeholder="At least 6 characters"/>
+            </div>
+            <div class="field">
+              <label for="pt-pw-confirm">Confirm New Password</label>
+              <input type="password" id="pt-pw-confirm" autocomplete="new-password" placeholder="Re-enter new password"/>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:1rem;">
+            <button class="btn btn-primary" id="pt-pw-save" style="min-height:var(--touch-min);">Update Password</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Read-only health info card -->
+      <div class="card">
+        <div class="card-header"><div><div class="card-title">🩺 My Health Info</div><div class="card-subtitle">Your personal health information on file</div></div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-grid form-cols-2">
+              <div class="field"><label>Full Name</label><div class="field-value" id="p-name" aria-label="Full Name">—</div></div>
+              <div class="field"><label>Date of Birth</label><div class="field-value" id="p-dob" aria-label="Date of Birth">—</div></div>
+            </div>
+            <div class="form-grid form-cols-3">
+              <div class="field"><label>MRN</label><div class="field-value" id="p-mrn" aria-label="Medical Record Number">—</div></div>
+              <div class="field"><label>Blood Type</label><div class="field-value" id="p-blood" aria-label="Blood Type">—</div></div>
+              <div class="field"><label>Primary Doctor</label><div class="field-value" id="p-doctor" aria-label="Primary Doctor">—</div></div>
+            </div>
+            <div class="field">
+              <label>&#9888;&#65039; Allergies</label>
+              <div class="field-value" id="p-allergies" style="border-color:#fbbf24;background:#fffbeb;color:#92400e;font-weight:600;" aria-label="Allergies">—</div>
+            </div>
+            <div class="form-grid form-cols-2">
+              <div class="field"><label>Emergency Contact</label><div class="field-value" id="p-emergency" aria-label="Emergency Contact">—</div></div>
+              <div class="field"><label>Emergency Phone</label><div class="field-value" id="p-emergency-phone" aria-label="Emergency Phone">—</div></div>
+            </div>
+            <div class="field"><label>Care Notes</label><div class="field-value" id="p-notes" style="min-height:70px;white-space:pre-wrap;" aria-label="Care Notes">—</div></div>
+          </div>
+          <p style="font-size:var(--text-xs);color:var(--text-muted);margin-top:1rem;padding:.6rem .9rem;background:var(--surface2);border-radius:8px;border-left:3px solid var(--primary);">
+            To update your health information, please contact your caregiver or care team.
+          </p>
+        </div>
+      </div>
+    </div>
+
   </main>
+</div>
 
-  <!-- Floating Chat (bottom-right) -->
-  <div class="chat-fab"><button id="chat-toggle" aria-label="Open messages">💬</button></div>
-  <aside id="chat-panel" class="chat-panel" aria-label="Messages" aria-live="polite">
-    <div class="chat-head">
-      <h3 class="chat-title">Messages</h3>
-      <span class="muted">Care team chat</span>
+<!-- ── IMAGE LIGHTBOX ── -->
+<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Medication image viewer">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">&#215;</button>
+    <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Previous image">&#8249;</button>
+    <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Next image">&#8250;</button>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="Medication image"/>
+    <div class="lightbox-info">
+      <div class="lightbox-med" id="lightbox-med"></div>
+      <div class="lightbox-desc" id="lightbox-desc"></div>
+      <div class="lightbox-meta" id="lightbox-meta"></div>
     </div>
-    <div class="chat-body">
-      <div id="chat-list" class="list"></div>
+  </div>
+</div>
+
+<!-- ── CHAT PANEL ── -->
+<button class="fab fab-chat" id="chat-fab" aria-label="Open messages" aria-haspopup="dialog">
+  <span aria-hidden="true">💬</span>
+  <div class="fab-badge" id="fab-badge" aria-hidden="true"></div>
+</button>
+
+<div class="side-panel" id="chat-panel" role="dialog" aria-label="Messages" aria-modal="true">
+  <div class="panel-header">
+    <div class="panel-title">Messages</div>
+    <button class="panel-close" id="chat-close" aria-label="Close messages">&#215;</button>
+  </div>
+  <div class="panel-body" id="chat-list" role="log" aria-live="polite" aria-label="Message history"></div>
+  <div class="panel-footer">
+    <div class="chat-input-wrap">
+      <textarea id="chat-input" rows="2" placeholder="Message your caregiver..." aria-label="Type a message"></textarea>
+      <button class="btn-send" id="chat-send" aria-label="Send message">Send</button>
     </div>
-    <div class="chat-foot">
-      <form id="chat-form">
-        <label class="muted" for="chat-input">Message</label>
-        <textarea id="chat-input" rows="2" placeholder="Type a message to your caregiver…"></textarea>
-        <button class="btn btn--primary" type="submit">Send</button>
-      </form>
-    </div>
-  </aside>
+  </div>
+</div>
+
+<script>
+var TOKEN_KEY = 'mh_token';
+var myId = null;
+var allMeds = [], allAppts = [], allReminders = [], allMedImages = [];
+var apptFilter = 'upcoming', remFilter = 'all';
+var lightboxIdx = 0; // index into loaded image data array
+var loadedImgData = []; // { id, medName, description, imageData, uploadedByName, uploadedAt }
+
+function api(url, method, body) {
+  var t = localStorage.getItem(TOKEN_KEY);
+  var o = { method: method||'GET', headers: { 'Content-Type': 'application/json' } };
+  if (t) o.headers['x-auth-token'] = t;
+  if (body) o.body = JSON.stringify(body);
+  return fetch(url, o).then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.error||'Error'); return d; }); });
+}
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+var _t = localStorage.getItem(TOKEN_KEY);
+if (!_t) { window.location.replace('/'); }
+else {
+  api('/api/me').then(function(me) {
+    if (me.role !== 'patient') { localStorage.removeItem(TOKEN_KEY); window.location.replace('/'); return; }
+    myId = me.id;
+    document.body.style.visibility = 'visible';
+    loadPatientData(me);
+    initPatientProfile();
+  }).catch(function() { localStorage.removeItem(TOKEN_KEY); window.location.replace('/'); });
+}
+
+// ── ACCESSIBILITY UI ──────────────────────────────────────────────────────────
+(function(){
+  var dk = document.getElementById('sidebar-dark');
+  if (dk) {
+    if (localStorage.getItem('mhd') === '1') document.body.classList.add('dark');
+    dk.addEventListener('click', function() { var on = document.body.classList.toggle('dark'); localStorage.setItem('mhd', on ? '1' : '0'); dk.classList.toggle('active', on); });
+    if (localStorage.getItem('mhd') === '1') dk.classList.add('active');
+  }
+  var ct = document.getElementById('sidebar-contrast');
+  if (ct) {
+    if (localStorage.getItem('mhc') === '1') document.body.classList.add('contrast');
+    ct.addEventListener('click', function() { var on = document.body.classList.toggle('contrast'); localStorage.setItem('mhc', on ? '1' : '0'); ct.classList.toggle('active', on); });
+    if (localStorage.getItem('mhc') === '1') ct.classList.add('active');
+  }
+  var base = parseFloat(localStorage.getItem('mhf') || '1.05');
+  document.documentElement.style.fontSize = base + 'rem';
+  document.getElementById('sidebar-font-up').addEventListener('click', function() { base = Math.min(base + .1, 1.5); localStorage.setItem('mhf', base); document.documentElement.style.fontSize = base + 'rem'; });
+  document.getElementById('sidebar-font-down').addEventListener('click', function() { base = Math.max(base - .1, .85); localStorage.setItem('mhf', base); document.documentElement.style.fontSize = base + 'rem'; });
+  var lb = document.getElementById('logout-btn');
+  if (lb) lb.addEventListener('click', function() { api('/api/logout', 'POST').catch(function(){}).then(function() { localStorage.removeItem(TOKEN_KEY); window.location.href = '/'; }); });
+})();
+
+// ── SIDEBAR NAV ───────────────────────────────────────────────────────────────
+function goSection(sec) {
+  document.querySelectorAll('[data-section]').forEach(function(b) { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+  document.querySelectorAll('.section-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('[data-section="' + sec + '"]').forEach(function(b) { b.classList.add('active'); b.setAttribute('aria-current', 'page'); });
+  var el = document.getElementById('section-' + sec); if (el) { el.classList.add('active'); el.focus(); }
+}
+document.querySelectorAll('[data-section]').forEach(function(btn) { btn.addEventListener('click', function() { goSection(btn.dataset.section); }); });
+
+function greeting() { var h = new Date().getHours(); if (h < 12) return 'Good morning'; if (h < 17) return 'Good afternoon'; return 'Good evening'; }
+
+// ── LOAD DATA ─────────────────────────────────────────────────────────────────
+function loadPatientData(me) {
+  api('/api/users').then(function(users) {
+    var p = users.find(function(u) { return u.id === me.id; }); if (!p) return;
+    allMeds = p.meds || [];
+
+    var ini = document.getElementById('patient-initials');
+    var greet = document.getElementById('topbar-greeting');
+    if (ini) ini.textContent = p.fullName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+    if (greet) greet.textContent = greeting() + ', ' + p.fullName.split(' ')[0];
+
+    var wn = document.getElementById('welcome-name'); if (wn) wn.textContent = greeting() + ', ' + p.fullName.split(' ')[0] + '!';
+    var wm = document.getElementById('welcome-meta'); if (wm) {
+      var parts = [];
+      if (p.mrn)    parts.push('MRN: ' + p.mrn);
+      if (p.dob)    parts.push('DOB: ' + new Date(p.dob+'T00:00:00').toLocaleDateString([],{month:'long',day:'numeric',year:'numeric'}));
+      if (p.blood)  parts.push('Blood: ' + p.blood);
+      if (p.doctor) parts.push('Dr: ' + p.doctor);
+      wm.innerHTML = parts.map(function(s){ return '<span class="welcome-tag">'+esc(s)+'</span>'; }).join('');
+    }
+
+    var fMap = { name:'fullName', mrn:'mrn', blood:'blood', doctor:'doctor', allergies:'allergies', emergency:'emergency', 'emergency-phone':'emergencyPhone', notes:'notes' };
+    Object.keys(fMap).forEach(function(k) { var el = document.getElementById('p-' + k); if (el) el.textContent = p[fMap[k]] || 'Not on file'; });
+    if (p.dob) { var el = document.getElementById('p-dob'); if (el) el.textContent = new Date(p.dob+'T00:00:00').toLocaleDateString([],{month:'long',day:'numeric',year:'numeric'}); }
+
+    renderMeds();
+  });
+
+  api('/api/appointments/' + me.id).then(function(a) { allAppts = a; renderAppts(); renderOvAppts(); updateStats(); });
+  api('/api/reminders/'    + me.id).then(function(r) { allReminders = r; renderReminders(); renderOvReminders(); updateStats(); });
+  loadMedImages(me.id);
+}
+
+function updateStats() {
+  var e;
+  e=document.getElementById('stat-meds');  if(e) e.textContent=allMeds.length;
+  e=document.getElementById('stat-appts'); if(e) e.textContent=allAppts.filter(function(a){return a.status==='upcoming';}).length;
+  e=document.getElementById('stat-tasks'); if(e) e.textContent=allReminders.filter(function(r){return !r.done;}).length;
+}
+
+// ── OVERVIEW PANELS ───────────────────────────────────────────────────────────
+function renderOvAppts() {
+  var el = document.getElementById('ov-appts'); if (!el) return;
+  var upcoming = allAppts.filter(function(a){ return a.status==='upcoming'; }).slice(0,3);
+  if (!upcoming.length) { el.innerHTML='<div class="empty-state"><div class="empty-icon">&#128197;</div><p class="empty-text">No upcoming appointments</p></div>'; return; }
+  el.innerHTML = upcoming.map(function(a){
+    var dt = a.date ? new Date(a.date+'T00:00:00').toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'}) : '';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--border);">'+
+      '<div><div style="font-weight:700;font-size:var(--text-base);">'+esc(a.title)+'</div>'+
+      '<div style="font-size:var(--text-xs);color:var(--text-muted);">'+(a.doctor?esc(a.doctor)+' · ':'')+dt+(a.time?' at '+a.time:'')+'</div></div>'+
+      '<span class="tag tag-blue">upcoming</span></div>';
+  }).join('');
+}
+
+function renderOvReminders() {
+  var el = document.getElementById('ov-reminders'); if (!el) return;
+  var pending = allReminders.filter(function(r){ return !r.done; }).slice(0,4);
+  if (!pending.length) { el.innerHTML='<div class="empty-state"><div class="empty-icon">&#10003;</div><p class="empty-text">All caught up!</p></div>'; return; }
+  var tagMap = {medication:'tag-blue',appointment:'tag-teal',lab:'tag-green',general:'tag-gray'};
+  el.innerHTML = pending.map(function(r){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--border);">'+
+      '<div><div style="font-weight:700;font-size:var(--text-base);">'+esc(r.title)+'</div>'+
+      '<div style="font-size:var(--text-xs);color:var(--text-muted);">'+(r.dueDate?'Due: '+r.dueDate:'No due date')+'</div></div>'+
+      '<span class="tag '+(tagMap[r.category]||'tag-gray')+'">'+r.category+'</span></div>';
+  }).join('');
+}
+
+// ── MEDICATIONS ───────────────────────────────────────────────────────────────
+function renderMeds() {
+  updateStats();
+  var targets = ['med-list', 'ov-meds'];
+  targets.forEach(function(tid) {
+    var list = document.getElementById(tid); if (!list) return;
+    if (!allMeds.length) { list.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128138;</div><p class="empty-text">No medications on file</p></div>'; return; }
+    list.innerHTML = allMeds.map(function(m) {
+      var obj = typeof m === 'object' ? m : { name: m };
+      return '<article class="med-item" aria-label="Medication: ' + esc(obj.name||m) + '">'+
+        '<div class="med-icon" aria-hidden="true">&#128138;</div>'+
+        '<div style="flex:1;">'+
+          '<div class="med-name">'+esc(obj.name||m)+'</div>'+
+          (obj.dose ? '<div class="med-dose">'+esc(obj.dose)+(obj.form?' · '+esc(obj.form):'')+'</div>' : '')+
+          (obj.directions ? '<div class="med-directions">'+esc(obj.directions)+'</div>' : '')+
+          (obj.freq ? '<div class="med-freq">&#8635; '+esc(obj.freq)+(obj.times?' · '+esc(obj.times):'')+'</div>' : '')+
+          (obj.prescriber ? '<div class="med-freq">Prescribed by: '+esc(obj.prescriber)+'</div>' : '')+
+          (obj.notes ? '<div class="med-note">&#9888; '+esc(obj.notes)+'</div>' : '')+
+        '</div></article>';
+    }).join('');
+  });
+}
+
+// ── MED IMAGES ────────────────────────────────────────────────────────────────
+function loadMedImages(pid) {
+  api('/api/med-images/' + pid).then(function(imgs) {
+    allMedImages = imgs;
+    renderMedImageGallery(pid);
+  }).catch(function() { allMedImages = []; renderMedImageGallery(pid); });
+}
+
+function renderMedImageGallery(pid) {
+  var section = document.getElementById('med-img-section'); if (!section) return;
+  var badge   = document.getElementById('img-count-badge');
+
+  if (!allMedImages.length) {
+    section.innerHTML = '<div class="empty-state"><div class="empty-icon">🖼</div><p class="empty-text">No medication images on file yet.<br/>Your care team can add reference photos here.</p></div>';
+    if (badge) badge.style.display = 'none';
+    return;
+  }
+
+  if (badge) { badge.style.display = 'inline-flex'; badge.textContent = allMedImages.length + ' photo' + (allMedImages.length !== 1 ? 's' : ''); }
+
+  section.innerHTML = '<div class="img-gallery" id="img-gallery-grid" role="list" aria-label="Medication images"></div>';
+  var grid = document.getElementById('img-gallery-grid');
+
+  // Build card shells first; lazy-load image data
+  loadedImgData = new Array(allMedImages.length).fill(null);
+
+  grid.innerHTML = allMedImages.map(function(img, i) {
+    return '<div class="img-card" role="listitem" tabindex="0" data-gallery-idx="'+i+'" aria-label="'+(img.medName ? esc(img.medName) : 'Medication image')+'">'+
+      '<img src="" alt="'+(img.medName ? esc(img.medName) : 'Medication')+'" id="patient-img-'+img.id+'"/>'+
+      (img.medName ? '<div class="img-card-badge">'+esc(img.medName.split(' ')[0])+'</div>' : '')+
+      '<div class="img-zoom-hint">🔍 View</div>'+
+      '<div class="img-card-body">'+
+        '<div class="img-card-med">'+(img.medName ? esc(img.medName) : '<em style="opacity:.6;">General</em>')+'</div>'+
+        (img.description ? '<div class="img-card-desc">'+esc(img.description)+'</div>' : '')+
+        '<div class="img-card-date">'+new Date(img.uploadedAt).toLocaleDateString([],{month:'short',day:'numeric',year:'numeric'})+'</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+
+  // Fetch image data for each card
+  allMedImages.forEach(function(img, i) {
+    api('/api/med-images/' + (pid || img.patientId) + '/image/' + img.id).then(function(data) {
+      loadedImgData[i] = data;
+      var el = document.getElementById('patient-img-' + img.id);
+      if (el) el.src = data.imageData;
+    }).catch(function() {});
+  });
+
+  // Click / keyboard on cards → lightbox
+  grid.querySelectorAll('.img-card').forEach(function(card) {
+    function openLightbox() {
+      var idx = parseInt(card.dataset.galleryIdx);
+      openLightboxAt(idx);
+    }
+    card.addEventListener('click', openLightbox);
+    card.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(); } });
+  });
+}
+
+function openLightboxAt(idx) {
+  lightboxIdx = idx;
+  var data = loadedImgData[idx];
+  if (!data) { return; } // still loading
+  document.getElementById('lightbox-img').src = data.imageData;
+  document.getElementById('lightbox-med').textContent  = data.medName || 'General medication image';
+  document.getElementById('lightbox-desc').textContent = data.description || '';
+  document.getElementById('lightbox-meta').textContent = 'Uploaded by ' + (data.uploadedByName||'Care team') + ' · ' + new Date(data.uploadedAt).toLocaleDateString([],{month:'long',day:'numeric',year:'numeric'});
+  // Show/hide nav buttons
+  document.getElementById('lightbox-prev').style.display = (loadedImgData.length > 1) ? '' : 'none';
+  document.getElementById('lightbox-next').style.display = (loadedImgData.length > 1) ? '' : 'none';
+  document.getElementById('lightbox').classList.add('open');
+  document.getElementById('lightbox-close').focus();
+}
+
+// Lightbox controls
+document.getElementById('lightbox-close').addEventListener('click', function() { document.getElementById('lightbox').classList.remove('open'); });
+document.getElementById('lightbox').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
+document.getElementById('lightbox-prev').addEventListener('click', function() {
+  var next = (lightboxIdx - 1 + loadedImgData.length) % loadedImgData.length;
+  openLightboxAt(next);
+});
+document.getElementById('lightbox-next').addEventListener('click', function() {
+  var next = (lightboxIdx + 1) % loadedImgData.length;
+  openLightboxAt(next);
+});
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape')      { document.getElementById('lightbox').classList.remove('open'); }
+  else if (e.key === 'ArrowLeft')  { document.getElementById('lightbox-prev').click(); }
+  else if (e.key === 'ArrowRight') { document.getElementById('lightbox-next').click(); }
+});
+
+// ── APPOINTMENTS ──────────────────────────────────────────────────────────────
+function renderAppts() {
+  var list = document.getElementById('appt-list'); if (!list) return;
+  var filtered = allAppts.filter(function(a){ return apptFilter==='all' || a.status===apptFilter; });
+  if (!filtered.length) { list.innerHTML='<div class="empty-state"><div class="empty-icon">&#128197;</div><p class="empty-text">No appointments found</p></div>'; return; }
+  list.innerHTML = filtered.map(function(a) {
+    var d = a.date ? new Date(a.date + 'T00:00:00') : null;
+    var month = d ? d.toLocaleDateString([], {month:'short'}) : '—';
+    var day   = d ? d.getDate() : '—';
+    var year  = d ? d.getFullYear() : '';
+    var statusLabel = a.status === 'completed' ? 'Completed' : a.status === 'cancelled' ? 'Cancelled' : 'Upcoming';
+    var tagClass = a.status === 'completed' ? 'tag-green' : a.status === 'cancelled' ? 'tag-gray' : 'tag-blue';
+    return '<article class="appt-item '+ a.status +'" aria-label="Appointment: ' + esc(a.title) + ', ' + statusLabel + '">'+
+      '<div class="appt-date-block"><div class="appt-month">'+month+'</div><div class="appt-day">'+day+'</div><div class="appt-year">'+year+'</div></div>'+
+      '<div class="appt-body" style="flex:1;">'+
+        '<div class="appt-title">'+esc(a.title)+'</div>'+
+        '<div class="appt-meta">'+
+          (a.doctor   ? '<span>&#128100; '+esc(a.doctor)+'</span>' : '')+
+          (a.time     ? '<span>&#128336; '+a.time+'</span>' : '')+
+          (a.location ? '<span>&#128205; '+esc(a.location)+'</span>' : '')+
+        '</div>'+
+        (a.notes ? '<div class="appt-notes">'+esc(a.notes)+'</div>' : '')+
+      '</div>'+
+      '<span class="tag '+tagClass+'">'+statusLabel+'</span>'+
+    '</article>';
+  }).join('');
+}
+
+// ── REMINDERS ─────────────────────────────────────────────────────────────────
+function renderReminders() {
+  updateStats();
+  var list = document.getElementById('reminder-list'); if (!list) return;
+  var filtered = allReminders.filter(function(r){ return remFilter==='all' || r.category===remFilter; });
+  if (!filtered.length) { list.innerHTML='<div class="empty-state"><div class="empty-icon">&#10003;</div><p class="empty-text">No reminders found</p></div>'; return; }
+  filtered.sort(function(a,b){ return a.done - b.done; });
+  var tagMap = {medication:'tag-blue',appointment:'tag-teal',lab:'tag-green',general:'tag-gray'};
+  list.innerHTML = filtered.map(function(r) {
+    var due = r.dueDate ? new Date(r.dueDate+'T00:00:00').toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})+(r.dueTime?' at '+r.dueTime:'') : '';
+    return '<div class="rem-item '+(r.done?'done':'')+'" role="listitem">'+
+      '<input class="rem-check" type="checkbox" '+(r.done?'checked':'')+' data-toggle-rem="'+r.id+'" id="rem-'+r.id+'" aria-label="Mark '+(r.done?'incomplete':'complete')+': '+esc(r.title)+'"/>'+
+      '<div style="flex:1;">'+
+        '<label class="rem-title" for="rem-'+r.id+'" style="cursor:pointer;">'+esc(r.title)+'</label>'+
+        '<div class="rem-meta">'+
+          '<span class="tag '+(tagMap[r.category]||'tag-gray')+'">'+r.category+'</span>'+
+          (due ? '<span>&#128197; '+due+'</span>' : '')+
+          (r.repeat && r.repeat !== 'none' ? '<span>&#8635; '+r.repeat+'</span>' : '')+
+          (r.notes ? '<span style="font-style:italic;">'+esc(r.notes)+'</span>' : '')+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  list.querySelectorAll('[data-toggle-rem]').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      api('/api/reminders/toggle', 'POST', {id: cb.dataset.toggleRem}).then(function() {
+        var r = allReminders.find(function(x){ return String(x.id)===String(cb.dataset.toggleRem); });
+        if (r) r.done = r.done ? 0 : 1;
+        renderReminders(); renderOvReminders();
+      });
+    });
+  });
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+document.querySelectorAll('.filter-tabs .filter-tab').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var group = btn.closest('.filter-tabs');
+    group.querySelectorAll('.filter-tab').forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+    btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
+    var sec = btn.closest('.section-panel');
+    if (sec && sec.id === 'section-appointments') { apptFilter = btn.dataset.filter; renderAppts(); }
+    else if (sec && sec.id === 'section-reminders') { remFilter = btn.dataset.filter; renderReminders(); }
+    else if (btn.dataset.section) goSection(btn.dataset.section);
+  });
+});
+
+// ── CHAT ─────────────────────────────────────────────────────────────────────
+function loadMsgs() {
+  if (!myId) return;
+  var list = document.getElementById('chat-list');
+  api('/api/messages/' + myId).then(function(msgs) {
+    if (!msgs.length) { list.innerHTML = '<div class="chat-empty">No messages yet. Your caregiver can send you messages here.</div>'; return; }
+    list.innerHTML = msgs.map(function(m) {
+      var mine = m.sender === 'patient';
+      return '<div class="chat-msg" style="'+(mine?'text-align:right':'')+'">'+
+        '<div class="chat-sender">'+(mine?'You':'Your Caregiver')+'</div>'+
+        '<div class="chat-bubble'+(mine?' mine':'')+'" style="'+(mine?'margin-left:auto':'')+'">'+esc(m.text)+'</div>'+
+        '<div class="chat-time">'+new Date(m.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</div>'+
+      '</div>';
+    }).join('');
+    list.scrollTop = list.scrollHeight;
+  });
+}
+
+function openChat()  { document.getElementById('chat-panel').classList.add('open'); loadMsgs(); setTimeout(function(){ document.getElementById('chat-close').focus(); }, 300); }
+function closeChat() { document.getElementById('chat-panel').classList.remove('open'); document.getElementById('chat-toggle').focus(); }
+
+document.getElementById('chat-toggle').addEventListener('click', openChat);
+document.getElementById('chat-fab').addEventListener('click', openChat);
+document.getElementById('chat-close').addEventListener('click', closeChat);
+document.getElementById('chat-send').addEventListener('click', function() {
+  var inp = document.getElementById('chat-input'), text = inp.value.trim(); if (!text || !myId) return;
+  var btn = this; btn.disabled = true; btn.textContent = '...';
+  api('/api/messages', 'POST', {patientId: myId, sender: 'patient', text: text}).then(function() {
+    inp.value = ''; loadMsgs(); btn.disabled = false; btn.textContent = 'Send';
+  });
+});
+document.getElementById('chat-input').addEventListener('keydown', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); document.getElementById('chat-send').click(); } });
+document.getElementById('chat-panel').addEventListener('keydown', function(e) { if (e.key === 'Escape') closeChat(); });
+
+// ── PATIENT PROFILE ───────────────────────────────────────────────────────────
+var _ptPendingAvatar = undefined;
+
+function initPatientProfile() {
+  api('/api/profile').then(function(prof) {
+    var initEl    = document.getElementById('pt-avatar-initials');
+    var imgEl     = document.getElementById('pt-avatar-img');
+    var removeBtn = document.getElementById('pt-avatar-remove');
+    var dnEl      = document.getElementById('pt-displayName');
+    var unEl      = document.getElementById('pt-username');
+    var labelEl   = document.getElementById('pt-avatar-label');
+
+    if (dnEl) dnEl.value = prof.displayName || '';
+    if (unEl) unEl.value = prof.username || '';
+
+    var words = (prof.displayName || prof.fullName || '?').trim().split(' ');
+    var inits = words.map(function(w){ return w[0]||''; }).join('').toUpperCase().slice(0,2) || '?';
+    if (initEl) initEl.textContent = inits;
+    if (labelEl) labelEl.textContent = prof.displayName || prof.fullName || 'Your Photo';
+
+    if (prof.avatar) {
+      if (imgEl)    { imgEl.src=prof.avatar; imgEl.style.display='block'; }
+      if (initEl)   initEl.style.display='none';
+      if (removeBtn) removeBtn.style.display='';
+    }
+
+    // Update topbar avatar on load
+    updatePatientTopbarAvatar(prof);
+
+    var fileInput = document.getElementById('pt-avatar-file');
+    if (fileInput) fileInput.addEventListener('change', function(e) {
+      var file = e.target.files[0]; if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { alert('Image must be under 5 MB.'); return; }
+      ptCompressAvatar(file, function(dataUrl) {
+        _ptPendingAvatar = dataUrl;
+        if (imgEl)    { imgEl.src=dataUrl; imgEl.style.display='block'; }
+        if (initEl)   initEl.style.display='none';
+        if (removeBtn) removeBtn.style.display='';
+      });
+    });
+
+    if (removeBtn) removeBtn.addEventListener('click', function() {
+      _ptPendingAvatar = null;
+      if (imgEl)    { imgEl.src=''; imgEl.style.display='none'; }
+      if (initEl)   { initEl.style.display=''; initEl.textContent=inits; }
+      removeBtn.style.display='none';
+    });
+
+    var saveBtn = document.getElementById('pt-profile-save');
+    if (saveBtn) saveBtn.addEventListener('click', function() {
+      var newDn = (document.getElementById('pt-displayName').value||'').trim();
+      var newUn = (document.getElementById('pt-username').value||'').trim();
+      if (!newUn) { ptShowStatus('pt-profile-status','Username cannot be empty.','error'); return; }
+      var payload = { username: newUn, displayName: newDn };
+      if (_ptPendingAvatar !== undefined) payload.avatar = _ptPendingAvatar;
+      saveBtn.disabled=true; saveBtn.textContent='Saving...';
+      api('/api/profile','POST',payload).then(function(r) {
+        _ptPendingAvatar = undefined;
+        ptShowStatus('pt-profile-status','Profile saved successfully!','success');
+        updatePatientTopbarAvatar(r);
+        // Update greeting
+        var greet = document.getElementById('topbar-greeting');
+        var hour = new Date().getHours();
+        var tod = hour<12?'Good morning':hour<17?'Good afternoon':'Good evening';
+        if (greet) greet.textContent = tod + ', ' + (r.displayName || prof.fullName);
+      }).catch(function(e) {
+        ptShowStatus('pt-profile-status', e.message||'Save failed.','error');
+      }).finally(function(){ saveBtn.disabled=false; saveBtn.textContent='Save Changes'; });
+    });
+  });
+
+  var pwBtn = document.getElementById('pt-pw-save');
+  if (pwBtn) pwBtn.addEventListener('click', function() {
+    var cur = document.getElementById('pt-pw-current').value;
+    var nw  = document.getElementById('pt-pw-new').value;
+    var cf  = document.getElementById('pt-pw-confirm').value;
+    if (!cur || !nw || !cf) { ptShowStatus('pt-pw-status','All fields required.','error'); return; }
+    if (nw !== cf) { ptShowStatus('pt-pw-status','New passwords do not match.','error'); return; }
+    if (nw.length < 6) { ptShowStatus('pt-pw-status','Password must be at least 6 characters.','error'); return; }
+    pwBtn.disabled=true; pwBtn.textContent='Updating...';
+    api('/api/profile/password','POST',{currentPassword:cur,newPassword:nw}).then(function() {
+      document.getElementById('pt-pw-current').value='';
+      document.getElementById('pt-pw-new').value='';
+      document.getElementById('pt-pw-confirm').value='';
+      ptShowStatus('pt-pw-status','Password updated successfully!','success');
+    }).catch(function(e) {
+      ptShowStatus('pt-pw-status',e.message||'Failed.','error');
+    }).finally(function(){ pwBtn.disabled=false; pwBtn.textContent='Update Password'; });
+  });
+}
+
+function updatePatientTopbarAvatar(prof) {
+  var initEl = document.getElementById('patient-initials');
+  if (!initEl) return;
+  var words = (prof.displayName || prof.fullName || '?').trim().split(' ');
+  var inits = words.map(function(w){ return w[0]||''; }).join('').toUpperCase().slice(0,2)||'?';
+  // Try to show photo in topbar
+  var existing = document.getElementById('topbar-avatar-img');
+  if (prof.avatar) {
+    initEl.style.overflow='hidden';
+    if (!existing) {
+      var img = document.createElement('img');
+      img.id='topbar-avatar-img'; img.alt='Profile';
+      img.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:50%;';
+      initEl.innerHTML=''; initEl.appendChild(img);
+    }
+    document.getElementById('topbar-avatar-img').src = prof.avatar;
+  } else {
+    if (existing) existing.remove();
+    initEl.textContent = inits;
+  }
+}
+
+function ptShowStatus(id, msg, type) {
+  var el = document.getElementById(id); if (!el) return;
+  el.style.display='block';
+  el.style.background = type==='success' ? '#d1fae5' : '#fee2e2';
+  el.style.color       = type==='success' ? '#065f46' : '#991b1b';
+  el.style.border      = type==='success' ? '1px solid #a7f3d0' : '1px solid #fecaca';
+  el.textContent = msg;
+  if (type==='success') setTimeout(function(){ el.style.display='none'; }, 3500);
+}
+
+function ptCompressAvatar(file, cb) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var MAX=256, scale=Math.min(MAX/img.width,MAX/img.height,1);
+      var c=document.createElement('canvas'); c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      cb(c.toDataURL('image/jpeg',0.88));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── TTS ───────────────────────────────────────────────────────────────────────
+(function() {
+  var TOKEN_KEY_TTS = 'mh_token';
+  var ttsAudio = null;
+  var ttsPlaying = false;
+
+  var toggleBtn  = document.getElementById('tts-toggle-btn');
+  var dropdown   = document.getElementById('tts-dropdown');
+  var chevron    = document.getElementById('tts-chevron');
+  var voiceSel   = document.getElementById('tts-voice');
+  var volSlider  = document.getElementById('tts-volume');
+  var volDisplay = document.getElementById('tts-vol-display');
+  var readBtn    = document.getElementById('tts-read-btn');
+  var statusEl   = document.getElementById('tts-status');
+
+  // Restore saved voice preference
+  var savedVoice = localStorage.getItem('tts-voice');
+  if (savedVoice) voiceSel.value = savedVoice;
+  voiceSel.addEventListener('change', function() { localStorage.setItem('tts-voice', voiceSel.value); });
+
+  // Volume display
+  volSlider.addEventListener('input', function() {
+    volDisplay.textContent = Math.round(volSlider.value * 100) + '%';
+    if (ttsAudio) ttsAudio.volume = parseFloat(volSlider.value);
+  });
+
+  // Toggle dropdown
+  toggleBtn.addEventListener('click', function() {
+    var open = dropdown.classList.toggle('open');
+    chevron.style.transform = open ? 'rotate(180deg)' : '';
+    toggleBtn.classList.toggle('active', open);
+    toggleBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  // Build a spoken summary from the patient's actual loaded data
+  function getPageText() {
+    var parts = [];
+    var active = document.querySelector('.section-panel.active');
+    var section = active ? active.id : '';
+
+    // ── Patient name / greeting ───────────────────────────────────────────
+    var nameEl = document.getElementById('welcome-name');
+    var name = nameEl ? nameEl.textContent.replace(/^Good (morning|afternoon|evening), /, '').replace('!','').trim() : '';
+    if (name) parts.push('Health summary for ' + name + '.');
+
+    // ── Medications ───────────────────────────────────────────────────────
+    if (section === 'section-overview' || section === 'section-meds') {
+      if (allMeds && allMeds.length) {
+        parts.push('Medications: ' + allMeds.length + ' on file.');
+        allMeds.forEach(function(m) {
+          var obj = typeof m === 'object' ? m : { name: m };
+          var line = obj.name;
+          if (obj.dose) line += ', ' + obj.dose;
+          if (obj.directions) line += '. ' + obj.directions;
+          if (obj.freq) line += '. ' + obj.freq;
+          if (obj.prescriber) line += '. Prescribed by ' + obj.prescriber;
+          parts.push(line + '.');
+        });
+      } else {
+        parts.push('No medications on file.');
+      }
+    }
+
+    // ── Appointments ──────────────────────────────────────────────────────
+    if (section === 'section-overview' || section === 'section-appointments') {
+      var upcoming = (allAppts || []).filter(function(a) { return a.status === 'upcoming'; });
+      if (upcoming.length) {
+        parts.push('You have ' + upcoming.length + ' upcoming appointment' + (upcoming.length > 1 ? 's' : '') + '.');
+        upcoming.forEach(function(a) {
+          var line = a.title;
+          if (a.date) {
+            var d = new Date(a.date + 'T00:00:00');
+            line += ' on ' + d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+          }
+          if (a.time) line += ' at ' + a.time;
+          if (a.doctor) line += ' with ' + a.doctor;
+          if (a.location) line += ' at ' + a.location;
+          if (a.notes) line += '. Note: ' + a.notes;
+          parts.push(line + '.');
+        });
+      } else {
+        parts.push('No upcoming appointments.');
+      }
+    }
+
+    // ── Reminders ─────────────────────────────────────────────────────────
+    if (section === 'section-overview' || section === 'section-reminders') {
+      var pending = (allReminders || []).filter(function(r) { return !r.done; });
+      var done    = (allReminders || []).filter(function(r) { return r.done; });
+      if (pending.length) {
+        parts.push('You have ' + pending.length + ' pending reminder' + (pending.length > 1 ? 's' : '') + '.');
+        pending.forEach(function(r) {
+          var line = r.title;
+          if (r.category && r.category !== 'general') line += ', category ' + r.category;
+          if (r.dueDate) {
+            var d = new Date(r.dueDate + 'T00:00:00');
+            line += ', due ' + d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+          }
+          if (r.dueTime) line += ' at ' + r.dueTime;
+          if (r.notes) line += '. ' + r.notes;
+          parts.push(line + '.');
+        });
+      } else {
+        parts.push('All reminders are complete.');
+      }
+      if (done.length) parts.push(done.length + ' reminder' + (done.length > 1 ? 's' : '') + ' already completed.');
+    }
+
+    // ── Profile / health info ─────────────────────────────────────────────
+    if (section === 'section-profile') {
+      var fields = [
+        { id: 'p-name',           label: 'Full name' },
+        { id: 'p-dob',            label: 'Date of birth' },
+        { id: 'p-mrn',            label: 'Medical record number' },
+        { id: 'p-blood',          label: 'Blood type' },
+        { id: 'p-doctor',         label: 'Primary doctor' },
+        { id: 'p-allergies',      label: 'Allergies' },
+        { id: 'p-emergency',      label: 'Emergency contact' },
+        { id: 'p-emergency-phone',label: 'Emergency phone' },
+        { id: 'p-notes',          label: 'Care notes' },
+      ];
+      parts.push('Your health information on file.');
+      fields.forEach(function(f) {
+        var el = document.getElementById(f.id);
+        var val = el ? el.textContent.trim() : '';
+        if (val && val !== '—' && val !== 'Not on file') parts.push(f.label + ': ' + val + '.');
+      });
+    }
+
+    return parts.join(' ');
+  }
+
+  // Stop any playing audio
+  function stopAudio(msg) {
+    if (ttsAudio) { ttsAudio.onerror = null; ttsAudio.pause(); ttsAudio.src = ''; ttsAudio = null; }
+    ttsPlaying = false;
+    readBtn.disabled = false;
+    readBtn.textContent = '▶ Read Current Page';
+    statusEl.textContent = msg || '';
+  }
+
+  readBtn.addEventListener('click', function() {
+    if (ttsPlaying) { stopAudio(); return; }
+
+    var text = getPageText();
+    if (!text || text.trim().length < 5) { statusEl.textContent = 'Nothing to read on this page.'; return; }
+    if (text.length > 4000) text = text.slice(0, 4000);
+
+    var voice = voiceSel.value;
+    var token = localStorage.getItem(TOKEN_KEY_TTS);
+    if (!token) { statusEl.textContent = 'Not logged in.'; return; }
+
+    readBtn.disabled = true;
+    readBtn.textContent = '⏳ Loading…';
+    statusEl.textContent = 'Fetching audio…';
+
+    var url = '/api/tts?text=' + encodeURIComponent(text) + '&voice=' + encodeURIComponent(voice);
+
+    fetch(url, { headers: { 'x-auth-token': token } })
+      .then(function(r) {
+        if (!r.ok) {
+          return r.text().then(function(t) {
+            var msg = 'TTS failed (' + r.status + ')';
+            try { var j = JSON.parse(t); if (j.error) msg = j.error; } catch(e) {}
+            throw new Error(msg);
+          });
+        }
+        return r.blob();
+      })
+      .then(function(blob) {
+        if (!blob || blob.size === 0) { throw new Error('No audio received. Check your Gemini API key.'); }
+        var objUrl = URL.createObjectURL(blob);
+        ttsAudio = new Audio(objUrl);
+        ttsAudio.volume = parseFloat(volSlider.value);
+        ttsAudio.onended = function() {
+          ttsAudio.onerror = null; // prevent false error after revoke
+          URL.revokeObjectURL(objUrl);
+          stopAudio();
+        };
+        ttsAudio.onerror = function() {
+          URL.revokeObjectURL(objUrl);
+          stopAudio();
+          statusEl.textContent = 'Playback error — audio format may not be supported.';
+        };
+        ttsAudio.play().then(function() {
+          ttsPlaying = true;
+          readBtn.disabled = false;
+          readBtn.textContent = '⏹ Stop';
+          statusEl.textContent = 'Playing…';
+        }).catch(function(e) {
+          stopAudio();
+          statusEl.textContent = 'Could not play: ' + e.message;
+        });
+      })
+      .catch(function(err) {
+        stopAudio();
+        statusEl.textContent = err.message || 'Error.';
+      });
+  });
+
+  // Stop audio when navigating away
+  document.querySelectorAll('[data-section]').forEach(function(btn) {
+    btn.addEventListener('click', function() { if (ttsPlaying) stopAudio(); });
+  });
+})();
+</script>
 </body>
 </html>

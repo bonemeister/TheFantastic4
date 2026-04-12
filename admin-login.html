@@ -1,66 +1,471 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <title>Administrator Login</title>
-  <link rel="stylesheet" href="styles.css?v=2" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin Login — MyHealth Portals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --accent-start:#8b5cf6;
+      --accent-end:#6366f1;
+      --bg:#f0f2f7;--surface:#fff;--surface2:#f8fafc;
+      --border:#e4e8f0;--text:#1a2540;--text-muted:#7b8fac;
+      --sidebar:#0f1623;--sidebar2:#141d2e;
+      --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+      --radius:12px;--touch:48px;
+    }
+    body{font-family:var(--font);min-height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--text);}
+    .skip-link{position:absolute;top:-100px;left:1rem;z-index:999;background:var(--accent-start);color:#fff;padding:.75rem 1.25rem;border-radius:8px;font-weight:700;text-decoration:none;transition:top .15s;}
+    .skip-link:focus{top:1rem;}
+
+    /* TOPBAR */
+    .topbar{height:60px;background:var(--sidebar);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;border-bottom:1px solid #1e2a3a;}
+    .brand{display:flex;align-items:center;gap:.65rem;text-decoration:none;}
+    .brand-icon{width:34px;height:34px;background:var(--accent-start);border-radius:9px;display:flex;align-items:center;justify-content:center;}
+    .brand-icon svg{width:20px;height:20px;}
+    .brand-name{font-size:.88rem;font-weight:700;color:#fff;}
+    .brand-sub{font-size:.68rem;color:#5a7090;}
+    .topbar-right{display:flex;gap:.4rem;}
+    .ctrl-btn{min-height:36px;padding:.3rem .75rem;border-radius:7px;border:1px solid #1e2a3a;background:#141d2e;color:#8a9bb5;font-family:var(--font);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s;}
+    .ctrl-btn:hover{border-color:var(--accent-start);color:#fff;}
+    .ctrl-btn:focus-visible{outline:2px solid var(--accent-start);outline-offset:2px;}
+
+    /* LAYOUT */
+    main{flex:1;display:flex;}
+
+    /* LEFT SIDEBAR PANEL */
+    .left-panel{
+      width:300px;flex-shrink:0;
+      background:var(--sidebar);
+      display:flex;flex-direction:column;
+      padding:2.5rem 1.75rem;
+      position:relative;overflow:hidden;
+    }
+    .left-panel::before{
+      content:'';position:absolute;top:-80px;right:-80px;
+      width:260px;height:260px;border-radius:50%;
+      background:linear-gradient(135deg,var(--accent-start),var(--accent-end));
+      opacity:.07;
+    }
+    .left-panel::after{
+      content:'';position:absolute;bottom:-60px;left:-60px;
+      width:200px;height:200px;border-radius:50%;
+      background:var(--accent-end);opacity:.05;
+    }
+    .panel-badge{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+      border-radius:8px;padding:.35rem .75rem;
+      font-size:.7rem;font-weight:700;color:#5a7090;letter-spacing:.06em;text-transform:uppercase;
+      margin-bottom:2rem;width:fit-content;
+    }
+    .panel-icon-wrap{
+      width:64px;height:64px;border-radius:16px;
+      background:linear-gradient(135deg,var(--accent-start),var(--accent-end));
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.8rem;margin-bottom:1.25rem;
+      box-shadow:0 8px 24px color-mix(in srgb,var(--accent-start) 40%,transparent);
+    }
+    .panel-title{font-size:1.45rem;font-weight:800;color:#fff;margin-bottom:.6rem;line-height:1.25;}
+    .panel-desc{font-size:.82rem;color:#4a6080;line-height:1.7;margin-bottom:2rem;}
+    .feat-item{display:flex;align-items:center;gap:.6rem;font-size:.8rem;color:#5a7090;margin-bottom:.7rem;}
+    .feat-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+    /* STAT MINI CARDS */
+    .mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:auto;padding-top:2rem;}
+    .mini-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.75rem;}
+    .mini-stat-num{font-size:1.1rem;font-weight:800;color:#fff;font-family:var(--mono);}
+    .mini-stat-label{font-size:.68rem;color:#3d5270;margin-top:.15rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+
+    /* RIGHT FORM PANEL */
+    .right-panel{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;background:var(--bg);}
+    .form-card{background:var(--surface);border-radius:16px;padding:2.25rem 2rem;width:100%;max-width:400px;box-shadow:0 4px 32px rgba(15,22,35,.1);border:1px solid var(--border);}
+
+    /* ACCENT BAR TOP */
+    .form-card-accent{height:4px;background:linear-gradient(90deg,var(--accent-start),var(--accent-end));border-radius:99px;margin-bottom:1.75rem;}
+
+    .form-heading{font-size:1.35rem;font-weight:800;margin-bottom:.25rem;}
+    .form-sub{font-size:.82rem;color:var(--text-muted);margin-bottom:1.4rem;}
+    .demo-row{
+      display:flex;align-items:center;gap:.5rem;
+      background:var(--surface2);border:1px solid var(--border);
+      border-radius:8px;padding:.4rem .85rem;
+      font-size:.75rem;color:var(--text-muted);
+      font-family:var(--mono);margin-bottom:1.4rem;
+    }
+    .demo-row strong{color:var(--text);}
+
+    .field{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.85rem;}
+    .field label{font-size:.75rem;font-weight:700;color:var(--text-muted);letter-spacing:.04em;text-transform:uppercase;}
+    .field input{
+      font-family:var(--font);font-size:.9rem;
+      padding:.6rem .85rem;min-height:var(--touch);
+      border:2px solid var(--border);border-radius:9px;
+      background:var(--surface2);color:var(--text);
+      outline:none;transition:border-color .15s,box-shadow .15s;
+    }
+    .field input:focus{border-color:var(--accent-start);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-start) 18%,transparent);background:#fff;}
+
+    .btn-submit{
+      min-height:var(--touch);width:100%;
+      background:linear-gradient(90deg,var(--accent-start),var(--accent-end));
+      color:#fff;border:none;border-radius:9px;
+      font-family:var(--font);font-size:.95rem;font-weight:700;
+      cursor:pointer;margin-top:.25rem;
+      transition:opacity .15s,transform .1s,box-shadow .15s;
+      box-shadow:0 4px 20px color-mix(in srgb,var(--accent-start) 40%,transparent);
+      letter-spacing:.01em;
+    }
+    .btn-submit:hover{opacity:.92;transform:translateY(-1px);}
+    .btn-submit:active{transform:none;}
+    .btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+    .btn-submit:focus-visible{outline:3px solid var(--accent-start);outline-offset:3px;}
+
+    .btn-back{display:inline-flex;align-items:center;gap:.35rem;color:var(--text-muted);font-size:.82rem;font-weight:600;text-decoration:none;margin-top:1rem;transition:color .15s;}
+    .btn-back:hover{color:var(--text);}
+    .status-msg{font-size:.82rem;padding:.55rem .75rem;border-radius:8px;margin-bottom:.75rem;display:none;}
+    .status-msg.error{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;}
+    .status-msg.info{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;}
+
+    body.dark{--bg:#0d1420;--surface:#141d2e;--surface2:#1a2540;--border:#1e2a3a;--text:#e2e8f0;--text-muted:#64748b;}
+    body.dark .field input{background:#1a2540;color:var(--text);}
+    body.dark .field input:focus{background:#1e2d4a !important;color:var(--text) !important;}
+    body.dark .right-panel{background:#0d1420;}
+    @media(max-width:680px){
+      main{flex-direction:column;}
+      .left-panel{width:100%;padding:1.75rem 1.5rem;}
+      .mini-stats{display:none;}
+    }
+  
+    /* ── DARK MODE: force input text black only while typing (focused) ── */
+    body.dark input:focus,
+    body.dark select:focus,
+    body.dark textarea:focus {
+      color: var(--text) !important;
+    }
+  </style>
 </head>
-<body>
-  <a class="skip-link" href="#main">Skip to main content</a>
+<body style="visibility:visible">
+<a class="skip-link" href="#main">Skip to main content</a>
 
-  <header class="appbar">
-    <a class="brand" href="index.html" aria-label="Go to Home">
-      <span class="brand__mark" aria-hidden="true">
-        <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M256 32C256 32 160 64 96 64C96 64 96 192 96 256C96 368 256 480 256 480C256 480 416 368 416 256C416 192 416 64 416 64C352 64 256 32 256 32Z" fill="#2563EB"/>
-          <circle cx="256" cy="256" r="96" fill="white"/>
-          <path d="M256 200V312M200 256H312" stroke="#2563EB" stroke-width="32" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="brand__text">MyHealth Admin</span>
-    </a>
-    <nav class="usernav">
-      <button class="btn btn--top text-size" data-size="up">A+</button>
-      <button class="btn btn--top text-size" data-size="down">A−</button>
-      <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
-      <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
-    </nav>
-  </header>
+<header class="topbar" role="banner">
+  <a class="brand" href="/" aria-label="MyHealth Portals home">
+    <div class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2s-7 3-7 10v5l7 5 7-5v-5c0-7-7-10-7-10z"/><path d="M12 8v4M10 12h4"/></svg></div>
+    <div><div class="brand-name">MyHealth Portals</div><div class="brand-sub">Secure Health Management</div></div>
+  </a>
+  <div class="topbar-right" role="toolbar" aria-label="Accessibility controls">
+    <button class="ctrl-btn text-size" data-size="up" aria-label="Increase text size">A+</button>
+    <button class="ctrl-btn text-size" data-size="down" aria-label="Decrease text size">A−</button>
+    <button class="ctrl-btn" id="dark-toggle" aria-pressed="false">🌙 Dark</button>
+    <button class="ctrl-btn" id="contrast-toggle" aria-pressed="false">◑ Contrast</button>
+  </div>
+</header>
 
-  <main id="main" class="layout">
-    <section class="content">
-      <article class="card" style="max-width:720px;margin:auto;">
-        <header class="card__header">
-          <h1 class="card__title" style="margin-bottom:.35rem;">Administrator Login</h1>
-          <div class="muted">
-            Demo: username <code>admin</code> &middot; password <code>admin123</code>
+<main id="main" role="main">
+  <div class="left-panel" aria-hidden="true">
+    <div class="panel-badge">MyHealth Portals</div>
+    <div class="panel-icon-wrap">&#128737;&#65039;</div>
+    <div class="panel-title">Admin Login</div>
+    <p class="panel-desc">Securely sign in to access your dashboard and manage your responsibilities.</p>
+    <div class="feat-item"><span class="feat-dot" style="background:#8b5cf6;"></span>Manage users &amp; accounts</div>
+    <div class="feat-item"><span class="feat-dot" style="background:#8b5cf6;"></span>Review support tickets</div>
+    <div class="feat-item"><span class="feat-dot" style="background:#8b5cf6;"></span>System-wide oversight</div>
+    <div class="feat-item"><span class="feat-dot" style="background:#8b5cf6;"></span>Audit logs &amp; reports</div>
+    <div class="mini-stats">
+      <div class="mini-stat"><div class="mini-stat-num">256</div><div class="mini-stat-label">Bit Encrypted</div></div>
+      <div class="mini-stat"><div class="mini-stat-num">24/7</div><div class="mini-stat-label">Available</div></div>
+      <div class="mini-stat"><div class="mini-stat-num">WCAG</div><div class="mini-stat-label">Accessible</div></div>
+      <div class="mini-stat"><div class="mini-stat-num">HIPAA</div><div class="mini-stat-label">Compliant</div></div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="form-card" id="form-card" role="region" aria-label="Admin Login form">
+      <div class="form-card-accent" aria-hidden="true"></div>
+
+      <!-- ── STEP 1: CREDENTIALS ── -->
+      <div id="step-credentials">
+        <h1 class="form-heading">Welcome back</h1>
+        <p class="form-sub">Sign in to your admin account</p>
+        <div class="demo-row">&#128273; Demo: <strong>admin / admin123</strong></div>
+        <div id="login-status" class="status-msg" role="alert" aria-live="assertive"></div>
+        <form id="login-form" novalidate>
+          <div class="field">
+            <label for="inp-user">Username</label>
+            <input id="inp-user" name="username" type="text" autocomplete="username" required placeholder="Enter username" aria-required="true"/>
           </div>
-        </header>
-
-        <form id="admin-login-form" class="assist" style="display:grid;gap:.75rem;">
-          <label style="display:flex !important;flex-direction:column !important;gap:.4rem !important;visibility:visible !important;opacity:1 !important;">Username
-            <input id="ad-user" type="text" autocomplete="username" style="display:block !important;visibility:visible !important;" />
-          </label>
-
-          <label style="display:flex !important;flex-direction:column !important;gap:.4rem !important;visibility:visible !important;opacity:1 !important;">Password
-            <input id="ad-pass" type="password" autocomplete="current-password" style="display:block !important;visibility:visible !important;" />
-          </label>
-
-          <div style="display:flex;gap:.5rem;align-items:center;margin-top:1rem;">
-            <button class="btn btn--primary" type="submit">Enter Admin</button>
-            <a class="btn btn--ghost" href="index.html">Cancel</a>
+          <div class="field">
+            <label for="inp-pass">Password</label>
+            <input id="inp-pass" name="password" type="password" autocomplete="current-password" required placeholder="Enter password" aria-required="true"/>
           </div>
-
-          <div id="login-status" class="text-danger" role="status" aria-live="polite"></div>
+          <button class="btn-submit" type="submit" id="cred-btn" aria-label="Sign in to Admin Portal">Sign in to Admin Portal</button>
         </form>
-      </article>
-    </section>
-  </main>
+        <a class="btn-back" href="/" aria-label="Back to portal selection">&#8592; Back to portal selection</a>
+      </div>
 
-  <script defer src="portal.js?v=2"></script>
+      <!-- ── STEP 2a: MFA SETUP (first login — show QR) ── -->
+      <div id="step-mfa-setup" style="display:none;">
+        <h1 class="form-heading">Set up 2FA</h1>
+        <p class="form-sub">Scan the QR code with the <strong>2FAS Auth</strong> app, then enter the 6-digit code to confirm.</p>
+        <div id="mfa-setup-status" class="status-msg" role="alert" aria-live="assertive"></div>
+        <div style="text-align:center;margin-bottom:1.25rem;">
+          <img id="mfa-qr-img" src="" alt="2FA QR code" style="width:190px;height:190px;border-radius:10px;border:1px solid var(--border);display:block;margin:0 auto .75rem;background:var(--surface2);"/>
+          <div class="demo-row" style="justify-content:center;font-size:.7rem;word-break:break-all;" id="mfa-secret-row">
+            &#128273; Manual key: <strong id="mfa-secret-text"></strong>
+          </div>
+        </div>
+        <div class="field">
+          <label for="mfa-setup-code">6-digit code from 2FAS</label>
+          <input id="mfa-setup-code" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" aria-required="true"/>
+        </div>
+        <button class="btn-submit" id="mfa-setup-btn">Verify &amp; Sign In</button>
+        <a class="btn-back" href="#" id="mfa-setup-back">&#8592; Back to login</a>
+      </div>
+
+      <!-- ── STEP 2b: MFA VERIFY (returning login — enter code) ── -->
+      <div id="step-mfa-verify" style="display:none;">
+        <h1 class="form-heading">Two-Factor Auth</h1>
+        <p class="form-sub">Enter the current 6-digit code from your <strong>2FAS Auth</strong> app.</p>
+        <div id="mfa-verify-status" class="status-msg" role="alert" aria-live="assertive"></div>
+        <div class="demo-row" style="justify-content:center;">
+          &#128274; Admin account verified
+        </div>
+        <div class="field">
+          <label for="mfa-verify-code">6-digit code</label>
+          <input id="mfa-verify-code" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" aria-required="true"/>
+        </div>
+        <button class="btn-submit" id="mfa-verify-btn">Verify &amp; Sign In</button>
+        <a class="btn-back" href="#" id="mfa-verify-back">&#8592; Back to login</a>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  // ── ACCESSIBILITY / THEME ──────────────────────────────────────────────────
+  var f = localStorage.getItem('mhf'); if(f) document.documentElement.style.fontSize = f + 'rem';
+  document.querySelectorAll('.text-size').forEach(function(b){
+    b.addEventListener('click', function(){
+      var c = parseFloat(localStorage.getItem('mhf') || '1');
+      var n = b.dataset.size === 'up' ? Math.min(c + .08, 1.4) : Math.max(c - .08, .85);
+      localStorage.setItem('mhf', n); document.documentElement.style.fontSize = n + 'rem';
+    });
+  });
+  var dk = document.getElementById('dark-toggle');
+  if(dk){
+    if(localStorage.getItem('mhd') === '1'){ document.body.classList.add('dark'); dk.textContent = '☀️ Light'; dk.setAttribute('aria-pressed','true'); }
+    dk.addEventListener('click', function(){
+      var on = document.body.classList.toggle('dark');
+      localStorage.setItem('mhd', on ? '1' : '0');
+      dk.setAttribute('aria-pressed', on ? 'true' : 'false');
+      dk.textContent = on ? '☀️ Light' : '🌙 Dark';
+    });
+  }
+  var ct = document.getElementById('contrast-toggle');
+  if(ct){
+    if(localStorage.getItem('mhc') === '1'){ document.body.classList.add('contrast'); ct.setAttribute('aria-pressed','true'); }
+    ct.addEventListener('click', function(){
+      var on = document.body.classList.toggle('contrast');
+      localStorage.setItem('mhc', on ? '1' : '0');
+      ct.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  // ── HELPERS ───────────────────────────────────────────────────────────────
+  function showStatus(elId, msg, type) {
+    var el = document.getElementById(elId);
+    el.textContent = msg;
+    el.className = 'status-msg ' + (type || 'error');
+    el.style.display = 'block';
+  }
+  function hideStatus(elId) {
+    var el = document.getElementById(elId);
+    el.style.display = 'none';
+  }
+
+  // Which step is visible
+  function showStep(step) {
+    document.getElementById('step-credentials').style.display = 'none';
+    document.getElementById('step-mfa-setup').style.display   = 'none';
+    document.getElementById('step-mfa-verify').style.display  = 'none';
+    document.getElementById(step).style.display = '';
+  }
+
+  // Store tempToken across steps
+  var _tempToken = '';
+
+  // ── STEP 1: CREDENTIAL SUBMIT ─────────────────────────────────────────────
+  var form = document.getElementById('login-form');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var u  = document.getElementById('inp-user').value.trim();
+    var pw = document.getElementById('inp-pass').value;
+    if(!u || !pw) { showStatus('login-status', 'Please enter your username and password.', 'error'); return; }
+    var btn = document.getElementById('cred-btn');
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+    showStatus('login-status', 'Checking credentials…', 'info');
+
+    fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, password: pw, expectedRole: 'admin' })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d) {
+      btn.disabled = false;
+      btn.textContent = 'Sign in to Admin Portal';
+
+      // ── MFA first-time setup ──────────────────────────────────────────────
+      if(d.mfaSetup) {
+        _tempToken = d.tempToken;
+        hideStatus('login-status');
+        // Fetch QR then show setup screen
+        fetch('/api/mfa/qr?token=' + encodeURIComponent(_tempToken))
+          .then(function(r2){ return r2.json(); })
+          .then(function(qr) {
+            document.getElementById('mfa-qr-img').src   = qr.qr;
+            document.getElementById('mfa-secret-text').textContent = qr.secret;
+            document.getElementById('mfa-setup-code').value = '';
+            hideStatus('mfa-setup-status');
+            showStep('step-mfa-setup');
+            document.getElementById('mfa-setup-code').focus();
+          })
+          .catch(function(){ showStatus('login-status', 'Could not load QR code. Please try again.', 'error'); });
+        return;
+      }
+
+      // ── MFA verify (returning user) ───────────────────────────────────────
+      if(d.mfaRequired) {
+        _tempToken = d.tempToken;
+        hideStatus('login-status');
+        document.getElementById('mfa-verify-code').value = '';
+        hideStatus('mfa-verify-status');
+        showStep('step-mfa-verify');
+        document.getElementById('mfa-verify-code').focus();
+        return;
+      }
+
+      // ── Error from server ─────────────────────────────────────────────────
+      if(!d.success || d.error) {
+        showStatus('login-status', d.error || 'Login failed.', 'error');
+        return;
+      }
+
+      // ── Unexpected role ───────────────────────────────────────────────────
+      if(d.role !== 'admin') {
+        showStatus('login-status', 'This login is for admins only.', 'error');
+        return;
+      }
+
+      // ── Direct success (should not happen for admin — but handle anyway) ──
+      localStorage.setItem('mh_token', d.token);
+      window.location.href = d.redirect;
+    })
+    .catch(function(err) {
+      btn.disabled = false;
+      btn.textContent = 'Sign in to Admin Portal';
+      showStatus('login-status', err.message || 'An error occurred.', 'error');
+    });
+  });
+
+  // ── STEP 2a: MFA SETUP — CONFIRM ─────────────────────────────────────────
+  document.getElementById('mfa-setup-btn').addEventListener('click', function() {
+    var code = document.getElementById('mfa-setup-code').value.replace(/\s/g, '');
+    if(!code || code.length < 6) { showStatus('mfa-setup-status', 'Enter the 6-digit code from 2FAS.', 'error'); return; }
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Verifying…';
+    showStatus('mfa-setup-status', 'Confirming code…', 'info');
+
+    fetch('/api/mfa/confirm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tempToken: _tempToken, code: code })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d) {
+      btn.disabled = false;
+      btn.textContent = 'Verify & Sign In';
+      if(!d.success) { showStatus('mfa-setup-status', d.error || 'Invalid code. Try again.', 'error'); return; }
+      localStorage.setItem('mh_token', d.token);
+      window.location.href = d.redirect;
+    })
+    .catch(function(err) {
+      btn.disabled = false;
+      btn.textContent = 'Verify & Sign In';
+      showStatus('mfa-setup-status', err.message || 'Verification failed.', 'error');
+    });
+  });
+
+  // Allow Enter key in setup code field
+  document.getElementById('mfa-setup-code').addEventListener('keydown', function(e) {
+    if(e.key === 'Enter') { e.preventDefault(); document.getElementById('mfa-setup-btn').click(); }
+  });
+
+  // Back link on setup screen
+  document.getElementById('mfa-setup-back').addEventListener('click', function(e) {
+    e.preventDefault();
+    _tempToken = '';
+    hideStatus('mfa-setup-status');
+    showStep('step-credentials');
+    document.getElementById('inp-pass').value = '';
+    hideStatus('login-status');
+    document.getElementById('inp-user').focus();
+  });
+
+  // ── STEP 2b: MFA VERIFY ───────────────────────────────────────────────────
+  document.getElementById('mfa-verify-btn').addEventListener('click', function() {
+    var code = document.getElementById('mfa-verify-code').value.replace(/\s/g, '');
+    if(!code || code.length < 6) { showStatus('mfa-verify-status', 'Enter the 6-digit code from 2FAS.', 'error'); return; }
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Verifying…';
+    showStatus('mfa-verify-status', 'Checking code…', 'info');
+
+    fetch('/api/mfa/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tempToken: _tempToken, code: code })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d) {
+      btn.disabled = false;
+      btn.textContent = 'Verify & Sign In';
+      if(!d.success) { showStatus('mfa-verify-status', d.error || 'Invalid code. Try again.', 'error'); return; }
+      localStorage.setItem('mh_token', d.token);
+      window.location.href = d.redirect;
+    })
+    .catch(function(err) {
+      btn.disabled = false;
+      btn.textContent = 'Verify & Sign In';
+      showStatus('mfa-verify-status', err.message || 'Verification failed.', 'error');
+    });
+  });
+
+  // Allow Enter key in verify code field
+  document.getElementById('mfa-verify-code').addEventListener('keydown', function(e) {
+    if(e.key === 'Enter') { e.preventDefault(); document.getElementById('mfa-verify-btn').click(); }
+  });
+
+  // Back link on verify screen
+  document.getElementById('mfa-verify-back').addEventListener('click', function(e) {
+    e.preventDefault();
+    _tempToken = '';
+    hideStatus('mfa-verify-status');
+    showStep('step-credentials');
+    document.getElementById('inp-pass').value = '';
+    hideStatus('login-status');
+    document.getElementById('inp-user').focus();
+  });
+
+})();
+</script>
 </body>
 </html>

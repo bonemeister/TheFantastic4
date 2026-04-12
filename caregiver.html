@@ -1,204 +1,2196 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MyHealth Portal – Caregiver</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script defer src="portal.js"></script>
-</head>
-<body data-page="caregiver">
-  <a class="skip-link" href="#main">Skip to main content</a>
-
-  <header class="appbar">
-    <a class="brand" href="index.html" aria-label="Go to Home">
-      <span class="brand__mark" aria-hidden="true">
-        <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M256 32C256 32 160 64 96 64C96 64 96 192 96 256C96 368 256 480 256 480C256 480 416 368 416 256C416 192 416 64 416 64C352 64 256 32 256 32Z" fill="#2563EB"/>
-          <circle cx="256" cy="256" r="96" fill="white"/>
-          <path d="M256 200V312M200 256H312" stroke="#2563EB" stroke-width="32" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="brand__text">MyHealth Portal</span>
-    </a>
-    <nav class="usernav">
-      <button class="btn btn--top text-size" data-size="up">A+</button>
-      <button class="btn btn--top text-size" data-size="down">A−</button>
-      <button class="btn btn--top" id="dark-toggle" aria-pressed="false">Dark</button>
-      <button class="btn btn--top" id="contrast-toggle" aria-pressed="false">Contrast</button>
-      <a class="btn btn--top" href="admin-login.html" title="Admin">🛡️</a>
-      <button class="btn btn--top" data-logout>Log out</button>
-    </nav>
-  </header>
-
-  <section class="patientbar">
-    <div class="patientbar__left">
-      <div id="patient-initials" class="patientpic">PT</div>
-      <div>
-        <label for="patient-select" style="font-size:.85rem;color:var(--muted);">Managing Patient:</label>
-        <select id="patient-select" style="font-size:1.1rem;font-weight:600;border:none;background:transparent;cursor:pointer;">
-          <option>Loading...</option>
-        </select>
-        <p class="patientmeta" id="patient-meta"></p>
-        <p class="alerts" id="patient-alerts"></p>
-      </div>
-    </div>
-    <div class="assist" id="login-status">Signed in as Caregiver</div>
-  </section>
-
-  <main id="main" class="layout">
-    <aside class="sidenav">
-      <a class="sidenav__link sidenav__link--active" href="#info" aria-current="page">Patient Info</a>
-      <a class="sidenav__link" href="#meds">Medications</a>
-      <button class="sidenav__link" id="issue-toggle" style="border:none;background:none;text-align:left;width:100%;cursor:pointer;">Report Issue</button>
-    </aside>
-
-    <section class="content">
-      <article id="info" class="card">
-        <header class="card__header">
-          <h2 class="card__title">Patient Information</h2>
-        </header>
-        <form class="assist" style="display:grid; gap:.75rem;">
-          <label>Full Name
-            <input id="f-name" type="text" placeholder="Patient full name" />
-          </label>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:.75rem;">
-            <label>MRN
-              <input id="f-mrn" type="text" placeholder="Medical Record Number" />
-            </label>
-            <label>Date of Birth
-              <input id="f-dob" type="date" />
-            </label>
-            <label>Blood Type
-              <input id="f-blood" type="text" placeholder="e.g. O+" />
-            </label>
-          </div>
-
-          <label>Allergies
-            <input id="f-allergies" type="text" placeholder="Known allergies" />
-          </label>
-
-          <label>Access Code
-            <input id="f-access" type="text" inputmode="numeric" placeholder="4-digit patient access code" />
-          </label>
-
-          <button type="button" class="btn btn--primary" id="save-patient" style="padding:.5rem 1rem;font-size:.9rem;">Save Patient Info</button>
-        </form>
-      </article>
-
-      <article id="meds" class="card">
-        <header class="card__header">
-          <h2 class="card__title">Medications</h2>
-        </header>
-
-        <div class="assist" style="display:grid; gap:.75rem; padding:1rem; background:var(--surface-accent); border-radius:.5rem; margin-bottom:1rem;">
-          <h3 style="margin:0; font-size:1rem;">Add New Medication</h3>
-          
-          <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:.5rem;">
-            <label style="font-size:.85rem;">Medication Name
-              <input id="med-name" type="text" placeholder="e.g. Lisinopril" />
-            </label>
-            <label style="font-size:.85rem;">Strength
-              <input id="med-strength" type="text" placeholder="10" />
-            </label>
-            <label style="font-size:.85rem;">Unit
-              <input id="med-unit" type="text" placeholder="mg" />
-            </label>
-            <label style="font-size:.85rem;">Form
-              <select id="med-form">
-                <option value="tablet">Tablet</option>
-                <option value="capsule">Capsule</option>
-                <option value="liquid">Liquid</option>
-                <option value="inhaler">Inhaler</option>
-              </select>
-            </label>
-          </div>
-
-          <label style="font-size:.85rem;">Directions
-            <input id="med-directions" type="text" placeholder="e.g. Take 1 tablet daily" />
-          </label>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:.5rem;">
-            <label style="font-size:.85rem;">Quantity
-              <input id="med-qty" type="text" placeholder="30" />
-            </label>
-            <label style="font-size:.85rem;">Refills
-              <input id="med-refills" type="text" placeholder="2" />
-            </label>
-          </div>
-
-          <label style="font-size:.85rem;">Notes
-            <input id="med-notes" type="text" placeholder="Additional notes" />
-          </label>
-
-          <button type="button" class="btn btn--primary" id="med-add" style="padding:.5rem 1rem;font-size:.9rem;">Add Medication</button>
-        </div>
-
-        <h3 style="margin:1rem 0 .5rem; font-size:1rem;">Current Medications</h3>
-        <ul class="list" id="med-list-care" style="display:grid;gap:.5rem;"></ul>
-        
-        <div style="display:none;">
-          <textarea id="f-meds" rows="8"></textarea>
-        </div>
-      </article>
-    </section>
-  </main>
-
-  <!-- Floating Chat (bottom-right) -->
-  <button id="chat-toggle" class="chat-fab" aria-label="Open secure messages">💬</button>
-  <aside id="chat-panel" class="chat-panel" aria-label="Secure Messages" aria-live="polite">
-    <div class="chat-head">
-      <div>
-        <h3 class="chat-title">Secure Messages</h3>
-        <label for="chat-patient-select" style="font-size:.85rem;color:var(--muted);display:block;margin-top:.25rem;">
-          Chatting with:
-          <select id="chat-patient-select" style="font-size:.95rem;font-weight:500;border:1px solid var(--border);background:var(--surface);padding:.25rem .5rem;border-radius:.25rem;cursor:pointer;margin-left:.25rem;">
-            <option>Loading patients...</option>
-          </select>
-        </label>
-      </div>
-      <button class="chat-close" type="button" onclick="document.getElementById('chat-panel').classList.remove('open')">×</button>
-    </div>
-    <div class="chat-body">
-      <div id="chat-list" class="list"></div>
-    </div>
-    <div class="chat-foot">
-      <form id="chat-form">
-        <label class="muted" for="chat-input">Message</label>
-        <textarea id="chat-input" rows="2" placeholder="Type a secure message…"></textarea>
-        <button class="btn btn--primary" type="submit">Send</button>
-      </form>
-    </div>
-  </aside>
-
-  <!-- Issue Panel (bottom-left) -->
-  <button id="issue-toggle-fab" class="chat-fab" aria-label="Report to Admin" style="left:18px;right:auto;">📋</button>
-  <aside id="issue-panel" class="chat-panel" aria-label="Report Issue" style="left:18px;right:auto;">
-    <div class="chat-head">
-      <div>
-        <h3 class="chat-title">Report to Admin</h3>
-        <span class="muted" style="display:block;font-size:.85rem;margin-top:.25rem;">Submit tickets to administrators</span>
-      </div>
-      <button class="chat-close" type="button" onclick="document.getElementById('issue-panel').classList.remove('open')">×</button>
-    </div>
-    <div class="chat-body">
-      <div id="issue-list" class="list"></div>
-    </div>
-    <div class="chat-foot">
-      <form id="issue-form">
-        <label class="muted" for="issue-input">Describe the issue</label>
-        <textarea id="issue-input" rows="3" placeholder="Report a technical or medical issue to administrators…"></textarea>
-        <button class="btn btn--primary" type="submit">Submit Ticket</button>
-      </form>
-    </div>
-  </aside>
-
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>MyHealth — Caregiver Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    #med-list-care {
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-w: 230px;
+      --sidebar-bg: #0f1623;
+      --sidebar-border: #1e2a3a;
+      --sidebar-text: #8a9bb5;
+      --sidebar-active-bg: #1a2540;
+      --sidebar-active-text: #fff;
+      --sidebar-accent: #3b82f6;
+      --topbar-h: 60px;
+      --bg: #f0f2f7;
+      --surface: #ffffff;
+      --surface2: #f8fafc;
+      --border: #e4e8f0;
+      --text: #1a2540;
+      --text-muted: #7b8fac;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #06b6d4;
+      --radius: 10px;
+      --shadow: 0 2px 12px rgba(15,22,35,.07);
+      --shadow-lg: 0 8px 32px rgba(15,22,35,.13);
+      --font: 'DM Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+    }
+
+    body { font-family: var(--font); background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w); background: var(--sidebar-bg);
+      display: flex; flex-direction: column;
+      position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; overflow-y: auto;
+    }
+    .sidebar-brand {
+      display: flex; align-items: center; gap: .75rem;
+      padding: 1.2rem 1.25rem 1rem; border-bottom: 1px solid var(--sidebar-border); text-decoration: none;
+    }
+    .sidebar-brand-icon { width: 34px; height: 34px; background: var(--primary); border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-brand-icon svg { width: 20px; height: 20px; }
+    .sidebar-brand-text { font-size: .8rem; font-weight: 600; color: #fff; line-height: 1.2; }
+    .sidebar-brand-sub  { font-size: .7rem; color: var(--sidebar-text); font-weight: 400; }
+    .sidebar-section { padding: .9rem 1rem .3rem; font-size: .65rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #3d5270; }
+    .sidebar-item {
+      display: flex; align-items: center; gap: .65rem;
+      padding: .6rem 1.25rem; font-size: .82rem; font-weight: 500;
+      color: var(--sidebar-text); cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+      transition: background .15s, color .15s; position: relative;
+    }
+    .sidebar-item:hover { background: #161f30; color: #c8d6ea; }
+    .sidebar-item.active { background: var(--sidebar-active-bg); color: var(--sidebar-active-text); }
+    .sidebar-item.active::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--sidebar-accent); border-radius: 0 2px 2px 0; }
+    .sidebar-item .icon { width: 16px; height: 16px; opacity: .7; flex-shrink: 0; }
+    .sidebar-item.active .icon { opacity: 1; }
+    .sidebar-footer { margin-top: auto; padding: .75rem 1rem; border-top: 1px solid var(--sidebar-border); }
+    .sidebar-footer .sidebar-item { padding: .55rem .75rem; border-radius: 8px; }
+
+    /* ── MAIN ── */
+    .main-wrap { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      height: var(--topbar-h); background: var(--surface); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; position: sticky; top: 0; z-index: 50; gap: 1rem;
+    }
+    .topbar-patient { display: flex; align-items: center; gap: .75rem; }
+    .patient-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, #3b82f6, #06b6d4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .topbar-patient-name { font-weight: 600; font-size: .92rem; }
+    .topbar-patient-meta { font-size: .75rem; color: var(--text-muted); }
+    .patient-select-wrap { display: flex; align-items: center; gap: .4rem; }
+    .patient-select-wrap select { font-family: var(--font); font-size: .88rem; font-weight: 600; border: 1px solid var(--border); border-radius: 8px; padding: .35rem .65rem; background: var(--surface2); cursor: pointer; color: var(--text); }
+    .topbar-right { display: flex; align-items: center; gap: .6rem; }
+    .tag { display: inline-flex; align-items: center; gap: .25rem; font-size: .72rem; font-weight: 600; padding: .2rem .55rem; border-radius: 99px; }
+    .tag-blood   { background: #fce7f3; color: #9d174d; }
+    .tag-allergy { background: #fef3c7; color: #92400e; }
+    .tag-blue    { background: #dbeafe; color: #1d4ed8; }
+    .tag-green   { background: #d1fae5; color: #065f46; }
+    .tag-red     { background: #fee2e2; color: #991b1b; }
+    .tag-gray    { background: #f3f4f6; color: #374151; }
+    .tag-teal    { background: #cffafe; color: #0e7490; }
+    .topbar-btn { padding: .35rem .8rem; border-radius: 8px; font-size: .78rem; font-weight: 600; border: 1px solid var(--border); background: var(--surface2); color: var(--text-muted); cursor: pointer; font-family: var(--font); transition: all .15s; }
+    .topbar-btn:hover { background: var(--bg); color: var(--text); }
+
+    /* ── CONTENT AREA ── */
+    .content-area { flex: 1; padding: 1.5rem; }
+    .section-panel { display: none; }
+    .section-panel.active { display: block; }
+
+    /* ── STAT CARDS ── */
+    .stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: var(--surface); border-radius: var(--radius); padding: 1.15rem 1.2rem; box-shadow: var(--shadow); display: flex; align-items: flex-start; justify-content: space-between; border: 1px solid var(--border); position: relative; overflow: hidden; }
+    .stat-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: var(--radius) var(--radius) 0 0; }
+    .stat-card.c-blue::after   { background: linear-gradient(90deg,#3b82f6,#06b6d4); }
+    .stat-card.c-green::after  { background: linear-gradient(90deg,#10b981,#34d399); }
+    .stat-card.c-orange::after { background: linear-gradient(90deg,#f59e0b,#fbbf24); }
+    .stat-card.c-purple::after { background: linear-gradient(90deg,#8b5cf6,#a78bfa); }
+    .stat-card-label { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: .35rem; }
+    .stat-card-value { font-size: 1.65rem; font-weight: 700; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
+    .stat-card-sub   { font-size: .75rem; color: var(--text-muted); margin-top: .3rem; }
+    .stat-card-icon  { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .stat-card-icon svg { width: 20px; height: 20px; }
+    .si-blue   { background: #eff6ff; color: #3b82f6; }
+    .si-green  { background: #ecfdf5; color: #10b981; }
+    .si-orange { background: #fffbeb; color: #f59e0b; }
+    .si-purple { background: #f5f3ff; color: #8b5cf6; }
+
+    /* ── CARD ── */
+    .card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 1.2rem; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
+    .card-title { font-size: .95rem; font-weight: 700; color: var(--text); }
+    .card-subtitle { font-size: .75rem; color: var(--text-muted); margin-top: .1rem; }
+    .card-body { padding: 1.25rem; }
+
+    /* ── FORM ── */
+    .form-grid   { display: grid; gap: .9rem; }
+    .form-cols-2 { grid-template-columns: 1fr 1fr; }
+    .form-cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .field { display: flex; flex-direction: column; gap: .35rem; }
+    .field label { font-size: .78rem; font-weight: 600; color: var(--text-muted); letter-spacing: .02em; }
+    .field input, .field select, .field textarea {
+      font-family: var(--font); font-size: .88rem; font-weight: 400;
+      padding: .55rem .8rem; border: 1px solid var(--border); border-radius: 8px;
+      background: var(--surface2); color: var(--text);
+      transition: border-color .15s, box-shadow .15s; outline: none;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.12); background: #fff; }
+    .field textarea { resize: vertical; min-height: 70px; }
+
+    /* ── BUTTONS ── */
+    .btn { display: inline-flex; align-items: center; gap: .4rem; font-family: var(--font); font-size: .82rem; font-weight: 600; padding: .5rem 1rem; border-radius: 8px; border: none; cursor: pointer; transition: all .15s; }
+    .btn-primary   { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg); }
+    .btn-danger    { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; }
+    .btn-danger:hover { background: #fecaca; }
+    .btn-ghost     { background: none; color: var(--text-muted); border: 1px solid transparent; }
+    .btn-ghost:hover { background: var(--bg); color: var(--text); border-color: var(--border); }
+    .btn-sm   { padding: .3rem .7rem; font-size: .76rem; }
+    .btn-icon { width: 30px; height: 30px; padding: 0; justify-content: center; border-radius: 6px; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── FILTER TABS ── */
+    .filter-tabs { display: flex; gap: .4rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .filter-tab { font-family: var(--font); font-size: .78rem; font-weight: 600; padding: .3rem .75rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-muted); cursor: pointer; transition: all .15s; }
+    .filter-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .filter-tab:hover:not(.active) { background: var(--bg); color: var(--text); }
+
+    /* ── MED CARD ── */
+    .med-card { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: .9rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--surface2); margin-bottom: .6rem; transition: box-shadow .15s; }
+    .med-card:hover { box-shadow: var(--shadow); background: #fff; }
+    .med-name   { font-weight: 700; font-size: .93rem; }
+    .med-dose   { font-size: .78rem; color: var(--text-muted); font-family: var(--mono); margin-left: .4rem; }
+    .med-detail { font-size: .8rem; color: var(--text-muted); margin-top: .2rem; }
+    .med-actions { display: flex; gap: .35rem; flex-shrink: 0; }
+
+    /* ── APPT CARD ── */
+    .appt-card { padding: 1rem; border: 1px solid var(--border); border-radius: 8px; margin-bottom: .6rem; background: var(--surface2); display: flex; gap: 1rem; align-items: flex-start; transition: box-shadow .15s; }
+    .appt-card:hover { box-shadow: var(--shadow); background: #fff; }
+    .appt-date-block { min-width: 52px; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: .4rem .5rem; }
+    .appt-date-month { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--primary); }
+    .appt-date-day   { font-size: 1.4rem; font-weight: 800; line-height: 1; color: var(--text); }
+    .appt-date-year  { font-size: .65rem; color: var(--text-muted); }
+    .appt-body  { flex: 1; }
+    .appt-title { font-weight: 700; font-size: .93rem; }
+    .appt-meta  { font-size: .8rem; color: var(--text-muted); margin-top: .25rem; display: flex; gap: .75rem; flex-wrap: wrap; }
+    .appt-notes { font-size: .8rem; color: var(--text-muted); font-style: italic; margin-top: .3rem; }
+    .appt-actions { display: flex; flex-direction: column; gap: .35rem; align-items: flex-end; flex-shrink: 0; }
+
+    /* ── REMINDER ROW ── */
+    .reminder-row { display: flex; align-items: center; gap: .8rem; padding: .7rem .9rem; border: 1px solid var(--border); border-radius: 8px; background: var(--surface2); margin-bottom: .5rem; transition: box-shadow .15s; }
+    .reminder-row:hover { box-shadow: var(--shadow); background: #fff; }
+    .reminder-row.done { opacity: .5; }
+    .reminder-row.done .reminder-title { text-decoration: line-through; }
+    .rem-check    { width: 18px; height: 18px; cursor: pointer; flex-shrink: 0; accent-color: var(--primary); }
+    .reminder-title { font-weight: 500; font-size: .88rem; }
+    .reminder-meta  { font-size: .75rem; color: var(--text-muted); margin-top: .1rem; display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    .reminder-spacer { flex: 1; }
+
+    /* ── MED IMAGE GALLERY ── */
+    .img-gallery {
       display: grid;
-      gap: 0.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+    .img-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--surface2);
+      transition: box-shadow .15s, transform .15s;
+      position: relative;
+      cursor: pointer;
+    }
+    .img-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .img-card img {
+      width: 100%; height: 130px; object-fit: cover;
+      display: block; background: #e2e8f0;
+    }
+    .img-card-body { padding: .55rem .65rem .6rem; }
+    .img-card-med  { font-size: .78rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .img-card-desc { font-size: .72rem; color: var(--text-muted); margin-top: .15rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .img-card-meta { font-size: .68rem; color: var(--text-muted); margin-top: .3rem; }
+    .img-card-del  {
+      position: absolute; top: .4rem; right: .4rem;
+      width: 26px; height: 26px;
+      background: rgba(239,68,68,.85); color: #fff;
+      border: none; border-radius: 6px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem; line-height: 1;
+      opacity: 0; transition: opacity .15s;
+    }
+    .img-card:hover .img-card-del { opacity: 1; }
+
+    /* ── IMAGE FILE DROP ZONE ── */
+    .img-dropzone {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: .85rem;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      position: relative;
+    }
+    .img-dropzone:hover, .img-dropzone.drag-over { border-color: var(--primary); background: #eff6ff; color: var(--primary); }
+    .img-dropzone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .img-dropzone-icon { font-size: 2rem; margin-bottom: .5rem; display: block; }
+    .img-preview-wrap { margin-top: .75rem; }
+    .img-preview-wrap img { max-height: 180px; border-radius: 8px; border: 1px solid var(--border); display: block; margin: 0 auto; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(5,10,20,.92);
+      z-index: 500;
+      align-items: center; justify-content: center;
+      padding: 1.5rem;
+    }
+    .lightbox-overlay.open { display: flex; }
+    .lightbox-inner { max-width: 780px; width: 100%; position: relative; }
+    .lightbox-img { width: 100%; max-height: 70vh; object-fit: contain; border-radius: 10px; display: block; }
+    .lightbox-info { background: rgba(255,255,255,.06); border-radius: 10px; padding: 1rem 1.1rem; margin-top: .75rem; color: #e2e8f0; }
+    .lightbox-med  { font-size: 1rem; font-weight: 700; }
+    .lightbox-desc { font-size: .88rem; color: #94a3b8; margin-top: .3rem; }
+    .lightbox-close {
+      position: absolute; top: -2.5rem; right: 0;
+      background: none; border: none; color: #94a3b8; font-size: 1.6rem;
+      cursor: pointer; line-height: 1; padding: .25rem .5rem;
+      transition: color .15s;
+    }
+    .lightbox-close:hover { color: #fff; }
+
+    /* ── MODAL ── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,18,35,.5); backdrop-filter: blur(3px); z-index: 300; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--surface); border-radius: 14px; padding: 1.75rem; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(10,18,35,.25); animation: modal-in .2s ease; }
+    @keyframes modal-in { from { opacity:0; transform:translateY(-12px) scale(.97); } to { opacity:1; transform:none; } }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.4rem; }
+    .modal-title  { font-size: 1.05rem; font-weight: 700; }
+    .modal-close  { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.3rem; line-height: 1; padding: .2rem; border-radius: 6px; transition: background .15s; }
+    .modal-close:hover { background: var(--bg); color: var(--text); }
+    .modal-footer { display: flex; gap: .6rem; justify-content: flex-end; margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+
+    /* ── CHAT / ISSUE PANELS ── */
+    .fab { position: fixed; bottom: 1.5rem; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,.2); cursor: pointer; border: none; font-size: 1.2rem; transition: transform .15s, box-shadow .15s; z-index: 90; }
+    .fab:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+    .fab-chat  { right: 1.5rem; background: var(--primary); color: #fff; }
+    .fab-issue { left: calc(var(--sidebar-w) + 1.5rem); background: #1e2a3a; color: #8a9bb5; }
+    .side-panel { position: fixed; bottom: 0; right: 0; width: 360px; height: 480px; background: var(--surface); border-radius: 16px 16px 0 0; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; transform: translateY(100%); transition: transform .25s cubic-bezier(.34,1.2,.64,1); z-index: 90; border: 1px solid var(--border); border-bottom: none; }
+    .side-panel.issue { right: auto; left: calc(var(--sidebar-w) + 1.5rem); }
+    .side-panel.open { transform: translateY(0); }
+    .panel-header { display: flex; align-items: center; justify-content: space-between; padding: .9rem 1.1rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .panel-title { font-weight: 700; font-size: .9rem; }
+    .panel-close { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.1rem; padding: .2rem; border-radius: 6px; }
+    .panel-close:hover { background: var(--bg); color: var(--text); }
+    .panel-body  { flex: 1; overflow-y: auto; padding: .75rem; }
+    .panel-footer { padding: .75rem; border-top: 1px solid var(--border); flex-shrink: 0; }
+    .panel-footer textarea { width: 100%; padding: .55rem .75rem; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font); font-size: .85rem; resize: none; outline: none; margin-bottom: .5rem; background: var(--surface2); }
+    .panel-footer textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.1); }
+    .chat-msg { padding: .4rem 0; font-size: .85rem; border-bottom: 1px solid var(--border); }
+    .chat-msg:last-child { border-bottom: none; }
+    .chat-sender { font-weight: 700; font-size: .78rem; color: var(--text-muted); margin-bottom: .1rem; }
+    .chat-time { float: right; font-size: .72rem; color: var(--text-muted); }
+    .chat-empty { text-align: center; color: var(--text-muted); font-size: .85rem; padding: 2rem 0; }
+
+    /* ── UTILITY ── */
+    .divider { height: 1px; background: var(--border); margin: .6rem 0; }
+    .empty-state { text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); }
+    .empty-state svg { width: 40px; height: 40px; opacity: .3; margin: 0 auto .75rem; display: block; }
+    .empty-state p { font-size: .88rem; }
+    .row-actions { display: flex; gap: .35rem; align-items: center; }
+
+    /* DARK MODE */
+    body.dark {
+      --bg: #0d1420; --surface: #141d2e; --surface2: #1a2540;
+      --border: #1e2a3a; --text: #e2e8f0; --text-muted: #64748b;
+      --sidebar-bg: #0a1018;
+    }
+    body.dark .img-card img { background: #1a2540; }
+    body.dark .lightbox-info { background: rgba(255,255,255,.04); }
+
+    /* ── PATIENT DASHBOARD ── */
+    .pt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.2rem; }
+    .pt-card {
+      background: var(--surface); border-radius: var(--radius);
+      border: 1px solid var(--border); box-shadow: var(--shadow);
+      display: flex; flex-direction: column; overflow: hidden;
+      transition: box-shadow .18s, transform .18s;
+    }
+    .pt-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .pt-card-accent { height: 4px; background: linear-gradient(90deg, var(--pt-c1,#3b82f6), var(--pt-c2,#06b6d4)); }
+    .pt-card-body { padding: 1.15rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: .9rem; }
+    .pt-head { display: flex; align-items: flex-start; gap: .9rem; }
+    .pt-avatar {
+      width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 700; color: #fff; overflow: hidden;
+    }
+    .pt-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .pt-info { flex: 1; min-width: 0; }
+    .pt-name { font-size: 1rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pt-sub  { font-size: .74rem; color: var(--text-muted); margin-top: .15rem; }
+    .pt-tags { display: flex; gap: .3rem; flex-wrap: wrap; margin-top: .35rem; }
+    .pt-divider { height: 1px; background: var(--border); }
+    .pt-stats { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .pt-stat { padding: .6rem .5rem; text-align: center; background: var(--surface2); }
+    .pt-stat + .pt-stat { border-left: 1px solid var(--border); }
+    .pt-stat-val { font-size: 1.3rem; font-weight: 800; color: var(--text); line-height: 1; font-variant-numeric: tabular-nums; }
+    .pt-stat-lbl { font-size: .65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; margin-top: .2rem; }
+    .pt-team { display: flex; align-items: center; gap: .6rem; }
+    .pt-team-lbl { font-size: .73rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+    .pt-faces { display: flex; align-items: center; flex: 1; }
+    .pt-face {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 2px solid var(--surface); margin-left: -6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .6rem; font-weight: 700; color: #fff; overflow: hidden; flex-shrink: 0;
+    }
+    .pt-face:first-child { margin-left: 0; }
+    .pt-face img { width: 100%; height: 100%; object-fit: cover; }
+    .pt-face-more { background: var(--border); color: var(--text-muted); font-size: .62rem; }
+    .pt-card-footer { display: flex; gap: .5rem; padding: .9rem 1.25rem; border-top: 1px solid var(--border); background: var(--surface2); }
+    .pt-card-footer .btn { flex: 1; justify-content: center; font-size: .79rem; }
+    .pt-empty { grid-column: 1/-1; }
+
+    /* ── CARE TEAM MODAL ── */
+    .ct-member { display: flex; align-items: center; gap: .75rem; padding: .65rem 0; border-bottom: 1px solid var(--border); }
+    .ct-member:last-child { border-bottom: none; }
+    .ct-member-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; color: #fff; flex-shrink: 0; overflow: hidden; }
+    .ct-member-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .ct-member-name { flex: 1; font-size: .9rem; font-weight: 600; }
+    .ct-member-you { font-size: .72rem; color: var(--text-muted); margin-top: .1rem; }
+    .ct-divider { height: 1px; background: var(--border); margin: 1rem 0; }
+    .ct-add-row { display: flex; gap: .5rem; align-items: center; }
+    .ct-add-row select { flex: 1; }
+    .pt-dash-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.4rem; }
+    .pt-dash-title { font-size: 1.35rem; font-weight: 800; color: var(--text); }
+    .pt-dash-sub { font-size: .83rem; color: var(--text-muted); margin-top: .2rem; }
+    .pt-dash-actions { display: flex; gap: .6rem; align-items: center; }
+
+    /* ── PATIENT PICKER ── */
+    .ap-item { display: flex; align-items: center; gap: .75rem; padding: .8rem 1rem; border-bottom: 1px solid var(--border); cursor: default; transition: background .12s; }
+    .ap-item:last-child { border-bottom: none; }
+    .ap-item:hover { background: var(--surface2); }
+    .ap-item-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .85rem; font-weight: 700; color: #fff; flex-shrink: 0; overflow: hidden; }
+    .ap-item-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .ap-item-info { flex: 1; min-width: 0; }
+    .ap-item-name { font-size: .9rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ap-item-sub  { font-size: .74rem; color: var(--text-muted); margin-top: .1rem; }
+    .ap-empty { padding: 2rem 1rem; text-align: center; color: var(--text-muted); font-size: .85rem; }
+    /* ── TIMELINE ── */
+    .timeline-item { padding: .75rem 0; border-bottom: 1px solid var(--border); }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .25rem; }
+    .timeline-title { font-size: .88rem; font-weight: 600; color: var(--text); flex: 1; }
+    .timeline-type { font-size: .72rem; font-weight: 600; padding: .15rem .5rem; border-radius: 99px; background: #dbeafe; color: #1d4ed8; white-space: nowrap; }
+    .timeline-meta { font-size: .76rem; color: var(--text-muted); }
+  
+    /* ── DARK MODE: force input text black only while typing (focused) ── */
+    body.dark input:focus{background:var(--surface2) !important;}
+    body.dark input:focus,
+    body.dark select:focus,
+    body.dark textarea:focus {
+      color: var(--text) !important;
     }
   </style>
+</head>
+<body style="visibility:hidden">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <a class="sidebar-brand" href="/">
+    <div class="sidebar-brand-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+        <path d="M12 2s-7 3-7 10v5l7 5 7-5v-5c0-7-7-10-7-10z"/>
+        <path d="M12 8v4M10 12h4"/>
+      </svg>
+    </div>
+    <div>
+      <div class="sidebar-brand-text">MyHealth</div>
+      <div class="sidebar-brand-sub">Caregiver Portal</div>
+    </div>
+  </a>
+
+  <div class="sidebar-section">Dashboard</div>
+  <button class="sidebar-item active" data-section="patients">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+    My Patients
+  </button>
+
+  <div class="sidebar-section">Patient</div>
+  <button class="sidebar-item" data-section="overview">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Overview
+  </button>
+  <button class="sidebar-item" data-section="info">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Patient Info
+  </button>
+  <button class="sidebar-item" data-section="meds">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+    Medications
+  </button>
+  <button class="sidebar-item" data-section="appointments">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    Appointments
+  </button>
+  <button class="sidebar-item" data-section="reminders">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+    Reminders
+  </button>
+
+  <div class="sidebar-section">Actions</div>
+  <button class="sidebar-item" data-section="profile">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    My Profile
+  </button>
+  <button class="sidebar-item" data-section="new-patient">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+    New Patient
+  </button>
+  <button class="sidebar-item" id="issue-toggle">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    Report Issue
+  </button>
+
+  <div class="sidebar-footer">
+    <button class="sidebar-item" id="logout-btn">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      Log Out
+    </button>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main-wrap">
+  <header class="topbar">
+    <div class="topbar-patient">
+      <div class="patient-avatar" id="patient-initials">PT</div>
+      <div>
+        <div class="topbar-patient-name" id="topbar-patient-name">Loading...</div>
+        <div class="topbar-patient-meta" id="topbar-patient-meta">Select a patient</div>
+      </div>
+    </div>
+    <div class="patient-select-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      <select id="patient-select"><option>Loading...</option></select>
+    </div>
+    <div id="patient-tags" style="display:flex;gap:.35rem;flex-wrap:wrap;align-items:center;flex:1;"></div>
+    <div class="topbar-right">
+      <button class="topbar-btn" id="dark-toggle">🌙 Dark</button>
+      <button class="topbar-btn text-size" data-size="up">A+</button>
+      <button class="topbar-btn text-size" data-size="down">A−</button>
+      <button class="topbar-btn" id="topbar-profile-btn" style="display:flex;align-items:center;gap:.5rem;padding:.25rem .7rem .25rem .25rem;" title="My Profile">
+        <div id="topbar-my-avatar" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;">
+          <span id="topbar-my-initials">?</span>
+          <img id="topbar-my-img" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;"/>
+        </div>
+        <span id="topbar-my-name" style="font-size:.8rem;font-weight:600;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="content-area">
+
+    <!-- ── MY PATIENTS DASHBOARD ── -->
+    <div id="section-patients" class="section-panel active">
+      <div class="pt-dash-header">
+        <div>
+          <div class="pt-dash-title">My Patients</div>
+          <div class="pt-dash-sub" id="pt-dash-sub">Loading your assigned patients…</div>
+        </div>
+        <div class="pt-dash-actions">
+          <button class="btn btn-secondary" id="pt-refresh-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Refresh
+          </button>
+          <button class="btn btn-primary" id="pt-add-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            Add Patient
+          </button>
+        </div>
+      </div>
+      <div id="pt-grid" class="pt-grid">
+        <div class="pt-empty">
+          <div class="empty-state" style="background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:3rem 1rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            <p>Loading patients…</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── OVERVIEW ── -->
+    <div id="section-overview" class="section-panel">
+      <div class="stat-grid">
+        <div class="stat-card c-blue">
+          <div><div class="stat-card-label">Active Meds</div><div class="stat-card-value" id="stat-meds">—</div><div class="stat-card-sub">Current prescriptions</div></div>
+          <div class="stat-card-icon si-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg></div>
+        </div>
+        <div class="stat-card c-orange">
+          <div><div class="stat-card-label">Upcoming Appts</div><div class="stat-card-value" id="stat-appts">—</div><div class="stat-card-sub">Scheduled visits</div></div>
+          <div class="stat-card-icon si-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        </div>
+        <div class="stat-card c-purple">
+          <div><div class="stat-card-label">Pending Tasks</div><div class="stat-card-value" id="stat-tasks">—</div><div class="stat-card-sub">Reminders due</div></div>
+          <div class="stat-card-icon si-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+        </div>
+        <div class="stat-card c-green">
+          <div><div class="stat-card-label">Completed</div><div class="stat-card-value" id="stat-done">—</div><div class="stat-card-sub">Tasks finished</div></div>
+          <div class="stat-card-icon si-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+        <div class="card">
+          <div class="card-header"><div><div class="card-title">Next Appointments</div><div class="card-subtitle">Upcoming scheduled visits</div></div><button class="btn btn-ghost btn-sm" data-section="appointments">View all</button></div>
+          <div class="card-body" id="overview-appts"><div class="empty-state"><p>No upcoming appointments</p></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><div class="card-title">Pending Reminders</div><div class="card-subtitle">Tasks needing attention</div></div><button class="btn btn-ghost btn-sm" data-section="reminders">View all</button></div>
+          <div class="card-body" id="overview-reminders"><div class="empty-state"><p>No pending reminders</p></div></div>
+        </div>
+      </div>
+
+      <!-- CARE TL -->
+      <div class="card" style="margin-top:1.2rem;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Care Activity Timeline</div>
+            <div class="card-subtitle">Recent caregiver actions and updates</div>
+          </div>
+        </div>
+
+        <div class="card-body" id="timeline-list">
+          <div class="empty-state">
+            <p>No timeline activity yet.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── PATIENT INFO ── -->
+    <div id="section-info" class="section-panel">
+      <div class="card">
+        <div class="card-header"><div><div class="card-title">Patient Information</div><div class="card-subtitle">Demographics, contacts, and notes</div></div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="field"><label>Full Name</label><input id="f-name"/></div>
+            <div class="form-grid form-cols-3">
+              <div class="field"><label>MRN</label><input id="f-mrn"/></div>
+              <div class="field"><label>Date of Birth</label><input id="f-dob" type="date"/></div>
+              <div class="field"><label>Blood Type</label><input id="f-blood" placeholder="e.g. O+"/></div>
+            </div>
+            <div class="form-grid form-cols-2">
+              <div class="field"><label>Allergies</label><input id="f-allergies" placeholder="e.g. Penicillin, Peanuts"/></div>
+              <div class="field"><label>Primary Doctor</label><input id="f-doctor" placeholder="e.g. Dr. Jane Smith"/></div>
+            </div>
+            <div class="form-grid form-cols-2">
+              <div class="field"><label>Emergency Contact</label><input id="f-emergency" placeholder="Name — Relationship"/></div>
+              <div class="field"><label>Emergency Phone</label><input id="f-emergency-phone" type="tel" placeholder="555-0100"/></div>
+            </div>
+            <div class="field"><label>Care Notes</label><textarea id="f-notes" placeholder="General care notes, preferences, observations..."></textarea></div>
+            <div style="display:flex;justify-content:flex-end;"><button class="btn btn-primary" id="save-patient">Save Patient Info</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MEDICATIONS ── -->
+    <div id="section-meds" class="section-panel">
+      <!-- Prescriptions card -->
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Medications</div><div class="card-subtitle">Active prescriptions and supplements</div></div>
+          <button class="btn btn-primary btn-sm" id="add-med-btn">+ Add Medication</button>
+        </div>
+        <div class="card-body"><div id="med-list"></div></div>
+      </div>
+
+      <!-- Medication Images card -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">🖼 Medication Images</div>
+            <div class="card-subtitle">Reference photos for pills, packaging, or instructions</div>
+          </div>
+          <button class="btn btn-primary btn-sm" id="add-img-btn">+ Add Image</button>
+        </div>
+        <div class="card-body">
+          <div id="med-img-gallery">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <p>No images yet. Click <strong>+ Add Image</strong> to upload one.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── APPOINTMENTS ── -->
+    <div id="section-appointments" class="section-panel">
+      <div class="card">
+        <div class="card-header"><div><div class="card-title">Appointments</div><div class="card-subtitle">Doctor visits and scheduled care</div></div><button class="btn btn-primary btn-sm" id="add-appt-btn">+ Add Appointment</button></div>
+        <div class="card-body">
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="upcoming">Upcoming</button>
+            <button class="filter-tab" data-filter="completed">Completed</button>
+            <button class="filter-tab" data-filter="cancelled">Cancelled</button>
+            <button class="filter-tab" data-filter="all">All</button>
+          </div>
+          <div id="appt-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REMINDERS ── -->
+    <div id="section-reminders" class="section-panel">
+      <div class="card">
+        <div class="card-header"><div><div class="card-title">Reminders &amp; Tasks</div><div class="card-subtitle">Medication, lab, and care reminders</div></div><button class="btn btn-primary btn-sm" id="add-reminder-btn">+ Add Reminder</button></div>
+        <div class="card-body">
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="medication">Medication</button>
+            <button class="filter-tab" data-filter="appointment">Appointment</button>
+            <button class="filter-tab" data-filter="lab">Lab / Test</button>
+            <button class="filter-tab" data-filter="general">General</button>
+          </div>
+          <div id="reminder-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NEW PATIENT ── -->
+    <div id="section-new-patient" class="section-panel">
+      <div class="card">
+        <div class="card-header"><div><div class="card-title">Create New Patient</div><div class="card-subtitle">Register a new patient account — they will use these credentials to log in</div></div></div>
+        <div class="card-body">
+          <div id="np-status" style="display:none;padding:.65rem .9rem;border-radius:8px;margin-bottom:1rem;font-size:.85rem;"></div>
+          <div class="form-grid">
+            <div class="form-grid form-cols-2">
+              <div class="field"><label>Full Name *</label><input id="np-fullName" placeholder="e.g. Jane Doe"/></div>
+              <div class="field"><label>Username * <span style="font-weight:400;color:var(--text-muted);">(used to log in)</span></label><input id="np-username" placeholder="e.g. jane.doe" autocomplete="off"/></div>
+            </div>
+            <div class="form-grid form-cols-2">
+              <div class="field"><label>Password *</label><input id="np-password" type="password" placeholder="Set a temporary password" autocomplete="new-password"/></div>
+              <div class="field"><label>Confirm Password *</label><input id="np-password2" type="password" placeholder="Re-enter password" autocomplete="new-password"/></div>
+            </div>
+            <div class="card" style="background:var(--surface2);padding:1rem;margin-top:.25rem;">
+              <div style="font-size:.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;">Optional: Pre-fill Patient Info</div>
+              <div class="form-grid">
+                <div class="form-grid form-cols-3">
+                  <div class="field"><label>MRN</label><input id="np-mrn" placeholder="e.g. MRN002"/></div>
+                  <div class="field"><label>Date of Birth</label><input id="np-dob" type="date"/></div>
+                  <div class="field"><label>Blood Type</label><input id="np-blood" placeholder="e.g. A+"/></div>
+                </div>
+                <div class="form-grid form-cols-2">
+                  <div class="field"><label>Allergies</label><input id="np-allergies" placeholder="e.g. Penicillin, Latex"/></div>
+                  <div class="field"><label>Primary Doctor</label><input id="np-doctor" placeholder="e.g. Dr. Jane Smith"/></div>
+                </div>
+                <div class="form-grid form-cols-2">
+                  <div class="field"><label>Emergency Contact</label><input id="np-emergency" placeholder="Name — Relationship"/></div>
+                  <div class="field"><label>Emergency Phone</label><input id="np-emergency-phone" type="tel" placeholder="555-0100"/></div>
+                </div>
+                <div class="field"><label>Care Notes</label><textarea id="np-notes" placeholder="Initial care notes..."></textarea></div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:.6rem;padding-top:.25rem;">
+              <button class="btn btn-secondary" id="np-reset">Clear Form</button>
+              <button class="btn btn-primary" id="np-submit">&#43; Create Patient Account</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card" id="np-recent-card" style="display:none;">
+        <div class="card-header"><div class="card-title">Recently Created Patients</div></div>
+        <div class="card-body" id="np-recent-list"></div>
+      </div>
+    </div>
+
+    <!-- ── MY PROFILE ── -->
+    <div id="section-profile" class="section-panel">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;align-items:start;">
+
+        <!-- Account settings -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Account Settings</div>
+              <div class="card-subtitle">Update your username and display name</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="profile-status" style="display:none;padding:.6rem .9rem;border-radius:8px;margin-bottom:1rem;font-size:.84rem;"></div>
+
+            <!-- Avatar -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:.75rem;margin-bottom:1.5rem;">
+              <div id="cg-avatar-wrap" style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:#fff;overflow:hidden;border:3px solid var(--border);box-shadow:var(--shadow);">
+                <span id="cg-avatar-initials">?</span>
+                <img id="cg-avatar-img" src="" alt="Profile picture" style="display:none;width:100%;height:100%;object-fit:cover;"/>
+              </div>
+              <div style="display:flex;gap:.5rem;">
+                <label class="btn btn-secondary btn-sm" style="cursor:pointer;" title="Upload a profile picture">
+                  📷 Change Photo
+                  <input type="file" id="cg-avatar-file" accept="image/*" style="display:none;"/>
+                </label>
+                <button class="btn btn-secondary btn-sm" id="cg-avatar-remove" style="display:none;">✕ Remove</button>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label>Display Name</label>
+                <input id="cg-displayName" placeholder="How you want to be greeted (optional)"/>
+              </div>
+              <div class="field">
+                <label>Username *</label>
+                <input id="cg-username" placeholder="Your login username" autocomplete="off"/>
+              </div>
+              <div style="display:flex;justify-content:flex-end;">
+                <button class="btn btn-primary" id="cg-profile-save">Save Profile</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Change password -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Change Password</div>
+              <div class="card-subtitle">Use a strong, unique password</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="pw-status" style="display:none;padding:.6rem .9rem;border-radius:8px;margin-bottom:1rem;font-size:.84rem;"></div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Current Password</label>
+                <input type="password" id="cg-pw-current" autocomplete="current-password" placeholder="Enter current password"/>
+              </div>
+              <div class="field">
+                <label>New Password</label>
+                <input type="password" id="cg-pw-new" autocomplete="new-password" placeholder="At least 6 characters"/>
+              </div>
+              <div class="field">
+                <label>Confirm New Password</label>
+                <input type="password" id="cg-pw-confirm" autocomplete="new-password" placeholder="Re-enter new password"/>
+              </div>
+              <div style="display:flex;justify-content:flex-end;">
+                <button class="btn btn-primary" id="cg-pw-save">Update Password</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content-area -->
+</div><!-- /main-wrap -->
+
+<!-- ── MED MODAL ── -->
+<div class="modal-overlay" id="med-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="med-modal-title">Add Medication</div><button class="modal-close" id="med-modal-close">&#215;</button></div>
+    <div class="form-grid">
+      <div class="field"><label>Medication Name *</label><input id="med-m-name" placeholder="e.g. Lisinopril"/></div>
+      <div class="form-grid form-cols-2">
+        <div class="field"><label>Dose</label><input id="med-m-dose" placeholder="e.g. 10mg"/></div>
+        <div class="field"><label>Form</label><select id="med-m-form"><option value="tablet">Tablet</option><option value="capsule">Capsule</option><option value="liquid">Liquid</option><option value="inhaler">Inhaler</option><option value="injection">Injection</option><option value="patch">Patch</option><option value="other">Other</option></select></div>
+      </div>
+      <div class="field"><label>Directions</label><input id="med-m-directions" placeholder="e.g. Take 1 tablet daily with food"/></div>
+      <div class="form-grid form-cols-2">
+        <div class="field"><label>Frequency</label><select id="med-m-freq"><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>Four times daily</option><option>Every 4 hours</option><option>Every 6 hours</option><option>Every 8 hours</option><option>As needed</option><option>Weekly</option><option>Other</option></select></div>
+        <div class="field"><label>Time(s)</label><input id="med-m-times" placeholder="e.g. 8am, 8pm"/></div>
+      </div>
+      <div class="form-grid form-cols-2">
+        <div class="field"><label>Qty / Supply</label><input id="med-m-qty" placeholder="e.g. 30 tablets"/></div>
+        <div class="field"><label>Refills</label><input id="med-m-refills" placeholder="e.g. 2"/></div>
+      </div>
+      <div class="form-grid form-cols-2">
+        <div class="field"><label>Prescriber</label><input id="med-m-prescriber" placeholder="e.g. Dr. Smith"/></div>
+        <div class="field"><label>Start Date</label><input id="med-m-start" type="date"/></div>
+      </div>
+      <div class="field"><label>Notes</label><textarea id="med-m-notes" placeholder="Side effects to watch, special instructions..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" id="med-modal-cancel">Cancel</button><button class="btn btn-primary" id="med-modal-save">Save Medication</button></div>
+  </div>
+</div>
+
+<!-- ── IMAGE UPLOAD MODAL ── -->
+<div class="modal-overlay" id="img-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add Medication Image</div>
+      <button class="modal-close" id="img-modal-close">&#215;</button>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Medication (optional)</label>
+        <select id="img-m-med"><option value="">— Not specific to one medication —</option></select>
+      </div>
+      <div class="field">
+        <label>Image *</label>
+        <div class="img-dropzone" id="img-dropzone">
+          <input type="file" id="img-file-input" accept="image/*"/>
+          <span class="img-dropzone-icon">📷</span>
+          <div>Click or drag &amp; drop an image here</div>
+          <div style="font-size:.75rem;margin-top:.3rem;opacity:.7;">JPG, PNG, GIF, WebP — max 5 MB</div>
+        </div>
+        <div class="img-preview-wrap" id="img-preview-wrap" style="display:none;">
+          <img id="img-preview" src="" alt="Preview"/>
+          <button class="btn btn-ghost btn-sm" id="img-clear" style="margin-top:.5rem;">✕ Remove image</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea id="img-m-desc" placeholder="e.g. White oval tablet, scored on one side. Take with water." style="min-height:80px;"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="img-modal-cancel">Cancel</button>
+      <button class="btn btn-primary" id="img-modal-save">Upload Image</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── APPT MODAL ── -->
+<div class="modal-overlay" id="appt-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="appt-modal-title">Add Appointment</div><button class="modal-close" id="appt-modal-close">&#215;</button></div>
+    <div class="form-grid">
+      <div class="field"><label>Title / Type *</label><input id="appt-m-title" placeholder="e.g. Cardiology Follow-up"/></div>
+      <div class="form-grid form-cols-2">
+        <div class="field"><label>Date *</label><input id="appt-m-date" type="date"/></div>
+        <div class="field"><label>Time</label><input id="appt-m-time" type="time"/></div>
+      </div>
+      <div class="field"><label>Doctor / Provider</label><input id="appt-m-doctor" placeholder="e.g. Dr. Jane Smith"/></div>
+      <div class="field"><label>Location / Clinic</label><input id="appt-m-location" placeholder="e.g. City Medical Center, Room 204"/></div>
+      <div class="field"><label>Status</label><select id="appt-m-status"><option value="upcoming">Upcoming</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div>
+      <div class="field"><label>Notes</label><textarea id="appt-m-notes" placeholder="What to bring, preparation notes..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" id="appt-modal-cancel">Cancel</button><button class="btn btn-primary" id="appt-modal-save">Save Appointment</button></div>
+  </div>
+</div>
+
+<!-- ── REMINDER MODAL ── -->
+<div class="modal-overlay" id="rem-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Add Reminder</div><button class="modal-close" id="rem-modal-close">&#215;</button></div>
+    <div class="form-grid">
+      <div class="field"><label>Title *</label><input id="rem-m-title" placeholder="e.g. Refill Metformin"/></div>
+      <div class="form-grid form-cols-2">
+        <div class="field"><label>Category</label><select id="rem-m-cat"><option value="medication">Medication</option><option value="appointment">Appointment</option><option value="lab">Lab / Test</option><option value="general">General</option></select></div>
+        <div class="field"><label>Repeat</label><select id="rem-m-repeat"><option value="none">No repeat</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+      </div>
+      <div class="form-grid form-cols-2">
+        <div class="field"><label>Due Date</label><input id="rem-m-date" type="date"/></div>
+        <div class="field"><label>Due Time</label><input id="rem-m-time" type="time"/></div>
+      </div>
+      <div class="field"><label>Notes</label><textarea id="rem-m-notes"></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" id="rem-modal-cancel">Cancel</button><button class="btn btn-primary" id="rem-modal-save">Save Reminder</button></div>
+  </div>
+</div>
+
+<!-- ── ADD PATIENT PICKER MODAL ── -->
+<div class="modal-overlay" id="ap-modal">
+  <div class="modal" style="max-width:500px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Add Patient to Dashboard</div>
+        <div style="font-size:.78rem;color:var(--text-muted);margin-top:.2rem;">Select an existing patient or create a new one</div>
+      </div>
+      <button class="modal-close" id="ap-modal-close">&#215;</button>
+    </div>
+
+    <!-- Search -->
+    <div style="position:relative;margin-bottom:1rem;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="ap-search" placeholder="Search by name or MRN…" style="width:100%;padding:.55rem .8rem .55rem 2.4rem;border:1px solid var(--border);border-radius:8px;font-family:var(--font);font-size:.88rem;background:var(--surface2);color:var(--text);outline:none;" />
+    </div>
+
+    <div id="ap-status" style="display:none;padding:.55rem .8rem;border-radius:7px;margin-bottom:.75rem;font-size:.83rem;"></div>
+
+    <!-- Patient list -->
+    <div id="ap-list" style="max-height:340px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;"></div>
+
+    <div class="modal-footer" style="justify-content:space-between;">
+      <button class="btn btn-ghost btn-sm" data-section="new-patient" id="ap-create-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create New Patient
+      </button>
+      <button class="btn btn-secondary" id="ap-modal-cancel">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── CARE TEAM MODAL ── -->
+<div class="modal-overlay" id="ct-modal">
+  <div class="modal" style="max-width:460px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="ct-modal-title">Care Team</div>
+        <div style="font-size:.78rem;color:var(--text-muted);margin-top:.2rem;" id="ct-modal-sub"></div>
+      </div>
+      <button class="modal-close" id="ct-modal-close">&#215;</button>
+    </div>
+
+    <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:.6rem;">Current Team</div>
+    <div id="ct-members-list">
+      <div class="empty-state" style="padding:1rem 0;"><p>No caregivers assigned.</p></div>
+    </div>
+
+    <div class="ct-divider"></div>
+
+    <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:.6rem;">Add Caregiver</div>
+    <div id="ct-add-status" style="display:none;padding:.55rem .8rem;border-radius:7px;margin-bottom:.75rem;font-size:.83rem;"></div>
+    <div class="ct-add-row">
+      <div class="field" style="flex:1;margin:0;">
+        <select id="ct-cg-select" class="field">
+          <option value="">— Select a caregiver —</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="ct-add-btn">Add</button>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="ct-modal-done">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── IMAGE LIGHTBOX ── -->
+<div class="lightbox-overlay" id="lightbox">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lightbox-close">&#215;</button>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="Medication image"/>
+    <div class="lightbox-info">
+      <div class="lightbox-med" id="lightbox-med"></div>
+      <div class="lightbox-desc" id="lightbox-desc"></div>
+      <div style="font-size:.72rem;color:#64748b;margin-top:.5rem;" id="lightbox-meta"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CHAT FAB + PANEL ── -->
+<button class="fab fab-chat" id="chat-toggle">&#128172;</button>
+<div class="side-panel" id="chat-panel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">Secure Messages</div>
+      <select id="chat-patient-select" style="font-size:.78rem;border:none;background:none;color:var(--text-muted);cursor:pointer;font-family:var(--font);outline:none;"><option>Loading...</option></select>
+    </div>
+    <button class="panel-close" id="chat-close">&#215;</button>
+  </div>
+  <div class="panel-body"><div id="chat-list"></div></div>
+  <div class="panel-footer">
+    <textarea id="chat-input" rows="2" placeholder="Type a message..."></textarea>
+    <div style="display:flex;justify-content:flex-end;"><button class="btn btn-primary btn-sm" id="chat-send">Send</button></div>
+  </div>
+</div>
+
+<!-- ── ISSUE FAB + PANEL ── -->
+<button class="fab fab-issue" id="issue-toggle-fab">&#128203;</button>
+<div class="side-panel issue" id="issue-panel">
+  <div class="panel-header"><div class="panel-title">Report to Admin</div><button class="panel-close" id="issue-close">&#215;</button></div>
+  <div class="panel-footer" style="margin-top:auto;">
+    <textarea id="issue-input" rows="4" placeholder="Describe the issue..."></textarea>
+    <div style="display:flex;justify-content:flex-end;"><button class="btn btn-primary btn-sm" id="issue-send">Submit Ticket</button></div>
+  </div>
+</div>
+
+<script>
+var TOKEN_KEY = 'mh_token';
+var currentPid = null;
+var allMeds = [], allAppts = [], allReminders = [], allMedImages = [], allTimeline = [];
+var apptFilter = 'upcoming', remFilter = 'all';
+var editingApptId = null, editingMedIdx = null;
+var pendingImageData = null; // base64 for upload
+var allCaregivers = []; // cached caregiver list for care team modal
+var ctCurrentPid = null; // patient currently open in care team modal
+
+function api(url, method, body) {
+  var t = localStorage.getItem(TOKEN_KEY);
+  var o = { method: method||'GET', headers: { 'Content-Type': 'application/json' } };
+  if (t) o.headers['x-auth-token'] = t;
+  if (body) o.body = JSON.stringify(body);
+  return fetch(url, o).then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.error||'Error '+r.status); return d; }); });
+}
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+var _t = localStorage.getItem(TOKEN_KEY);
+if (!_t) { window.location.replace('/'); }
+else {
+  api('/api/me').then(function(me) {
+    if (me.role !== 'caregiver') { localStorage.removeItem(TOKEN_KEY); window.location.replace('/'); return; }
+    window._myCaregiverId = me.id; // store for assign-caregiver calls
+    document.body.style.visibility = 'visible';
+    // Update topbar user chip
+    var nm = document.getElementById('topbar-my-name');
+    var ini = document.getElementById('topbar-my-initials');
+    var img = document.getElementById('topbar-my-img');
+    if (nm)  nm.textContent = me.displayName || me.fullName;
+    if (ini) { var words=(me.displayName||me.fullName).trim().split(' '); ini.textContent=words.map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2)||'?'; }
+    if (img && me.avatar) { img.src=me.avatar; img.style.display='block'; ini.style.display='none'; }
+    var tpBtn = document.getElementById('topbar-profile-btn');
+    if (tpBtn) tpBtn.addEventListener('click', function(){ goSection('profile'); });
+    init();
+  }).catch(function() { localStorage.removeItem(TOKEN_KEY); window.location.replace('/'); });
+}
+
+// ── GLOBAL UI ─────────────────────────────────────────────────────────────────
+(function(){
+  var f=parseFloat(localStorage.getItem('mhf'));
+  if(f&&f>=0.7&&f<=2){document.documentElement.style.fontSize=f+'rem';}
+  else if(f){localStorage.removeItem('mhf');}
+  document.querySelectorAll('.text-size').forEach(function(b){b.addEventListener('click',function(){
+    var c=parseFloat(localStorage.getItem('mhf')||'1');
+    if(c>2||c<0.7)c=1;
+    var n=b.dataset.size==='up'?Math.min(c+.08,1.4):Math.max(c-.08,.85);
+    localStorage.setItem('mhf',n);document.documentElement.style.fontSize=n+'rem';
+  });});
+  var dk=document.getElementById('dark-toggle');
+  if(dk){ if(localStorage.getItem('mhd')==='1') document.body.classList.add('dark');
+    dk.addEventListener('click',function(){ var on=document.body.classList.toggle('dark'); localStorage.setItem('mhd',on?'1':'0'); dk.textContent=on?'☀️ Light':'🌙 Dark'; }); }
+  if(localStorage.getItem('mhd')==='1' && dk) dk.textContent='☀️ Light';
+  var lb=document.getElementById('logout-btn');
+  if(lb) lb.addEventListener('click',function(e){ e.preventDefault();
+    api('/api/logout','POST').catch(function(){}).then(function(){ localStorage.removeItem(TOKEN_KEY); window.location.href='/'; }); });
+})();
+
+// ── SIDEBAR NAV ───────────────────────────────────────────────────────────────
+function goSection(sec) {
+  document.querySelectorAll('[data-section]').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.section-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('[data-section="'+sec+'"]').forEach(function(b){ b.classList.add('active'); });
+  var el = document.getElementById('section-'+sec); if(el) el.classList.add('active');
+}
+document.querySelectorAll('[data-section]').forEach(function(btn){
+  btn.addEventListener('click', function(){ goSection(btn.dataset.section); });
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function init() {
+  // Load all caregivers for care team modal
+  api('/api/users?role=caregiver').then(function(cgs){ allCaregivers = cgs||[]; });
+
+  // Populate patient selector in topbar + chat
+  api('/api/users?role=patient').then(function(pts){
+    var sel  = document.getElementById('patient-select');
+    var csel = document.getElementById('chat-patient-select');
+    var opts = pts.map(function(p){ return '<option value="'+p.id+'">'+esc(p.fullName)+'</option>'; }).join('');
+
+    if(sel)  sel.innerHTML  = opts||'<option>No patients</option>';
+    if(csel) csel.innerHTML = opts||'<option>No patients</option>';
+
+    if(sel)  {
+      sel.addEventListener('change', function(){
+         loadPatient(sel.value); 
+         if(csel) csel.value=sel.value; 
+      });
+    }
+    if(csel) { 
+    csel.addEventListener('change', function(){ 
+      currentPid=csel.value; 
+      if(sel) sel.value=csel.value; 
+      loadMsgs(csel.value); 
+    });
+    }
+    // select first patient automatically when loading
+    if (pts.length && sel){
+      sel.value = pts[0].id;
+      if (csel) csel.value = pts[0].id;
+      currentPid = pts[0].id;
+      loadPatient(pts[0].id);
+    }
+  });
+
+  // Load My Patients dashboard
+  loadMyPatients();
+
+  // Refresh button
+  var rfBtn = document.getElementById('pt-refresh-btn');
+  if(rfBtn) rfBtn.addEventListener('click', function(){ loadMyPatients(); });
+
+  // Add Patient button → open picker
+  var apBtn = document.getElementById('pt-add-btn');
+  if(apBtn) apBtn.addEventListener('click', function(){ openAddPatientModal(); });
+
+  setupModals(); setupImageUpload(); setupChat(); setupIssue(); setupFilters(); setupNewPatient(); setupProfile(); setupCareTeam(); setupAddPatientModal();
+}
+
+// ── LOAD PATIENT ──────────────────────────────────────────────────────────────
+function loadPatient(pid) {
+  currentPid = pid;
+  api('/api/users').then(function(users){
+    var p = users.find(function(u){ return u.id===pid; }); if(!p) return;
+    var map = { name:'fullName', mrn:'mrn', dob:'dob', blood:'blood', allergies:'allergies', doctor:'doctor', emergency:'emergency', 'emergency-phone':'emergencyPhone', notes:'notes' };
+    Object.keys(map).forEach(function(k){ var el=document.getElementById('f-'+k); if(el) el.value=p[map[k]]||''; });
+    var ini = document.getElementById('patient-initials');
+    var nm  = document.getElementById('topbar-patient-name');
+    var mt  = document.getElementById('topbar-patient-meta');
+    if(ini) ini.textContent = p.fullName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+    if(nm)  nm.textContent  = p.fullName;
+    if(mt)  mt.textContent  = [p.mrn?'MRN: '+p.mrn:'', p.dob?'DOB: '+p.dob:''].filter(Boolean).join(' · ')||'Patient';
+    var tags = document.getElementById('patient-tags');
+    if(tags){ var t=[];
+      if(p.blood)     t.push('<span class="tag tag-blood">&#9641; '+esc(p.blood)+'</span>');
+      if(p.allergies) t.push('<span class="tag tag-allergy">&#9888; '+esc(p.allergies)+'</span>');
+      if(p.doctor)    t.push('<span class="tag tag-blue">&#128100; '+esc(p.doctor)+'</span>');
+      tags.innerHTML=t.join('');
+    }
+    allMeds = p.meds || [];
+    // Populate med selector in image modal
+    updateImgMedSelect();
+    renderMeds();
+  });
+  api('/api/appointments/'+pid).then(function(a){ 
+    allAppts = a; 
+    renderAppts(); 
+    renderOverviewAppts(); 
+    updateStats(); 
+  });
+
+  api('/api/reminders/'+pid).then(function(r){ 
+    allReminders = r; 
+    renderReminders(); 
+    renderOverviewReminders(); 
+    updateStats(); 
+  });
+
+  api('/api/patient/' + pid + '/timeline').then(function(t){
+    allTimeline = t;
+    renderTimeline();
+  }).catch(function(){
+    allTimeline = [];
+    renderTimeline();
+  });
+
+  loadMedImages(pid);
+}
+
+function updateStats() {
+  var el;
+  el=document.getElementById('stat-meds');  if(el) el.textContent=allMeds.length;
+  el=document.getElementById('stat-appts'); if(el) el.textContent=allAppts.filter(function(a){return a.status==='upcoming';}).length;
+  el=document.getElementById('stat-tasks'); if(el) el.textContent=allReminders.filter(function(r){return !r.done;}).length;
+  el=document.getElementById('stat-done');  if(el) el.textContent=allReminders.filter(function(r){return r.done;}).length;
+}
+
+// ── MY PATIENTS DASHBOARD ────────────────────────────────────────────────────
+var PT_GRADIENTS = [
+  ['#3b82f6','#06b6d4'], ['#8b5cf6','#ec4899'], ['#10b981','#06b6d4'],
+  ['#f59e0b','#ef4444'], ['#6366f1','#8b5cf6'], ['#14b8a6','#10b981'],
+  ['#f97316','#f59e0b'], ['#ec4899','#8b5cf6']
+];
+function ptGradient(name) {
+  var idx = name.charCodeAt(0) % PT_GRADIENTS.length;
+  return PT_GRADIENTS[idx];
+}
+function ptInitials(name) {
+  return (name||'?').trim().split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2)||'?';
+}
+
+function loadMyPatients() {
+  var sub = document.getElementById('pt-dash-sub');
+  if(sub) sub.textContent = 'Loading…';
+  var grid = document.getElementById('pt-grid');
+  if(grid) grid.innerHTML = '<div class="pt-empty"><div class="empty-state" style="background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:3rem 1rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><p>Loading patients…</p></div></div>';
+  api('/api/my-patients').then(function(patients){
+    if(sub) sub.textContent = patients.length === 1 ? '1 patient under your care' : patients.length + ' patients under your care';
+    renderPatientCards(patients);
+  }).catch(function(e){
+    if(sub) sub.textContent = 'Could not load patients.';
+    if(grid) grid.innerHTML = '<div class="pt-empty"><div class="empty-state" style="background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:3rem 1rem;"><p style="color:var(--danger);">'+esc(e.message)+'</p></div></div>';
+  });
+}
+
+function renderPatientCards(patients) {
+  var grid = document.getElementById('pt-grid'); if(!grid) return;
+  if(!patients.length) {
+    grid.innerHTML = '<div class="pt-empty"><div class="empty-state" style="background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:3rem 1rem;">'+
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>'+
+      '<p>No patients assigned to you yet.</p>'+
+      '<p style="margin-top:.5rem;font-size:.8rem;"><button class="btn btn-primary btn-sm" data-section="new-patient">+ Create a patient</button></p>'+
+    '</div></div>';
+    grid.querySelectorAll('[data-section]').forEach(function(b){ b.addEventListener('click', function(){ goSection(b.dataset.section); }); });
+    return;
+  }
+
+  grid.innerHTML = patients.map(function(p) {
+    var g = ptGradient(p.fullName);
+    var ini = ptInitials(p.fullName);
+    var avatarHtml = p.avatar
+      ? '<img src="'+esc(p.avatar)+'" alt="'+esc(p.fullName)+'"/>'
+      : ini;
+    var tags = [];
+    if(p.blood)     tags.push('<span class="tag tag-blood">&#9641; '+esc(p.blood)+'</span>');
+    if(p.allergies) tags.push('<span class="tag tag-allergy">&#9888; '+esc(p.allergies)+'</span>');
+
+    var subParts = [];
+    if(p.mrn) subParts.push('MRN '+esc(p.mrn));
+    if(p.dob) subParts.push(new Date(p.dob+'T00:00:00').toLocaleDateString([],{month:'short',day:'numeric',year:'numeric'}));
+
+    // Care team faces (up to 3, then +N)
+    var cgs = p.caregivers||[];
+    var facesHtml = cgs.slice(0,3).map(function(c){
+      var cg = ptGradient(c.fullName);
+      return '<div class="pt-face" style="background:linear-gradient(135deg,'+cg[0]+','+cg[1]+');">'+
+        (c.avatar ? '<img src="'+esc(c.avatar)+'" alt=""/>' : ptInitials(c.fullName))+
+      '</div>';
+    }).join('');
+    if(cgs.length>3) facesHtml+='<div class="pt-face pt-face-more">+'+( cgs.length-3)+'</div>';
+    var noTeam = !cgs.length ? '<span style="font-size:.75rem;color:var(--text-muted);font-style:italic;">None assigned</span>' : '';
+
+    return '<div class="pt-card">'+
+      '<div class="pt-card-accent" style="--pt-c1:'+g[0]+';--pt-c2:'+g[1]+';"></div>'+
+      '<div class="pt-card-body">'+
+        '<div class="pt-head">'+
+          '<div class="pt-avatar" style="background:linear-gradient(135deg,'+g[0]+','+g[1]+');">'+avatarHtml+'</div>'+
+          '<div class="pt-info">'+
+            '<div class="pt-name">'+esc(p.fullName)+'</div>'+
+            '<div class="pt-sub">'+(subParts.join(' · ')||'No demographics on file')+'</div>'+
+            (tags.length?'<div class="pt-tags">'+tags.join('')+'</div>':'')+
+          '</div>'+
+        '</div>'+
+        '<div class="pt-divider"></div>'+
+        '<div class="pt-stats">'+
+          '<div class="pt-stat"><div class="pt-stat-val">'+((p.meds||[]).length)+'</div><div class="pt-stat-lbl">Meds</div></div>'+
+          '<div class="pt-stat"><div class="pt-stat-val">'+(p.upcomingAppts||0)+'</div><div class="pt-stat-lbl">Appts</div></div>'+
+          '<div class="pt-stat"><div class="pt-stat-val">'+(p.pendingReminders||0)+'</div><div class="pt-stat-lbl">Tasks</div></div>'+
+        '</div>'+
+        '<div class="pt-team">'+
+          '<span class="pt-team-lbl">Care Team</span>'+
+          '<div class="pt-faces">'+facesHtml+noTeam+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="pt-card-footer">'+
+        '<button class="btn btn-secondary" data-open-ct="'+p.id+'" data-pt-name="'+esc(p.fullName)+'">'+
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/><line x1="20" y1="8" x2="20" y2="14"/></svg>'+
+          ' Care Team'+
+        '</button>'+
+        '<button class="btn btn-primary" data-view-pt="'+p.id+'" data-pt-name="'+esc(p.fullName)+'">'+
+          'View Patient &rarr;'+
+        '</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+
+  // Wire "View Patient" buttons
+  grid.querySelectorAll('[data-view-pt]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var pid = b.dataset.viewPt;
+      var sel = document.getElementById('patient-select');
+      if(sel) sel.value = pid;
+      loadPatient(pid);
+      goSection('overview');
+    });
+  });
+
+  // Wire "Care Team" buttons
+  grid.querySelectorAll('[data-open-ct]').forEach(function(b){
+    b.addEventListener('click', function(){
+      openCareTeamModal(b.dataset.openCt, b.dataset.ptName);
+    });
+  });
+}
+
+// ── ADD PATIENT PICKER MODAL ────────────────────────────────────────────────
+var _apAllPatients = []; // cache of unassigned patients
+
+function openAddPatientModal() {
+  var statusEl = document.getElementById('ap-status'); if(statusEl) statusEl.style.display='none';
+  var searchEl = document.getElementById('ap-search'); if(searchEl) searchEl.value='';
+  document.getElementById('ap-modal').classList.add('open');
+  loadUnassignedPatients();
+}
+
+function closeAddPatientModal() {
+  document.getElementById('ap-modal').classList.remove('open');
+}
+
+function setupAddPatientModal() {
+  var modal = document.getElementById('ap-modal'); if(!modal) return;
+  document.getElementById('ap-modal-close').addEventListener('click',  closeAddPatientModal);
+  document.getElementById('ap-modal-cancel').addEventListener('click', closeAddPatientModal);
+  modal.addEventListener('click', function(e){ if(e.target===this) closeAddPatientModal(); });
+
+  // Create New Patient link closes modal and navigates
+  var createBtn = document.getElementById('ap-create-btn');
+  if(createBtn) createBtn.addEventListener('click', function(){ closeAddPatientModal(); goSection('new-patient'); });
+
+  // Live search filter
+  var searchEl = document.getElementById('ap-search');
+  if(searchEl) searchEl.addEventListener('input', function(){ renderApPatientList(_apAllPatients, this.value.trim().toLowerCase()); });
+}
+
+function loadUnassignedPatients() {
+  var listEl = document.getElementById('ap-list'); if(!listEl) return;
+  listEl.innerHTML = '<div class="ap-empty">Loading…</div>';
+  api('/api/unassigned-patients').then(function(patients){
+    _apAllPatients = patients;
+    renderApPatientList(patients, '');
+  }).catch(function(e){
+    listEl.innerHTML = '<div class="ap-empty" style="color:var(--danger);">'+esc(e.message)+'</div>';
+  });
+}
+
+function renderApPatientList(patients, query) {
+  var listEl = document.getElementById('ap-list'); if(!listEl) return;
+  var filtered = query
+    ? patients.filter(function(p){
+        return (p.fullName||'').toLowerCase().indexOf(query)!==-1 ||
+               (p.mrn||'').toLowerCase().indexOf(query)!==-1;
+      })
+    : patients;
+
+  if(!filtered.length) {
+    listEl.innerHTML = query
+      ? '<div class="ap-empty">No patients match "<strong>'+esc(query)+'</strong>".</div>'
+      : '<div class="ap-empty">All patients are already on your dashboard.<br/><span style="font-size:.78rem;margin-top:.35rem;display:block;">Use <strong>Create New Patient</strong> to add more.</span></div>';
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(function(p){
+    var g = ptGradient(p.fullName);
+    var ini = ptInitials(p.fullName);
+    var avatarHtml = p.avatar ? '<img src="'+esc(p.avatar)+'" alt=""/>' : ini;
+    var sub = [];
+    if(p.mrn) sub.push('MRN '+esc(p.mrn));
+    if(p.dob) sub.push(new Date(p.dob+'T00:00:00').toLocaleDateString([],{month:'short',day:'numeric',year:'numeric'}));
+    if(p.blood) sub.push(esc(p.blood));
+    return '<div class="ap-item" data-pid="'+p.id+'">'+
+      '<div class="ap-item-avatar" style="background:linear-gradient(135deg,'+g[0]+','+g[1]+');">'+avatarHtml+'</div>'+
+      '<div class="ap-item-info">'+
+        '<div class="ap-item-name">'+esc(p.fullName)+'</div>'+
+        (sub.length ? '<div class="ap-item-sub">'+sub.join(' · ')+'</div>' : '')+
+      '</div>'+
+      '<button class="btn btn-primary btn-sm" data-add-pid="'+p.id+'" data-add-name="'+esc(p.fullName)+'">Add</button>'+
+    '</div>';
+  }).join('');
+
+  listEl.querySelectorAll('[data-add-pid]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var pid  = btn.dataset.addPid;
+      var name = btn.dataset.addName;
+      btn.disabled=true; btn.textContent='Adding…';
+      api('/api/assign-caregiver','POST',{ patientId: pid, caregiverId: currentCaregiverId() }).then(function(){
+        // Remove patient from local list
+        _apAllPatients = _apAllPatients.filter(function(p){ return p.id !== pid; });
+        var searchVal = (document.getElementById('ap-search')||{}).value||'';
+        renderApPatientList(_apAllPatients, searchVal.trim().toLowerCase());
+        showApStatus(esc(name)+' added to your dashboard.', 'success');
+        loadMyPatients();
+      }).catch(function(e){
+        btn.disabled=false; btn.textContent='Add';
+        showApStatus(e.message||'Failed to add patient.','error');
+      });
+    });
+  });
+}
+
+function currentCaregiverId() {
+  // Get from session via /api/me cache — stored when init fires
+  return window._myCaregiverId || '';
+}
+
+function showApStatus(msg, type) {
+  var el = document.getElementById('ap-status'); if(!el) return;
+  el.style.display='block';
+  el.style.background = type==='success' ? '#d1fae5' : '#fee2e2';
+  el.style.color       = type==='success' ? '#065f46' : '#991b1b';
+  el.style.border      = type==='success' ? '1px solid #a7f3d0' : '1px solid #fecaca';
+  el.textContent = msg;
+  if(type==='success') setTimeout(function(){ el.style.display='none'; }, 3000);
+}
+
+// ── CARE TEAM MODAL ──────────────────────────────────────────────────────────
+function setupCareTeam() {
+  var modal = document.getElementById('ct-modal');
+  if(!modal) return;
+  document.getElementById('ct-modal-close').addEventListener('click', closeCareTeamModal);
+  document.getElementById('ct-modal-done').addEventListener('click',  closeCareTeamModal);
+  modal.addEventListener('click', function(e){ if(e.target===this) closeCareTeamModal(); });
+
+  document.getElementById('ct-add-btn').addEventListener('click', function(){
+    var sel = document.getElementById('ct-cg-select');
+    var cgId = sel.value; if(!cgId || !ctCurrentPid) return;
+    var btn = this; btn.disabled=true; btn.textContent='Adding…';
+    api('/api/assign-caregiver','POST',{patientId:ctCurrentPid, caregiverId:cgId}).then(function(){
+      btn.disabled=false; btn.textContent='Add';
+      sel.value='';
+      showCtStatus('Caregiver added to care team.','success');
+      refreshCareTeamMembers(ctCurrentPid);
+      loadMyPatients(); // refresh dashboard cards
+    }).catch(function(e){
+      btn.disabled=false; btn.textContent='Add';
+      showCtStatus(e.message||'Failed to add caregiver.','error');
+    });
+  });
+}
+
+function openCareTeamModal(pid, patientName) {
+  ctCurrentPid = pid;
+  document.getElementById('ct-modal-title').textContent = 'Care Team';
+  document.getElementById('ct-modal-sub').textContent   = patientName || '';
+  var statusEl = document.getElementById('ct-add-status'); if(statusEl) statusEl.style.display='none';
+  populateCaregiverDropdown(pid);
+  refreshCareTeamMembers(pid);
+  document.getElementById('ct-modal').classList.add('open');
+}
+
+function closeCareTeamModal() {
+  document.getElementById('ct-modal').classList.remove('open');
+  ctCurrentPid = null;
+}
+
+function refreshCareTeamMembers(pid) {
+  var list = document.getElementById('ct-members-list'); if(!list) return;
+  list.innerHTML = '<div style="padding:.5rem 0;color:var(--text-muted);font-size:.84rem;">Loading…</div>';
+  api('/api/patient-caregivers/'+pid).then(function(cgs){
+    if(!cgs.length){
+      list.innerHTML='<div class="empty-state" style="padding:1rem 0;"><p>No caregivers assigned yet.</p></div>';
+      return;
+    }
+    list.innerHTML = cgs.map(function(c){
+      var g = ptGradient(c.fullName);
+      var ini = ptInitials(c.fullName);
+      var avatarContent = c.avatar
+        ? '<img src="'+esc(c.avatar)+'" alt=""/>'
+        : ini;
+      return '<div class="ct-member" data-cg-id="'+c.id+'">'+
+        '<div class="ct-member-avatar" style="background:linear-gradient(135deg,'+g[0]+','+g[1]+');">'+avatarContent+'</div>'+
+        '<div style="flex:1;">'+
+          '<div class="ct-member-name">'+esc(c.displayName||c.fullName)+'</div>'+
+          (c.displayName?'<div class="ct-member-you">'+esc(c.fullName)+'</div>':'')+
+        '</div>'+
+        '<button class="btn btn-danger btn-sm" data-rm-cg="'+c.id+'" title="Remove from care team">Remove</button>'+
+      '</div>';
+    }).join('');
+
+    list.querySelectorAll('[data-rm-cg]').forEach(function(b){
+      b.addEventListener('click', function(){
+        if(!confirm('Remove this caregiver from the care team?')) return;
+        b.disabled=true; b.textContent='Removing…';
+        api('/api/unassign-caregiver','POST',{patientId:ctCurrentPid, caregiverId:b.dataset.rmCg}).then(function(){
+          showCtStatus('Caregiver removed.','success');
+          refreshCareTeamMembers(ctCurrentPid);
+          populateCaregiverDropdown(ctCurrentPid);
+          loadMyPatients();
+        }).catch(function(e){ b.disabled=false; b.textContent='Remove'; showCtStatus(e.message||'Failed.','error'); });
+      });
+    });
+  }).catch(function(e){ list.innerHTML='<p style="color:var(--danger);font-size:.84rem;">'+esc(e.message)+'</p>'; });
+}
+
+function populateCaregiverDropdown(pid) {
+  var sel = document.getElementById('ct-cg-select'); if(!sel) return;
+  // Get currently assigned, then filter from all caregivers
+  api('/api/patient-caregivers/'+pid).then(function(assigned){
+    var assignedIds = assigned.map(function(c){ return c.id; });
+    var available = allCaregivers.filter(function(c){ return assignedIds.indexOf(c.id)===-1; });
+    sel.innerHTML = available.length
+      ? '<option value="">— Select a caregiver —</option>' + available.map(function(c){
+          return '<option value="'+c.id+'">'+esc(c.displayName||c.fullName)+'</option>';
+        }).join('')
+      : '<option value="">All caregivers already assigned</option>';
+  });
+}
+
+function showCtStatus(msg, type) {
+  var el = document.getElementById('ct-add-status'); if(!el) return;
+  el.style.display='block';
+  el.style.background = type==='success' ? '#d1fae5' : '#fee2e2';
+  el.style.color       = type==='success' ? '#065f46' : '#991b1b';
+  el.style.border      = type==='success' ? '1px solid #a7f3d0' : '1px solid #fecaca';
+  el.textContent = msg;
+  setTimeout(function(){ el.style.display='none'; }, 3000);
+}
+
+// ── OVERVIEW PANELS ───────────────────────────────────────────────────────────
+function renderOverviewAppts() {
+  var el=document.getElementById('overview-appts'); if(!el) return;
+  var upcoming=allAppts.filter(function(a){return a.status==='upcoming';}).slice(0,4);
+  if(!upcoming.length){el.innerHTML='<div class="empty-state"><p>No upcoming appointments</p></div>';return;}
+  el.innerHTML=upcoming.map(function(a){
+    var dt=a.date?new Date(a.date+'T00:00:00').toLocaleDateString([],{month:'short',day:'numeric'}):'';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border);">'+
+      '<div><div style="font-weight:600;font-size:.88rem;">'+esc(a.title)+'</div>'+
+      '<div style="font-size:.77rem;color:var(--text-muted);">'+(a.doctor?esc(a.doctor)+' · ':'')+dt+(a.time?' '+a.time:'')+'</div></div>'+
+      '<span class="tag tag-blue">upcoming</span></div>';
+  }).join('');
+}
+function renderOverviewReminders() {
+  var el=document.getElementById('overview-reminders'); if(!el) return;
+  var pending=allReminders.filter(function(r){return !r.done;}).slice(0,4);
+  if(!pending.length){el.innerHTML='<div class="empty-state"><p>No pending reminders</p></div>';return;}
+  var colors={medication:'tag-blue',appointment:'tag-blue',lab:'tag-green',general:'tag-gray'};
+  el.innerHTML=pending.map(function(r){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border);">'+
+      '<div><div style="font-weight:600;font-size:.88rem;">'+esc(r.title)+'</div>'+
+      '<div style="font-size:.77rem;color:var(--text-muted);">'+(r.dueDate?'Due: '+r.dueDate:'No due date')+'</div></div>'+
+      '<span class="tag '+(colors[r.category]||'tag-gray')+'">'+r.category+'</span></div>';
+  }).join('');
+}
+function renderTimeline() {
+var el = document.getElementById('timeline-list'); if(!el) return;
+if (!allTimeline.length) {
+  el.innerHTML = '<div class="empty-state"><p>No timeline activity yet.</p></div>';
+  return;
+}
+el.innerHTML = allTimeline.map(function(item){
+  var when = item.timestamp
+  ? new Date(item.timestamp).toLocaleString([], {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  })
+: '';
+return '<div class="timeline-item">' + 
+  '<div class="timeline-top">' +
+  '<div class="timeline-title">' + esc(item.summary || item.activityType || 'Activity') + '</div>' +
+  '<span class="timeline-type">' + esc(item.activityType || 'activity') + '</span>' +
+  '</div>' +
+  '<div class="timeline-meta">' +
+    'By ' + esc(item.actorRole || 'user') +
+        (when ? ' · ' + when : '') +
+        (item.shiftId ? ' · Shift: ' + esc(item.shiftId) : '') +
+      '</div>' +
+    '</div>';
+}).join('');
+}
+
+// ── MEDICATIONS ───────────────────────────────────────────────────────────────
+function renderMeds() {
+  updateStats();
+  var list=document.getElementById('med-list'); if(!list) return;
+  if(!allMeds.length){ list.innerHTML='<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18"/></svg><p>No medications on file.<br/>Click + Add Medication to get started.</p></div>'; return; }
+  list.innerHTML=allMeds.map(function(m,i){
+    var obj=typeof m==='object'?m:{name:m};
+    return '<div class="med-card">'+
+      '<div style="flex:1;">'+
+        '<div style="display:flex;align-items:baseline;gap:.5rem;">'+
+          '<span class="med-name">'+esc(obj.name||m)+'</span>'+
+          (obj.dose?'<span class="med-dose">'+esc(obj.dose)+'</span>':'')+
+          (obj.form?'<span class="tag tag-blue" style="font-size:.68rem;">'+esc(obj.form)+'</span>':'')+
+        '</div>'+
+        (obj.directions?'<div class="med-detail">'+esc(obj.directions)+'</div>':'')+
+        '<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.2rem;">'+
+          (obj.freq?'<span style="font-size:.76rem;color:var(--text-muted);">&#8635; '+esc(obj.freq)+(obj.times?' · '+esc(obj.times):'')+'</span>':'')+
+          (obj.prescriber?'<span style="font-size:.76rem;color:var(--text-muted);">Rx: '+esc(obj.prescriber)+'</span>':'')+
+          (obj.refills?'<span style="font-size:.76rem;color:var(--text-muted);">Refills: '+esc(obj.refills)+'</span>':'')+
+        '</div>'+
+        (obj.notes?'<div style="font-size:.76rem;color:var(--text-muted);font-style:italic;margin-top:.2rem;">'+esc(obj.notes)+'</div>':'')+
+      '</div>'+
+      '<div class="med-actions">'+
+        '<button class="btn btn-ghost btn-sm btn-icon" data-edit-med="'+i+'" title="Edit">&#9998;</button>'+
+        '<button class="btn btn-danger btn-sm btn-icon" data-del-med="'+i+'" title="Remove">&#10005;</button>'+
+      '</div></div>';
+  }).join('');
+  list.querySelectorAll('[data-del-med]').forEach(function(b){ b.addEventListener('click',function(){
+    if(!confirm('Remove this medication?')) return;
+    allMeds.splice(parseInt(b.dataset.delMed),1); saveMedsToServer();
+  }); });
+  list.querySelectorAll('[data-edit-med]').forEach(function(b){ b.addEventListener('click',function(){
+    var i=parseInt(b.dataset.editMed); editingMedIdx=i;
+    var m=typeof allMeds[i]==='object'?allMeds[i]:{name:allMeds[i]};
+    ['name','dose','directions','times','qty','refills','prescriber','notes'].forEach(function(k){ document.getElementById('med-m-'+k).value=m[k]||''; });
+    document.getElementById('med-m-form').value=m.form||'tablet';
+    document.getElementById('med-m-freq').value=m.freq||'Once daily';
+    document.getElementById('med-m-start').value=m.start||'';
+    document.getElementById('med-modal-title').textContent='Edit Medication';
+    document.getElementById('med-modal').classList.add('open');
+  }); });
+}
+function saveMedsToServer() {
+  api('/api/users').then(function(users){
+    var p=users.find(function(u){return u.id===currentPid;}); if(!p) throw new Error('Not found');
+    p.meds=allMeds; return api('/api/users','POST',p);
+  }).then(function(){ renderMeds(); updateImgMedSelect(); });
+}
+
+// ── MED IMAGES ────────────────────────────────────────────────────────────────
+function loadMedImages(pid) {
+  api('/api/med-images/'+pid).then(function(imgs){
+    allMedImages = imgs;
+    renderMedImageGallery();
+  }).catch(function(){ allMedImages=[]; renderMedImageGallery(); });
+}
+
+function updateImgMedSelect() {
+  var sel = document.getElementById('img-m-med'); if(!sel) return;
+  var opts = '<option value="">— Not specific to one medication —</option>';
+  allMeds.forEach(function(m){
+    var name = typeof m==='object' ? (m.name||'') : String(m);
+    opts += '<option value="'+esc(name)+'">'+esc(name)+'</option>';
+  });
+  sel.innerHTML = opts;
+}
+
+function renderMedImageGallery() {
+  var el = document.getElementById('med-img-gallery'); if(!el) return;
+  if(!allMedImages.length) {
+    el.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><p>No images yet. Click <strong>+ Add Image</strong> to upload one.</p></div>';
+    return;
+  }
+  el.innerHTML = '<div class="img-gallery" id="img-gallery-grid"></div>';
+  var grid = document.getElementById('img-gallery-grid');
+  grid.innerHTML = allMedImages.map(function(img) {
+    return '<div class="img-card" data-img-id="'+img.id+'" data-pid="'+img.patientId+'">'+
+      '<img src="" alt="'+(img.medName?esc(img.medName):'Medication image')+'" data-load-id="'+img.id+'" data-pid="'+img.patientId+'"/>'+
+      '<div class="img-card-body">'+
+        '<div class="img-card-med">'+(img.medName ? esc(img.medName) : '<em style="opacity:.6;">Unspecified</em>')+'</div>'+
+        (img.description ? '<div class="img-card-desc">'+esc(img.description)+'</div>' : '')+
+        '<div class="img-card-meta">'+new Date(img.uploadedAt).toLocaleDateString([],{month:'short',day:'numeric',year:'numeric'})+'</div>'+
+      '</div>'+
+      '<button class="img-card-del" data-del-img="'+img.id+'" title="Delete image">&#10005;</button>'+
+    '</div>';
+  }).join('');
+
+  // Lazy-load images
+  grid.querySelectorAll('img[data-load-id]').forEach(function(imgEl) {
+    var id = imgEl.dataset.loadId;
+    var pid = imgEl.dataset.pid;
+    api('/api/med-images/'+pid+'/image/'+id).then(function(data){
+      imgEl.src = data.imageData;
+      var card = imgEl.closest('.img-card');
+      if(card) {
+        card.dataset.imgData = data.imageData;
+        card.dataset.imgMed  = data.medName||'';
+        card.dataset.imgDesc = data.description||'';
+        card.dataset.imgMeta = 'Uploaded by '+data.uploadedByName+' · '+new Date(data.uploadedAt).toLocaleDateString([],{month:'long',day:'numeric',year:'numeric'});
+      }
+    }).catch(function(){ imgEl.src=''; imgEl.style.background='#e2e8f0'; });
+  });
+
+  // Card click → lightbox
+  grid.querySelectorAll('.img-card').forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      if(e.target.closest('.img-card-del')) return; // don't open lightbox on delete
+      // Wait until data is loaded
+      if(!card.dataset.imgData) return;
+      document.getElementById('lightbox-img').src = card.dataset.imgData;
+      document.getElementById('lightbox-med').textContent = card.dataset.imgMed || 'Unspecified medication';
+      document.getElementById('lightbox-desc').textContent = card.dataset.imgDesc || '';
+      document.getElementById('lightbox-meta').textContent = card.dataset.imgMeta || '';
+      document.getElementById('lightbox').classList.add('open');
+    });
+  });
+
+  // Delete buttons
+  grid.querySelectorAll('[data-del-img]').forEach(function(b) {
+    b.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if(!confirm('Delete this medication image? This cannot be undone.')) return;
+      api('/api/med-images/delete','POST',{id: b.dataset.delImg}).then(function(){
+        allMedImages = allMedImages.filter(function(x){ return String(x.id)!==String(b.dataset.delImg); });
+        renderMedImageGallery();
+      });
+    });
+  });
+}
+
+// ── IMAGE UPLOAD ──────────────────────────────────────────────────────────────
+function compressImage(file, callback) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var MAX = 900;
+      var w = img.width, h = img.height;
+      if(w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      if(h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      callback(canvas.toDataURL('image/jpeg', 0.82));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function setupImageUpload() {
+  var fileInput   = document.getElementById('img-file-input');
+  var dropzone    = document.getElementById('img-dropzone');
+  var previewWrap = document.getElementById('img-preview-wrap');
+  var preview     = document.getElementById('img-preview');
+  var clearBtn    = document.getElementById('img-clear');
+
+  function handleFile(file) {
+    if(!file || !file.type.startsWith('image/')) { alert('Please select an image file.'); return; }
+    if(file.size > 5 * 1024 * 1024) { alert('Image must be under 5 MB.'); return; }
+    compressImage(file, function(dataUrl) {
+      pendingImageData = dataUrl;
+      preview.src = dataUrl;
+      previewWrap.style.display = 'block';
+      dropzone.style.display = 'none';
+    });
+  }
+
+  fileInput.addEventListener('change', function() { if(this.files[0]) handleFile(this.files[0]); });
+
+  dropzone.addEventListener('dragover',  function(e){ e.preventDefault(); dropzone.classList.add('drag-over'); });
+  dropzone.addEventListener('dragleave', function()  { dropzone.classList.remove('drag-over'); });
+  dropzone.addEventListener('drop', function(e) {
+    e.preventDefault(); dropzone.classList.remove('drag-over');
+    if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+
+  clearBtn.addEventListener('click', function() {
+    pendingImageData = null;
+    preview.src = '';
+    previewWrap.style.display = 'none';
+    dropzone.style.display = '';
+    fileInput.value = '';
+  });
+
+  document.getElementById('add-img-btn').addEventListener('click', function() {
+    pendingImageData = null;
+    preview.src = '';
+    previewWrap.style.display = 'none';
+    dropzone.style.display = '';
+    fileInput.value = '';
+    document.getElementById('img-m-desc').value = '';
+    updateImgMedSelect();
+    document.getElementById('img-modal').classList.add('open');
+  });
+
+  document.getElementById('img-modal-close').addEventListener('click',  closeImgModal);
+  document.getElementById('img-modal-cancel').addEventListener('click', closeImgModal);
+
+  document.getElementById('img-modal').addEventListener('click', function(e){ if(e.target===this) closeImgModal(); });
+
+  document.getElementById('img-modal-save').addEventListener('click', function() {
+    if(!pendingImageData)  { alert('Please select an image first.'); return; }
+    if(!currentPid) { alert('No patient selected.'); return; }
+    var btn = this; btn.disabled = true; btn.textContent = 'Uploading...';
+    api('/api/med-images', 'POST', {
+      patientId:   currentPid,
+      medName:     document.getElementById('img-m-med').value,
+      description: document.getElementById('img-m-desc').value.trim(),
+      imageData:   pendingImageData
+    }).then(function() {
+      btn.disabled = false; btn.textContent = 'Upload Image';
+      closeImgModal();
+      loadMedImages(currentPid);
+    }).catch(function(err) {
+      btn.disabled = false; btn.textContent = 'Upload Image';
+      alert('Upload failed: ' + err.message);
+    });
+  });
+
+  // Lightbox close
+  document.getElementById('lightbox-close').addEventListener('click', function(){ document.getElementById('lightbox').classList.remove('open'); });
+  document.getElementById('lightbox').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') document.getElementById('lightbox').classList.remove('open'); });
+}
+
+function closeImgModal() {
+  document.getElementById('img-modal').classList.remove('open');
+}
+
+// ── APPOINTMENTS ──────────────────────────────────────────────────────────────
+function renderAppts() {
+  var list=document.getElementById('appt-list'); if(!list) return;
+  var filtered=allAppts.filter(function(a){ return apptFilter==='all'||a.status===apptFilter; });
+  if(!filtered.length){ list.innerHTML='<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><p>No appointments found.</p></div>'; return; }
+  var tagMap={upcoming:'tag-blue',completed:'tag-green',cancelled:'tag-red'};
+  list.innerHTML=filtered.map(function(a){
+    var d=a.date?new Date(a.date+'T00:00:00'):null;
+    var month=d?d.toLocaleDateString([],{month:'short'}):'—';
+    var day  =d?d.getDate():'—';
+    var year =d?d.getFullYear():'';
+    return '<div class="appt-card">'+
+      '<div class="appt-date-block"><div class="appt-date-month">'+month+'</div><div class="appt-date-day">'+day+'</div><div class="appt-date-year">'+year+'</div></div>'+
+      '<div class="appt-body">'+
+        '<div class="appt-title">'+esc(a.title)+'</div>'+
+        '<div class="appt-meta">'+
+          (a.doctor?'<span>&#128100; '+esc(a.doctor)+'</span>':'')+
+          (a.time?'<span>&#128336; '+a.time+'</span>':'')+
+          (a.location?'<span>&#128205; '+esc(a.location)+'</span>':'')+
+        '</div>'+
+        (a.notes?'<div class="appt-notes">'+esc(a.notes)+'</div>':'')+
+      '</div>'+
+      '<div class="appt-actions">'+
+        '<span class="tag '+(tagMap[a.status]||'tag-gray')+'">'+a.status+'</span>'+
+        '<div class="row-actions">'+
+          '<button class="btn btn-ghost btn-sm btn-icon" data-edit-appt="'+a.id+'" title="Edit">&#9998;</button>'+
+          '<button class="btn btn-danger btn-sm btn-icon" data-del-appt="'+a.id+'" title="Delete">&#10005;</button>'+
+        '</div>'+
+      '</div></div>';
+  }).join('');
+  list.querySelectorAll('[data-del-appt]').forEach(function(b){ b.addEventListener('click',function(){
+    if(!confirm('Delete this appointment?')) return;
+    api('/api/appointments/delete','POST',{id:b.dataset.delAppt}).then(function(){
+      allAppts=allAppts.filter(function(a){return String(a.id)!==String(b.dataset.delAppt);}); renderAppts(); renderOverviewAppts(); updateStats();
+    });
+  }); });
+  list.querySelectorAll('[data-edit-appt]').forEach(function(b){ b.addEventListener('click',function(){
+    var a=allAppts.find(function(x){return String(x.id)===String(b.dataset.editAppt);}); if(!a) return;
+    editingApptId=a.id;
+    document.getElementById('appt-m-title').value=a.title||''; document.getElementById('appt-m-date').value=a.date||'';
+    document.getElementById('appt-m-time').value=a.time||''; document.getElementById('appt-m-doctor').value=a.doctor||'';
+    document.getElementById('appt-m-location').value=a.location||''; document.getElementById('appt-m-status').value=a.status||'upcoming';
+    document.getElementById('appt-m-notes').value=a.notes||'';
+    document.getElementById('appt-modal-title').textContent='Edit Appointment';
+    document.getElementById('appt-modal').classList.add('open');
+  }); });
+}
+
+// ── REMINDERS ─────────────────────────────────────────────────────────────────
+function renderReminders() {
+  updateStats();
+  var list=document.getElementById('reminder-list'); if(!list) return;
+  var filtered=allReminders.filter(function(r){ return remFilter==='all'||r.category===remFilter; });
+  if(!filtered.length){ list.innerHTML='<div class="empty-state"><p>No reminders found.</p></div>'; return; }
+  filtered.sort(function(a,b){ return a.done-b.done; });
+  var tagMap={medication:'tag-blue',appointment:'tag-teal',lab:'tag-green',general:'tag-gray'};
+  list.innerHTML=filtered.map(function(r){
+    var due=r.dueDate?new Date(r.dueDate+'T00:00:00').toLocaleDateString([],{month:'short',day:'numeric',year:'numeric'})+(r.dueTime?' · '+r.dueTime:''):'';
+    return '<div class="reminder-row '+(r.done?'done':'')+'">'+
+      '<input class="rem-check" type="checkbox" '+(r.done?'checked':'')+' data-toggle-rem="'+r.id+'"/>'+
+      '<div style="flex:1;">'+
+        '<div class="reminder-title">'+esc(r.title)+'</div>'+
+        '<div class="reminder-meta">'+
+          '<span class="tag '+(tagMap[r.category]||'tag-gray')+'">'+r.category+'</span>'+
+          (due?'<span>&#128197; '+due+'</span>':'')+
+          (r.repeat&&r.repeat!=='none'?'<span>&#8635; '+r.repeat+'</span>':'')+
+          (r.notes?'<span style="font-style:italic;">'+esc(r.notes)+'</span>':'')+
+        '</div>'+
+      '</div>'+
+      '<button class="btn btn-danger btn-sm btn-icon" data-del-rem="'+r.id+'">&#10005;</button>'+
+    '</div>';
+  }).join('');
+  list.querySelectorAll('[data-toggle-rem]').forEach(function(cb){ cb.addEventListener('change',function(){
+    api('/api/reminders/toggle','POST',{id:cb.dataset.toggleRem}).then(function(){
+      var r=allReminders.find(function(x){return String(x.id)===String(cb.dataset.toggleRem);}); if(r) r.done=r.done?0:1;
+      renderReminders(); renderOverviewReminders();
+    });
+  }); });
+  list.querySelectorAll('[data-del-rem]').forEach(function(b){ b.addEventListener('click',function(){
+    if(!confirm('Delete this reminder?')) return;
+    api('/api/reminders/delete','POST',{id:b.dataset.delRem}).then(function(){
+      allReminders=allReminders.filter(function(r){return String(r.id)!==String(b.dataset.delRem);}); renderReminders(); renderOverviewReminders(); updateStats();
+    });
+  }); });
+}
+
+// ── MODALS ────────────────────────────────────────────────────────────────────
+function setupModals() {
+  function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+  function openModal(id){ document.getElementById(id).classList.add('open'); }
+  ['med-modal','appt-modal','rem-modal'].forEach(function(id){
+    document.getElementById(id).addEventListener('click',function(e){ if(e.target===this) closeModal(id); });
+  });
+  document.getElementById('med-modal-close').addEventListener('click',function(){ closeModal('med-modal'); });
+  document.getElementById('med-modal-cancel').addEventListener('click',function(){ closeModal('med-modal'); });
+  document.getElementById('appt-modal-close').addEventListener('click',function(){ closeModal('appt-modal'); });
+  document.getElementById('appt-modal-cancel').addEventListener('click',function(){ closeModal('appt-modal'); });
+  document.getElementById('rem-modal-close').addEventListener('click',function(){ closeModal('rem-modal'); });
+  document.getElementById('rem-modal-cancel').addEventListener('click',function(){ closeModal('rem-modal'); });
+
+  document.getElementById('add-med-btn').addEventListener('click',function(){
+    editingMedIdx=null;
+    ['med-m-name','med-m-dose','med-m-directions','med-m-times','med-m-qty','med-m-refills','med-m-prescriber','med-m-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+    document.getElementById('med-m-form').value='tablet'; document.getElementById('med-m-freq').value='Once daily'; document.getElementById('med-m-start').value='';
+    document.getElementById('med-modal-title').textContent='Add Medication'; openModal('med-modal');
+  });
+  document.getElementById('med-modal-save').addEventListener('click',function(){
+    var name=document.getElementById('med-m-name').value.trim(); if(!name){alert('Name required');return;}
+    var obj={name:name,dose:document.getElementById('med-m-dose').value.trim(),form:document.getElementById('med-m-form').value,
+      directions:document.getElementById('med-m-directions').value.trim(),freq:document.getElementById('med-m-freq').value,
+      times:document.getElementById('med-m-times').value.trim(),qty:document.getElementById('med-m-qty').value.trim(),
+      refills:document.getElementById('med-m-refills').value.trim(),prescriber:document.getElementById('med-m-prescriber').value.trim(),
+      start:document.getElementById('med-m-start').value,notes:document.getElementById('med-m-notes').value.trim()};
+    if(editingMedIdx!==null) allMeds[editingMedIdx]=obj; else allMeds.push(obj);
+    saveMedsToServer(); closeModal('med-modal');
+  });
+
+  document.getElementById('add-appt-btn').addEventListener('click',function(){
+    editingApptId=null;
+    ['appt-m-title','appt-m-date','appt-m-time','appt-m-doctor','appt-m-location','appt-m-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+    document.getElementById('appt-m-status').value='upcoming';
+    document.getElementById('appt-modal-title').textContent='Add Appointment'; openModal('appt-modal');
+  });
+  document.getElementById('appt-modal-save').addEventListener('click',function(){
+    var title=document.getElementById('appt-m-title').value.trim(), date=document.getElementById('appt-m-date').value;
+    if(!title||!date){alert('Title and date required');return;}
+    var body={patientId:currentPid,title:title,date:date,time:document.getElementById('appt-m-time').value,
+      doctor:document.getElementById('appt-m-doctor').value.trim(),location:document.getElementById('appt-m-location').value.trim(),
+      status:document.getElementById('appt-m-status').value,notes:document.getElementById('appt-m-notes').value.trim()};
+    var req=editingApptId?api('/api/appointments/update','POST',Object.assign({id:editingApptId},body)):api('/api/appointments','POST',body);
+    req.then(function(){ 
+      return api('/api/appointments/'+currentPid); }).then(function(a){ allAppts=a; renderAppts(); renderOverviewAppts(); updateStats(); closeModal('appt-modal'); 
+
+      });
+  });
+
+  document.getElementById('add-reminder-btn').addEventListener('click',function(){
+    ['rem-m-title','rem-m-date','rem-m-time','rem-m-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+    document.getElementById('rem-m-cat').value='general'; document.getElementById('rem-m-repeat').value='none'; openModal('rem-modal');
+  });
+  document.getElementById('rem-modal-save').addEventListener('click',function(){
+    var title=document.getElementById('rem-m-title').value.trim(); if(!title){alert('Title required');return;}
+    api('/api/reminders','POST',{patientId:currentPid,title:title,category:document.getElementById('rem-m-cat').value,
+      dueDate:document.getElementById('rem-m-date').value,dueTime:document.getElementById('rem-m-time').value,
+      repeat:document.getElementById('rem-m-repeat').value,notes:document.getElementById('rem-m-notes').value.trim()})
+    .then(function(){ return api('/api/reminders/'+currentPid); }).then(function(r){ allReminders=r; renderReminders(); renderOverviewReminders(); updateStats(); closeModal('rem-modal'); });
+  });
+
+  document.getElementById('save-patient').addEventListener('click',function(){
+    var btn=this; btn.disabled=true; btn.textContent='Saving...';
+    api('/api/users').then(function(users){
+      var p=users.find(function(u){return u.id===currentPid;}); if(!p) throw new Error('Not found');
+      p.fullName=document.getElementById('f-name').value; p.mrn=document.getElementById('f-mrn').value;
+      p.dob=document.getElementById('f-dob').value; p.blood=document.getElementById('f-blood').value;
+      p.allergies=document.getElementById('f-allergies').value; p.doctor=document.getElementById('f-doctor').value;
+      p.emergency=document.getElementById('f-emergency').value; p.emergencyPhone=document.getElementById('f-emergency-phone').value;
+      p.notes=document.getElementById('f-notes').value;
+      return api('/api/users','POST',p);
+    }).then(function(){ btn.disabled=false; btn.textContent='Save Patient Info'; loadPatient(currentPid); })
+      .catch(function(err){ btn.disabled=false; btn.textContent='Save Patient Info'; alert(err.message); });
+  });
+}
+
+// ── NEW PATIENT ───────────────────────────────────────────────────────────────
+var recentlyCreated = [];
+function setupNewPatient() {
+  document.getElementById('np-reset').addEventListener('click', function() {
+    ['np-fullName','np-username','np-password','np-password2','np-mrn','np-dob','np-blood','np-allergies','np-doctor','np-emergency','np-emergency-phone','np-notes']
+      .forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+    var st=document.getElementById('np-status'); st.style.display='none';
+  });
+  document.getElementById('np-submit').addEventListener('click', function() {
+    var btn=this, st=document.getElementById('np-status');
+    function showSt(msg,ok){ st.textContent=msg; st.style.display='block'; st.style.background=ok?'#d1fae5':'#fee2e2'; st.style.color=ok?'#065f46':'#991b1b'; st.style.border='1px solid '+(ok?'#6ee7b7':'#fecaca'); }
+    var fullName=document.getElementById('np-fullName').value.trim(), username=document.getElementById('np-username').value.trim(), pass=document.getElementById('np-password').value, pass2=document.getElementById('np-password2').value;
+    if(!fullName||!username||!pass){ showSt('Full name, username, and password are required.',false); return; }
+    if(pass!==pass2){ showSt('Passwords do not match.',false); return; }
+    if(pass.length<6){ showSt('Password must be at least 6 characters.',false); return; }
+    if(username.length<3){ showSt('Username must be at least 3 characters.',false); return; }
+    btn.disabled=true; btn.textContent='Creating...';
+    api('/api/users','POST',{ role:'patient', username:username, password:pass, fullName:fullName,
+      mrn:document.getElementById('np-mrn').value.trim(), dob:document.getElementById('np-dob').value,
+      blood:document.getElementById('np-blood').value.trim(), allergies:document.getElementById('np-allergies').value.trim(),
+      doctor:document.getElementById('np-doctor').value.trim(), emergency:document.getElementById('np-emergency').value.trim(),
+      emergencyPhone:document.getElementById('np-emergency-phone').value.trim(), notes:document.getElementById('np-notes').value.trim(), meds:[]
+    }).then(function(res){
+      showSt('✓ Patient account created! Username: '+username, true);
+      btn.disabled=false; btn.textContent='+ Create Patient Account';
+      recentlyCreated.unshift({fullName:fullName,username:username,id:res.id||'',createdAt:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});
+      if(recentlyCreated.length>5) recentlyCreated.pop(); renderRecentPatients();
+      ['np-fullName','np-username','np-password','np-password2'].forEach(function(id){ document.getElementById(id).value=''; });
+      api('/api/users?role=patient').then(function(pts){
+        var sel=document.getElementById('patient-select'), csel=document.getElementById('chat-patient-select');
+        var opts=pts.map(function(p){ return '<option value="'+p.id+'">'+esc(p.fullName)+'</option>'; }).join('');
+        if(sel) sel.innerHTML=opts||'<option>No patients</option>';
+        if(csel) csel.innerHTML=opts||'<option>No patients</option>';
+      });
+    }).catch(function(err){ btn.disabled=false; btn.textContent='+ Create Patient Account'; showSt('Error: '+err.message,false); });
+  });
+}
+function renderRecentPatients() {
+  var card=document.getElementById('np-recent-card'), list=document.getElementById('np-recent-list');
+  if(!card||!list||!recentlyCreated.length){ if(card) card.style.display='none'; return; }
+  card.style.display='block';
+  list.innerHTML=recentlyCreated.map(function(p){
+    return '<div style="display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-bottom:1px solid var(--border);">'+
+      '<div style="width:36px;height:36px;background:linear-gradient(135deg,#3b82f6,#06b6d4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;">'+
+        p.fullName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2)+'</div>'+
+      '<div style="flex:1;"><div style="font-weight:600;font-size:.9rem;">'+esc(p.fullName)+'</div>'+
+        '<div style="font-size:.77rem;color:var(--text-muted);">Username: <code style="background:var(--surface2);padding:.1rem .35rem;border-radius:4px;font-size:.75rem;">'+esc(p.username)+'</code></div></div>'+
+      '<span style="font-size:.72rem;color:var(--text-muted);">Created '+p.createdAt+'</span></div>';
+  }).join('');
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+function setupFilters() {
+  document.querySelectorAll('.filter-tab').forEach(function(b){
+    b.addEventListener('click',function(){
+      var group=b.closest('.filter-tabs');
+      group.querySelectorAll('.filter-tab').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active');
+      var sec=b.closest('.section-panel');
+      if(sec&&sec.id==='section-appointments'){ apptFilter=b.dataset.filter; renderAppts(); }
+      else { remFilter=b.dataset.filter; renderReminders(); }
+    });
+  });
+}
+
+// ── CHAT ─────────────────────────────────────────────────────────────────────
+function loadMsgs(pid) {
+  var list=document.getElementById('chat-list'); if(!list) return;
+  api('/api/messages/'+pid).then(function(msgs){
+    list.innerHTML=msgs.length
+      ? msgs.slice().reverse().map(function(m){
+          return '<div class="chat-msg"><div class="chat-sender">'+(m.sender==='patient'?'Patient':'You')+'<span class="chat-time">'+new Date(m.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</span></div>'+esc(m.text)+'</div>';
+        }).join('')
+      : '<div class="chat-empty">No messages yet.</div>';
+    list.scrollTop=list.scrollHeight;
+  });
+}
+function setupChat() {
+  var panel=document.getElementById('chat-panel');
+  document.getElementById('chat-toggle').addEventListener('click',function(){ panel.classList.toggle('open'); if(panel.classList.contains('open')&&currentPid) loadMsgs(currentPid); });
+  document.getElementById('chat-close').addEventListener('click',function(){ panel.classList.remove('open'); });
+  document.getElementById('chat-send').addEventListener('click',function(){
+    var inp=document.getElementById('chat-input'), text=inp.value.trim(); if(!text||!currentPid) return;
+    this.disabled=true;
+    api('/api/messages','POST',{patientId:currentPid,sender:'caregiver',text:text}).then(function(){ inp.value=''; loadMsgs(currentPid); document.getElementById('chat-send').disabled=false; });
+  });
+  document.getElementById('chat-input').addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); document.getElementById('chat-send').click(); } });
+}
+
+// ── ISSUE ─────────────────────────────────────────────────────────────────────
+function setupIssue() {
+  var panel=document.getElementById('issue-panel');
+  function toggle(){ panel.classList.toggle('open'); }
+  document.getElementById('issue-toggle-fab').addEventListener('click',toggle);
+  document.getElementById('issue-toggle').addEventListener('click',toggle);
+  document.getElementById('issue-close').addEventListener('click',function(){ panel.classList.remove('open'); });
+  document.getElementById('issue-send').addEventListener('click',function(){
+    var inp=document.getElementById('issue-input'), text=inp.value.trim(); if(!text) return;
+    var btn=this; btn.disabled=true; btn.textContent='Sending...';
+    api('/api/tickets','POST',{text:text}).then(function(){ inp.value=''; btn.disabled=false; btn.textContent='Submit Ticket'; alert('Ticket submitted.'); });
+  });
+}
+
+// ── PROFILE ───────────────────────────────────────────────────────────────────
+var _pendingAvatar = undefined; // undefined=unchanged, null=remove, string=new data URL
+
+function setupProfile() {
+  api('/api/profile').then(function(prof) {
+    var initEl  = document.getElementById('cg-avatar-initials');
+    var imgEl   = document.getElementById('cg-avatar-img');
+    var removeBtn = document.getElementById('cg-avatar-remove');
+    var dnEl    = document.getElementById('cg-displayName');
+    var unEl    = document.getElementById('cg-username');
+
+    if (dnEl) dnEl.value = prof.displayName || '';
+    if (unEl) unEl.value = prof.username || '';
+
+    // Set initials
+    var words = (prof.displayName || prof.fullName || '?').trim().split(' ');
+    var inits = words.map(function(w){ return w[0]||''; }).join('').toUpperCase().slice(0,2) || '?';
+    if (initEl) initEl.textContent = inits;
+
+    if (prof.avatar) {
+      if (imgEl)  { imgEl.src = prof.avatar; imgEl.style.display='block'; }
+      if (initEl) initEl.style.display = 'none';
+      if (removeBtn) removeBtn.style.display = '';
+    }
+
+    // File picker
+    var fileInput = document.getElementById('cg-avatar-file');
+    if (fileInput) fileInput.addEventListener('change', function(e) {
+      var file = e.target.files[0]; if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { alert('Image must be under 5 MB.'); return; }
+      compressAvatar(file, function(dataUrl) {
+        _pendingAvatar = dataUrl;
+        if (imgEl)    { imgEl.src=dataUrl; imgEl.style.display='block'; }
+        if (initEl)   initEl.style.display='none';
+        if (removeBtn) removeBtn.style.display='';
+      });
+    });
+
+    // Remove button
+    if (removeBtn) removeBtn.addEventListener('click', function() {
+      _pendingAvatar = null;
+      if (imgEl)    { imgEl.src=''; imgEl.style.display='none'; }
+      if (initEl)   { initEl.style.display=''; initEl.textContent=inits; }
+      removeBtn.style.display='none';
+    });
+
+    // Save profile
+    var saveBtn = document.getElementById('cg-profile-save');
+    if (saveBtn) saveBtn.addEventListener('click', function() {
+      var newDn = (document.getElementById('cg-displayName').value||'').trim();
+      var newUn = (document.getElementById('cg-username').value||'').trim();
+      if (!newUn) { showProfileStatus('profile-status','Username cannot be empty.','error'); return; }
+      var payload = { username: newUn, displayName: newDn };
+      if (_pendingAvatar !== undefined) payload.avatar = _pendingAvatar;
+      saveBtn.disabled=true; saveBtn.textContent='Saving...';
+      api('/api/profile','POST',payload).then(function(r) {
+        _pendingAvatar = undefined;
+        showProfileStatus('profile-status','Profile saved successfully!','success');
+        // Refresh topbar chip
+        var nm = document.getElementById('topbar-my-name');
+        var ini = document.getElementById('topbar-my-initials');
+        var timg = document.getElementById('topbar-my-img');
+        var label = r.displayName || r.username;
+        if (nm) nm.textContent = label;
+        var wds = label.trim().split(' ');
+        var ti = wds.map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2)||'?';
+        if (ini) ini.textContent = ti;
+        if (timg) {
+          if (r.avatar) { timg.src=r.avatar; timg.style.display='block'; ini.style.display='none'; }
+          else           { timg.style.display='none'; ini.style.display=''; }
+        }
+      }).catch(function(e) {
+        showProfileStatus('profile-status', e.message||'Save failed.','error');
+      }).finally(function(){ saveBtn.disabled=false; saveBtn.textContent='Save Profile'; });
+    });
+  });
+
+  // Password change
+  var pwBtn = document.getElementById('cg-pw-save');
+  if (pwBtn) pwBtn.addEventListener('click', function() {
+    var cur = document.getElementById('cg-pw-current').value;
+    var nw  = document.getElementById('cg-pw-new').value;
+    var cf  = document.getElementById('cg-pw-confirm').value;
+    if (!cur || !nw || !cf) { showProfileStatus('pw-status','All password fields required.','error'); return; }
+    if (nw !== cf) { showProfileStatus('pw-status','New passwords do not match.','error'); return; }
+    if (nw.length < 6) { showProfileStatus('pw-status','Password must be at least 6 characters.','error'); return; }
+    pwBtn.disabled=true; pwBtn.textContent='Updating...';
+    api('/api/profile/password','POST',{currentPassword:cur,newPassword:nw}).then(function() {
+      document.getElementById('cg-pw-current').value='';
+      document.getElementById('cg-pw-new').value='';
+      document.getElementById('cg-pw-confirm').value='';
+      showProfileStatus('pw-status','Password updated successfully!','success');
+    }).catch(function(e) {
+      showProfileStatus('pw-status',e.message||'Password update failed.','error');
+    }).finally(function(){ pwBtn.disabled=false; pwBtn.textContent='Update Password'; });
+  });
+}
+
+function showProfileStatus(id, msg, type) {
+  var el = document.getElementById(id); if (!el) return;
+  el.style.display='block';
+  el.style.background = type==='success' ? '#d1fae5' : '#fee2e2';
+  el.style.color       = type==='success' ? '#065f46' : '#991b1b';
+  el.style.border      = type==='success' ? '1px solid #a7f3d0' : '1px solid #fecaca';
+  el.textContent = msg;
+  if (type==='success') setTimeout(function(){ el.style.display='none'; }, 3500);
+}
+
+function compressAvatar(file, cb) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var MAX=256, sx=img.width, sy=img.height, scale=Math.min(MAX/sx,MAX/sy,1);
+      var c=document.createElement('canvas'); c.width=Math.round(sx*scale); c.height=Math.round(sy*scale);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      cb(c.toDataURL('image/jpeg',0.88));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+</script>
 </body>
 </html>
