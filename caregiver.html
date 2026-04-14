@@ -446,7 +446,13 @@
     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
     Reminders
   </button>
-
+  <button class="sidebar-item" data-section="shifts">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="4" width="18" height="18" rx="2"/>
+      <path d="M16 2v4M8 2v4M3 10h18"/>
+    </svg>
+    Shifts
+  </button>
   <div class="sidebar-section">Actions</div>
   <button class="sidebar-item" data-section="profile">
     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -664,6 +670,27 @@
             <button class="filter-tab" data-filter="general">General</button>
           </div>
           <div id="reminder-list"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- shifts-->
+    <div id="section-shifts" class="section-panel">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Care Shifts</div>
+            <div class="card-subtitle">Assigned caregiver schedule</div>
+          </div>
+          <button class="btn btn-primary btn-sm" id="add-shift-btn">+ Add Shift</button>
+        </div>
+
+        <div class="card-body">
+          <div id="shift-list">
+            <div class="empty-state">
+              <p>No shifts have been assigned yet.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -902,6 +929,57 @@
   </div>
 </div>
 
+<!--shifts modal-->
+<div class="modal-overlay" id="shift-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add Shift</div>
+      <button class="modal-close" id="shift-modal-close">&#215;</button>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Caregiver *</label>
+        <select id="shift-caregiver"></select>
+      </div>
+      <div class="field">
+        <label>Shift Label *</label>
+        <input id="shift-label" placeholder="e.g. Morning Shift"/>
+      </div>
+      <div class="form-grid form-cols-2">
+        <div class="field">
+          <label>Start Time *</label>
+          <input id="shift-start" type="time"/>
+        </div>
+        <div class="field">
+          <label>End Time *</label>
+          <input id="shift-end" type="time"/>
+        </div>
+      </div>
+      <div class="field">
+        <label>Days of Week</label>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+          <label><input type="checkbox" class="shift-day" value="Mon"/> Mon</label>
+          <label><input type="checkbox" class="shift-day" value="Tue"/> Tue</label>
+          <label><input type="checkbox" class="shift-day" value="Wed"/> Wed</label>
+          <label><input type="checkbox" class="shift-day" value="Thu"/> Thu</label>
+          <label><input type="checkbox" class="shift-day" value="Fri"/> Fri</label>
+          <label><input type="checkbox" class="shift-day" value="Sat"/> Sat</label>
+          <label><input type="checkbox" class="shift-day" value="Sun"/> Sun</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Notes</label>
+        <textarea id="shift-notes" placeholder="Optional notes"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="shift-modal-cancel">Cancel</button>
+      <button class="btn btn-primary" id="shift-modal-save">Save Shift</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── ADD PATIENT PICKER MODAL ── -->
 <div class="modal-overlay" id="ap-modal">
   <div class="modal" style="max-width:500px;">
@@ -1012,7 +1090,7 @@
 <script>
 var TOKEN_KEY = 'mh_token';
 var currentPid = null;
-var allMeds = [], allAppts = [], allReminders = [], allMedImages = [], allTimeline = [];
+var allMeds = [], allAppts = [], allReminders = [], allMedImages = [], allTimeline = [], allShifts = [];
 var apptFilter = 'upcoming', remFilter = 'all';
 var editingApptId = null, editingMedIdx = null;
 var pendingImageData = null; // base64 for upload
@@ -1096,7 +1174,9 @@ function init() {
 
     if(sel)  {
       sel.addEventListener('change', function(){
-         loadPatient(sel.value); 
+        currentPid = sel.value; 
+        loadPatient(sel.value); 
+        loadShifts(currentPid);
          if(csel) csel.value=sel.value; 
       });
     }
@@ -1104,6 +1184,8 @@ function init() {
     csel.addEventListener('change', function(){ 
       currentPid=csel.value; 
       if(sel) sel.value=csel.value; 
+      loadPatient(currentPid);   
+      loadShifts(currentPid);
       loadMsgs(csel.value); 
     });
     }
@@ -1113,6 +1195,7 @@ function init() {
       if (csel) csel.value = pts[0].id;
       currentPid = pts[0].id;
       loadPatient(pts[0].id);
+      loadShifts(currentPid);
     }
   });
 
@@ -1127,7 +1210,7 @@ function init() {
   var apBtn = document.getElementById('pt-add-btn');
   if(apBtn) apBtn.addEventListener('click', function(){ openAddPatientModal(); });
 
-  setupModals(); setupImageUpload(); setupChat(); setupIssue(); setupFilters(); setupNewPatient(); setupProfile(); setupCareTeam(); setupAddPatientModal();
+  setupModals(); setupImageUpload(); setupChat(); setupIssue(); setupFilters(); setupNewPatient(); setupProfile(); setupCareTeam(); setupAddPatientModal(); setupShifts();
 }
 
 // ── LOAD PATIENT ──────────────────────────────────────────────────────────────
@@ -1188,6 +1271,19 @@ function updateStats() {
   el=document.getElementById('stat-done');  if(el) el.textContent=allReminders.filter(function(r){return r.done;}).length;
 }
 
+//--- load shift fnt rendrng
+function loadShifts(pid) {
+  api('/api/shifts/' + pid)
+    .then(function(data) {
+      allShifts = data || [];
+      renderShifts();
+    })
+    .catch(function(err) {
+      console.error('Failed to load shifts:', err);
+      allShifts = [];
+      renderShifts();
+    });
+}
 // ── MY PATIENTS DASHBOARD ────────────────────────────────────────────────────
 var PT_GRADIENTS = [
   ['#3b82f6','#06b6d4'], ['#8b5cf6','#ec4899'], ['#10b981','#06b6d4'],
@@ -2054,7 +2150,91 @@ function setupChat() {
   });
   document.getElementById('chat-input').addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); document.getElementById('chat-send').click(); } });
 }
+// shifts ------------------------
+function setupShifts() {
+  var modal = document.getElementById('shift-modal');
+  var openBtn = document.getElementById('add-shift-btn');
+  var closeBtn = document.getElementById('shift-modal-close');
+  var cancelBtn = document.getElementById('shift-modal-cancel');
+  var saveBtn = document.getElementById('shift-modal-save');
+  var cgSelect = document.getElementById('shift-caregiver');
 
+  if (!modal || !openBtn || !closeBtn || !cancelBtn || !saveBtn || !cgSelect) return;
+  function closeShiftModal() {
+    modal.classList.remove('open');
+  }
+  function openShiftModal() {
+    cgSelect.innerHTML = allCaregivers.map(function(cg) {
+      return '<option value="' + cg.id + '">' + esc(cg.displayName || cg.fullName || cg.username) + '</option>';
+    }).join('');
+
+    document.getElementById('shift-label').value = '';
+    document.getElementById('shift-start').value = '';
+    document.getElementById('shift-end').value = '';
+    document.getElementById('shift-notes').value = '';
+    document.querySelectorAll('.shift-day').forEach(function(cb) { cb.checked = false; });
+
+    modal.classList.add('open');
+  }
+  openBtn.addEventListener('click', openShiftModal);
+  closeBtn.addEventListener('click', closeShiftModal);
+  cancelBtn.addEventListener('click', closeShiftModal);
+
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) closeShiftModal();
+  });
+
+  saveBtn.addEventListener('click', function() {
+    var caregiverId = cgSelect.value;
+    var shiftLabel = document.getElementById('shift-label').value.trim();
+    var startTime = document.getElementById('shift-start').value;
+    var endTime = document.getElementById('shift-end').value;
+    var notes = document.getElementById('shift-notes').value.trim();
+    var daysOfWeek = Array.from(document.querySelectorAll('.shift-day:checked')).map(function(cb) {
+      return cb.value;
+    });
+
+    if (!currentPid || !caregiverId || !shiftLabel || !startTime || !endTime) {
+      alert('Please fill in all required shift fields.');
+      return;
+    }
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+    api('/api/shifts', 'POST', {
+      patientId: currentPid,
+      caregiverId: caregiverId,
+      shiftLabel: shiftLabel,
+      startTime: startTime,
+      endTime: endTime,
+      daysOfWeek: daysOfWeek,
+      notes: notes
+    })
+
+    .then(function() {
+      return Promise.all([
+        api('/api/shifts/' + currentPid),
+        api('/api/patient/' + currentPid + '/timeline')
+      ]);
+    })
+
+    .then(function(results) {
+      allShifts = results[0] || [];
+      allTimeline = results[1] || [];
+      renderShifts();
+      renderTimeline();
+      modal.classList.remove('open');
+    })
+
+    .catch(function(err) {
+      alert(err.message || 'Failed to save shift.');
+    })
+    
+    .finally(function() {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Shift';
+    });
+  });
+}
 // ── ISSUE ─────────────────────────────────────────────────────────────────────
 function setupIssue() {
   var panel=document.getElementById('issue-panel');
